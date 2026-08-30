@@ -1,0 +1,420 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Intro to TouchDesigner</title>
+<meta name="theme-color" content="#e5aa70">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* Palette pulled directly from luisapinzon.com: sand background, black-brown ink,
+     Montserrat everywhere. This course's own lane accent (umber) is a deeper, distinct
+     shade from the same warm family, single fixed theme matching the live site. */
+  :root {
+    --bg: #e5aa70;
+    --surface: color-mix(in srgb, #e5aa70 55%, #fff8ec);
+    --surface-2: color-mix(in srgb, #e5aa70 78%, #fff8ec);
+    --text: #3d2b1f;
+    --muted: #59260b;
+    --border: color-mix(in srgb, #6b4a2f 26%, #e5aa70);
+    --accent: #6b4a2f;
+    --accent-ink: #6b4a2f;
+    --on-accent: #fdf1e3;
+    --shadow: 0 1px 3px rgba(61,43,31,.16);
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Montserrat', system-ui, sans-serif;
+    font-size: 16.5px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: var(--accent); color: var(--on-accent); }
+  a { color: var(--accent); font-weight: 600; }
+  h1, h2, h3 { font-family: 'Montserrat', system-ui, sans-serif; font-weight: 800; text-wrap: balance; margin: 0; color: var(--text); }
+  .mono { font-family: 'Montserrat', sans-serif; font-weight: 600; }
+  .wrap { max-width: 780px; margin: 0 auto; padding: 0 24px; }
+  .eyebrow {
+    font-family: 'Montserrat', sans-serif;
+    font-size: .78rem;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 400;
+  }
+
+  nav {
+    position: sticky; top: 0; z-index: 10;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-inner {
+    max-width: 780px; margin: 0 auto; padding: 14px 24px;
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 16px; flex-wrap: wrap;
+  }
+  .nav-title { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1.02rem; text-transform: uppercase; letter-spacing: .02em; }
+  .nav-title a { color: var(--text); text-decoration: none; }
+  .nav-links { display: flex; gap: 20px; flex-wrap: wrap; font-size: .88rem; }
+  .nav-links a { color: var(--muted); text-decoration: none; }
+  .nav-links a:hover { color: var(--accent-ink); }
+  .nav-links a:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  header.hero { padding: 64px 0 40px; border-bottom: 1px solid var(--border); }
+  .hero h1 { font-size: clamp(2.1rem, 5.4vw, 3.1rem); font-weight: 800; line-height: 1.06; }
+  .hero .thesis { margin-top: 16px; font-size: 1.18rem; color: var(--muted); max-width: 60ch; }
+  .spec-sheet {
+    margin-top: 32px; display: grid; grid-template-columns: repeat(auto-fit, minmax(160px,1fr));
+    gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 10px; overflow: hidden;
+  }
+  .spec-item { background: var(--surface); padding: 12px 16px; }
+  .spec-item .k { font-family: 'Montserrat', sans-serif; font-size: .68rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+  .spec-item .v { margin-top: 4px; font-size: .93rem; font-weight: 500; }
+
+  section { padding: 56px 0; border-bottom: 1px solid var(--border); scroll-margin-top: 76px; }
+  section:last-of-type { border-bottom: none; }
+  .section-head { margin-bottom: 28px; }
+  .section-head h2 { font-size: 1.6rem; font-weight: 700; }
+  .section-head .eyebrow { display: block; margin-bottom: 8px; }
+
+  p { margin: 0 0 1em; max-width: 68ch; }
+  p:last-child { margin-bottom: 0; }
+
+  blockquote {
+    margin: 0; padding: 18px 22px; border-left: 3px solid var(--accent);
+    background: var(--surface); border-radius: 0 8px 8px 0; font-style: italic; color: var(--text);
+  }
+
+  .callout {
+    background: color-mix(in srgb, var(--accent) 10%, var(--surface));
+    border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--border));
+    border-radius: 10px; padding: 20px 22px; margin: 24px 0;
+  }
+  .callout .eyebrow { margin-bottom: 8px; }
+  .callout p { margin-bottom: .6em; font-size: .96rem; }
+  .callout p:last-child { margin-bottom: 0; }
+
+  ul.outcomes { margin: 0; padding-left: 1.2em; }
+  ul.outcomes li { margin-bottom: 10px; }
+  ul.outcomes li:last-child { margin-bottom: 0; }
+
+  .week-row { display: grid; grid-template-columns: 96px 1fr; gap: 20px; padding: 20px 0; border-top: 1px solid var(--border); }
+  .week-row:first-child { border-top: none; }
+  .week-row .wk { font-family: 'Montserrat', sans-serif; }
+  .week-row .wk .n { font-size: 1.3rem; font-weight: 700; display: block; }
+  .week-row .wk .d { font-size: .78rem; color: var(--muted); }
+  .week-row h3 { font-size: 1.06rem; font-weight: 600; margin-bottom: 6px; }
+  .week-row .desc { font-size: .95rem; color: var(--text); margin-bottom: 8px; }
+  .week-row ul.desc-list { margin: 0 0 8px; padding-left: 1.15em; font-size: .95rem; color: var(--text); }
+  .week-row ul.desc-list li { margin-bottom: 4px; }
+  .week-row .assign { font-size: .87rem; color: var(--muted); }
+  .week-row .assign .mono { color: var(--accent-ink); }
+  .week-row.shared {
+    grid-template-columns: 1fr; background: color-mix(in srgb, var(--accent) 8%, var(--surface));
+    border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--border));
+    border-radius: 10px; padding: 18px 20px; margin: 10px 0;
+  }
+  .week-row.shared .tag { font-family: 'Montserrat', sans-serif; font-size: .68rem; text-transform: uppercase; letter-spacing: .08em; color: var(--accent-ink); display:block; margin-bottom: 6px; }
+
+  dl.spec { margin: 0; }
+  dl.spec > div { padding: 16px 0; border-top: 1px solid var(--border); display: grid; grid-template-columns: 180px 1fr; gap: 20px; }
+  dl.spec > div:first-child { border-top: none; }
+  dl.spec dt { font-family: 'Montserrat', sans-serif; font-size: .78rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+  dl.spec dd { margin: 0; font-size: .95rem; }
+
+  .bar { height: 10px; border-radius: 6px; overflow: hidden; display: flex; border: 1px solid var(--border); }
+  .bar span { display:block; height: 100%; }
+  .bar-legend { display: flex; gap: 18px; margin-top: 10px; flex-wrap: wrap; font-size: .82rem; color: var(--muted); }
+  .bar-legend .dot { display:inline-block; width:8px; height:8px; border-radius:2px; margin-right:6px; vertical-align: middle; }
+
+  .scale-bar { display: grid; grid-template-columns: repeat(4,1fr); border-radius: 6px; overflow: hidden; border: 1px solid var(--border); }
+  .scale-bar div { padding: 10px 8px; text-align: center; font-family: 'Montserrat', sans-serif; font-size: .78rem; }
+  .scale-bar .hp { background: var(--accent); color: var(--on-accent); }
+  .scale-bar .p { background: color-mix(in srgb, var(--accent) 55%, var(--surface-2)); }
+  .scale-bar .lp { background: color-mix(in srgb, var(--accent) 25%, var(--surface-2)); }
+  .scale-bar .nc { background: var(--surface-2); color: var(--muted); }
+
+  ul.plain { margin: 0; padding-left: 1.2em; }
+  ul.plain li { margin-bottom: 8px; }
+
+  footer { padding: 40px 0 64px; }
+  footer p { font-size: .85rem; color: var(--muted); }
+  footer a { color: var(--muted); }
+
+  @media (max-width: 560px) {
+    .week-row { grid-template-columns: 1fr; }
+    dl.spec > div { grid-template-columns: 1fr; gap: 4px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-title"><a href="#top">Intro to TouchDesigner</a></div>
+    <div class="nav-links">
+      <a href="#credit-load">Credit Load</a>
+      <a href="#overview">Overview</a>
+      <a href="#weekly">Weekly</a>
+      <a href="#final">Final Project</a>
+      <a href="#grading">Grading</a>
+      <a href="#materials">Materials</a>
+      <a href="index.html">&larr; All courses</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <header class="hero" id="top">
+    <span class="eyebrow">CalArts &middot; Fall 2026 &middot; Instructor: Luisa Pinzon</span>
+    <h1 style="margin-top:10px;">Intro to TouchDesigner</h1>
+    <p class="thesis">This course teaches TouchDesigner, a node-based program for building real-time visuals. Students build a new network every week, starting with a simple color palette and working up to audio-reactive and 3D work. The semester ends with a live group performance.</p>
+    <div class="spec-sheet">
+      <div class="spec-item"><div class="k">Meets</div><div class="v">Wed, 1:00&ndash;2:50 PM</div></div>
+      <div class="spec-item"><div class="k">Location</div><div class="v">Main Bldg, B214A</div></div>
+      <div class="spec-item"><div class="k">Credits</div><div class="v">3</div></div>
+      <div class="spec-item"><div class="k">Format</div><div class="v">Live in-person, sessions recorded</div></div>
+    </div>
+  </header>
+
+  <section id="credit-load">
+    <div class="section-head">
+      <span class="eyebrow">Credit Load</span>
+      <h2>Credit Load</h2>
+    </div>
+    <p>This is a 3-credit course, following CalArts&rsquo; standard credit-hour policy: 45 hours of work per credit for BFA students, 60 hours per credit for Masters students. That comes to 135 total hours for BFA students and 180 for Masters students across the semester. In-class time adds up to about 25.7 hours over the semester. The rest is independent work: roughly 7.8 hours a week for BFA students, and roughly 11 hours a week for Masters students.</p>
+  </section>
+
+  <section id="overview">
+    <div class="section-head">
+      <span class="eyebrow">Overview</span>
+      <h2>Course Description</h2>
+    </div>
+    <blockquote>This course provides a comprehensive introduction to TouchDesigner, a leading platform for interactive visual design. Students explore audio reactivity and dynamic visuals, introduction to 3D modeling and rendering, essential TouchDesigner components and workflows, and building interactive, real-time visual systems. No prior TouchDesigner experience is necessary.</blockquote>
+
+    <p style="margin-top:24px;">A typical 1h50m session opens with a few minutes for questions, then moves straight into building that week&rsquo;s network for the rest of class. There usually isn&rsquo;t time for a separate lecture or homework preview; that&rsquo;s part of why every session is recorded.</p>
+
+    <h3 style="margin-top:36px; margin-bottom:14px; font-size:1.1rem;">Learning outcomes</h3>
+    <ul class="outcomes">
+      <li><strong>Develop technical proficiency across music technology tools and workflows.</strong> Real-time audio-visual environments, matching audio-reactive visuals and TouchDesigner&rsquo;s own workflow.</li>
+      <li><strong>Create immersive virtual and augmented environments.</strong> The 3D introduction and the Instancing/POPs work that follows.</li>
+      <li><strong>Integrate spatial media into cohesive experiential systems.</strong> Building interactive, real-time visual systems across the semester, especially the Week 11&ndash;13 cross-tool final project work.</li>
+    </ul>
+    <p style="margin-top:14px; font-size:.92rem; color:var(--muted);">Masters students additionally build toward leading interdisciplinary teams on the required group final, independent research beyond what&rsquo;s shown in class, and articulating the thinking behind spatial and visual work.</p>
+  </section>
+
+  <section id="weekly">
+    <div class="section-head">
+      <span class="eyebrow">Weekly Breakdown</span>
+      <h2>Weekly Schedule</h2>
+    </div>
+
+    <div class="callout">
+      <span class="eyebrow">Weekly homework, in one line</span>
+      <p>Each class gets recorded and the network isn&rsquo;t shared as a file. Homework is: recreate that day&rsquo;s network from what you saw (plus the recording if needed), then add one new operator you found and explored yourself. Due <strong>11:59 PM the night of class</strong>, then submission closes, no late work.</p>
+      <p><strong>Final project:</strong> identical structure and deadlines to Coding Music Fundamentals and Coding Art Fundamentals. See Final Project below.</p>
+    </div>
+
+    <div class="week-row">
+      <div class="wk"><span class="n">01</span><span class="d">Sept 9</span></div>
+      <div>
+        <h3>Pixels, Assets &amp; an Exploratory Palette</h3>
+        <ul class="desc-list">
+          <li>Install, and a tour of the interface.</li>
+          <li>Pixels and resolution, what an asset is, and how to find operator docs.</li>
+          <li>Building a palette component: Constant TOPs, Table DAT, Ramp TOP, COMP.</li>
+          <li>A first look at the pre-made &ldquo;2D Compile&rdquo; network, previewing where the semester is headed.</li>
+        </ul>
+        <p class="assign">Assignment: recreate today&rsquo;s network, plus a new TOP you found on your own.</p>
+      </div>
+    </div>
+    <div class="week-row">
+      <div class="wk"><span class="n">02</span><span class="d">Sept 16</span></div>
+      <div>
+        <h3>Signal Processing</h3>
+        <ul class="desc-list">
+          <li>A brief note on color theory, not a full lecture.</li>
+          <li>Wave CHOP as an LFO, exported into a TOP parameter to animate the palette.</li>
+          <li>HSV Adjust and Lookup TOP.</li>
+        </ul>
+        <p class="assign">Assignment: recreate today&rsquo;s network, plus a new operator.</p>
+      </div>
+    </div>
+    <div class="week-row">
+      <div class="wk"><span class="n">03</span><span class="d">Sept 23</span></div>
+      <div>
+        <h3>Feedback Loops</h3>
+        <ul class="desc-list">
+          <li>Feedback TOP, kept simple: no webcam, no added noise.</li>
+          <li>Building a clear mental model of feedback on its own.</li>
+        </ul>
+        <p class="assign">Assignment: recreate today&rsquo;s network, plus a new operator.</p>
+      </div>
+    </div>
+    <div class="week-row">
+      <div class="wk"><span class="n">04</span><span class="d">Sept 30</span></div>
+      <div>
+        <h3>Audio Reactivity + Control Panel</h3>
+        <ul class="desc-list">
+          <li>Audio Spectrum CHOP driving visuals.</li>
+          <li>Panel COMPs: buttons and sliders for manual control.</li>
+        </ul>
+        <p class="assign">Assignment: recreate today&rsquo;s network, plus a new operator.</p>
+      </div>
+    </div>
+    <div class="week-row">
+      <div class="wk"><span class="n">05</span><span class="d">Oct 7</span></div>
+      <div>
+        <h3>Video Synthesis</h3>
+        <ul class="desc-list">
+          <li>Displace TOP and Ramp TOP, used heavily for waveform-like, video-synthesizer-style visuals.</li>
+          <li>Warping one pattern by another.</li>
+        </ul>
+        <p class="assign">Assignment: recreate today&rsquo;s network, plus a new operator.</p>
+      </div>
+    </div>
+    <div class="week-row">
+      <div class="wk"><span class="n">06</span><span class="d">Oct 14</span></div>
+      <div>
+        <h3>2D Compile: Revisit &amp; Explore</h3>
+        <ul class="desc-list">
+          <li>Revisiting the pre-made &ldquo;2D Compile&rdquo; network from Week 1, with the basics re-taught.</li>
+          <li>Dedicated time to explore and ask questions.</li>
+          <li>Midterm dry run.</li>
+        </ul>
+        <p class="assign">Assignment: pick one or two techniques from the network and fold them into your midterm piece.</p>
+      </div>
+    </div>
+    <div class="week-row shared">
+      <span class="tag">Shared across all three courses</span>
+      <h3 style="margin-bottom:6px;">Week 7 &middot; Oct 21 &middot; Midterm</h3>
+      <p class="desc" style="margin-bottom:0;">A TouchDesigner piece with a custom color palette, at least one animated or reactive component, and the Week 3 or Week 5 technique and/or audio reactivity. No fixed time slot; scheduling is coordinated across all three classes.</p>
+    </div>
+    <div class="week-row">
+      <div class="wk"><span class="n">08</span><span class="d">Oct 28</span></div>
+      <div>
+        <h3>3D Introduction</h3>
+        <ul class="desc-list">
+          <li>Geometry, Camera, and Light COMPs, and the Render TOP.</li>
+          <li>Your palette applied as material color.</li>
+        </ul>
+        <p class="assign">Assignment: recreate today&rsquo;s network, plus a new operator.</p>
+      </div>
+    </div>
+    <div class="week-row">
+      <div class="wk"><span class="n">09</span><span class="d">Nov 4</span></div>
+      <div>
+        <h3>Instancing</h3>
+        <ul class="desc-list">
+          <li>Instancing: per-instance position, color, and scale driven from data.</li>
+          <li>Counts kept to what a typical laptop can handle comfortably.</li>
+        </ul>
+        <p class="assign">Assignment: recreate today&rsquo;s network, plus a new operator. This week is also the deadline to have your final group formed (minimum 2, maximum 3).</p>
+      </div>
+    </div>
+    <div class="week-row">
+      <div class="wk"><span class="n">10</span><span class="d">Nov 11</span></div>
+      <div>
+        <h3>POPs: Point Clouds &amp; Particles</h3>
+        <ul class="desc-list">
+          <li>TouchDesigner&rsquo;s newer particle and point-cloud family (POPs).</li>
+          <li>Again scaled to run well on personal laptops.</li>
+        </ul>
+        <p class="assign">Assignment: recreate today&rsquo;s network, plus a new operator. Your group&rsquo;s presentation slot for Dec 2 also goes out this week.</p>
+      </div>
+    </div>
+    <div class="week-row shared">
+      <span class="tag">Shared across all three courses</span>
+      <h3 style="margin-bottom:6px;">Week 11 &middot; Nov 18 &middot; Talking to Other Software</h3>
+      <p class="desc" style="margin-bottom:0;">OSC/MIDI in from ChucK and openFrameworks classmates.</p>
+    </div>
+    <div class="week-row shared">
+      <span class="tag">Shared across all three courses</span>
+      <h3 style="margin-bottom:6px;">Week 12 &middot; Nov 25 &middot; Remote: CCRMA + 1:1 Help</h3>
+      <p class="desc" style="margin-bottom:0;">Shared remote day. A new pre-made &ldquo;2D+3D Compile&rdquo; reference network for final-project use, plus 1:1 help for cross-tool OSC/MIDI wiring. Specs for the Week 14 digital submission go out today.</p>
+    </div>
+    <div class="week-row shared">
+      <span class="tag">Shared across all three courses</span>
+      <h3 style="margin-bottom:6px;">Week 13 &middot; Dec 2 &middot; Final Performance</h3>
+      <p class="desc" style="margin-bottom:0;">In-person, required group performance, 1 to 6 PM. Your slot within that window was assigned in Week 10.</p>
+    </div>
+    <div class="week-row shared">
+      <span class="tag">Shared across all three courses</span>
+      <h3 style="margin-bottom:6px;">Week 14 &middot; Dec 9 &middot; Digital Submission &amp; Portfolio</h3>
+      <p class="desc" style="margin-bottom:0;">Recorded performance due, along with the required remote AI workshop, including a TouchDesigner-specific segment (attendance counts toward your final project grade, see Grading), and your Digital Expo portfolio.</p>
+    </div>
+  </section>
+
+  <section id="final">
+    <div class="section-head">
+      <span class="eyebrow">Final Project</span>
+      <h2>Final Project</h2>
+    </div>
+    <p>This is a live group performance, in person, on Wednesday, December 2, within the 1&ndash;6 PM window. This matches Coding Music Fundamentals and Coding Art Fundamentals exactly. Solo projects are not allowed.</p>
+    <dl class="spec" style="margin-top:24px;">
+      <div><dt>Group size</dt><dd>Minimum 2 people, maximum 3.</dd></div>
+      <div><dt>Forming your group</dt><dd>Around Week 4, once rosters are settled, a chart goes out where each student checks off their own background (musician, visual artist, prior coding experience) plus notes, so students who don&rsquo;t know each other can find a match. Week 9 is the deadline to have a group formed. Unformed groups get assigned that day, and members exchange contact information.</dd></div>
+      <div><dt>TouchDesigner requirement</dt><dd>Every TouchDesigner-enrolled student in a group contributes at least one properly built, genuinely real-time network: audio-reactive, OSC/MIDI-driven, or generative, not a pre-rendered video played back with nothing live behind it.</dd></div>
+      <div><dt>Masters student leadership</dt><dd>Each group should include at least one Masters student, when enrollment allows. Masters students are expected to take a leading role in their group. It&rsquo;s a chance to practice the leadership and professionalism needed on mixed-experience teams, in school and afterward.</dd></div>
+      <div><dt>Connecting outward</dt><dd>Every group&rsquo;s TouchDesigner content needs to connect to at least one other piece of software or language, such as ChucK, p5.js, openFrameworks, or Ableton, or anything that speaks OSC, MIDI, or another live protocol. You aren&rsquo;t limited to this list; any tool that fits the piece works.</dd></div>
+      <div><dt>Reusing one project</dt><dd>If a group&rsquo;s project counts as the final for more than one of Luisa&rsquo;s three Fall 2026 courses, it has to incorporate each tool it&rsquo;s counting for: two tools if double-counted, all three if triple-counted.</dd></div>
+      <div><dt>Digital submission</dt><dd>Week 14 (Dec 9): a high-quality video/audio recording, due the same day, for grading and the Digital Expo portfolio. Specs go out by Week 12. It doesn&rsquo;t have to be a straight capture of the live show. This matches Coding Music Fundamentals and Coding Art Fundamentals exactly; there are no exceptions for any of the three courses.</dd></div>
+    </dl>
+  </section>
+
+  <section id="grading">
+    <div class="section-head">
+      <span class="eyebrow">Grading</span>
+      <h2>Grading</h2>
+    </div>
+    <div class="bar" style="margin-top:0;">
+      <span style="width:50%; background: var(--accent);"></span>
+      <span style="width:20%; background: color-mix(in srgb, var(--accent) 60%, var(--surface-2));"></span>
+      <span style="width:30%; background: color-mix(in srgb, var(--accent) 30%, var(--surface-2));"></span>
+    </div>
+    <div class="bar-legend">
+      <span><span class="dot" style="background:var(--accent);"></span>Weekly assignments: 50%</span>
+      <span><span class="dot" style="background:color-mix(in srgb, var(--accent) 60%, var(--surface-2));"></span>Midterm: 20%</span>
+      <span><span class="dot" style="background:color-mix(in srgb, var(--accent) 30%, var(--surface-2));"></span>Final project: 30%</span>
+    </div>
+    <h3 style="margin-top:32px; margin-bottom:12px; font-size:1.02rem;">Grade scale</h3>
+    <div class="scale-bar">
+      <div class="hp">HP<br>80&ndash;100</div>
+      <div class="p">P<br>60&ndash;79</div>
+      <div class="lp">LP<br>30&ndash;59</div>
+      <div class="nc">NC<br>0&ndash;29</div>
+    </div>
+    <p style="margin-top:24px; font-size:.92rem; color:var(--muted);">Attendance at the Week 14 AI workshop counts for 10% of your final project grade. If you miss it, you lose that part of your grade.</p>
+    <p style="margin-top:14px; font-size:.92rem; color:var(--muted);">If you miss 3 or more classes without an excused absence, you will receive a No Credit for the course. Sign in every class. Sessions are recorded, so you can catch up on content after a missed class, but that doesn&rsquo;t count as attendance credit.</p>
+  </section>
+
+  <section id="materials">
+    <div class="section-head">
+      <span class="eyebrow">Materials</span>
+      <h2>Materials</h2>
+    </div>
+    <ul class="plain">
+      <li>TouchDesigner (free, non-commercial license), installed in Week 1 in class.</li>
+      <li><strong>Your own laptop, all semester.</strong> No computer lab assumed. The heavier weeks (3D, Instancing, POPs) are scaled to what a typical laptop can handle.</li>
+      <li>A short video clip (your own, or footage of a researched artist&rsquo;s work), for Week 2.</li>
+      <li>Canvas, for all weekly <span class="mono">.toe</span> submissions, all semester.</li>
+      <li>A GitHub account, plus a YouTube or Vimeo account, for the Week 14 Digital Expo portfolio.</li>
+    </ul>
+  </section>
+
+  <footer>
+    <p>Intro to TouchDesigner &middot; CalArts, Fall 2026 &middot; Luisa Pinzon</p>
+  </footer>
+
+</div>
+</body>
+</html>

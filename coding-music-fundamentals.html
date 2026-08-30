@@ -1,0 +1,451 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Coding Music Fundamentals</title>
+<meta name="theme-color" content="#e5aa70">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* Palette pulled directly from luisapinzon.com: sand background, black-brown ink,
+     rust-red accent, Montserrat everywhere. Single fixed theme, matching the live site
+     (which has no dark mode) rather than adapting to the viewer's OS theme. */
+  :root {
+    --bg: #e5aa70;
+    --surface: color-mix(in srgb, #e5aa70 55%, #fff8ec);
+    --surface-2: color-mix(in srgb, #e5aa70 78%, #fff8ec);
+    --text: #3d2b1f;
+    --muted: #59260b;
+    --border: color-mix(in srgb, #a81c07 20%, #e5aa70);
+    --accent: #a81c07;
+    --accent-ink: #a81c07;
+    --on-accent: #fdf1e3;
+    --shadow: 0 1px 3px rgba(61,43,31,.16);
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Montserrat', system-ui, sans-serif;
+    font-size: 16.5px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: var(--accent); color: var(--on-accent); }
+  a { color: var(--accent); font-weight: 600; }
+  h1, h2, h3 { font-family: 'Montserrat', system-ui, sans-serif; font-weight: 800; text-wrap: balance; margin: 0; color: var(--text); }
+  .mono { font-family: 'Montserrat', sans-serif; font-weight: 600; }
+  .wrap { max-width: 780px; margin: 0 auto; padding: 0 24px; }
+  .eyebrow {
+    font-family: 'Montserrat', sans-serif;
+    font-size: .78rem;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 400;
+  }
+
+  /* nav */
+  nav {
+    position: sticky; top: 0; z-index: 10;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-inner {
+    max-width: 780px; margin: 0 auto; padding: 14px 24px;
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 16px; flex-wrap: wrap;
+  }
+  .nav-title { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1.02rem; text-transform: uppercase; letter-spacing: .02em; }
+  .nav-title a { color: var(--text); text-decoration: none; }
+  .nav-links { display: flex; gap: 20px; flex-wrap: wrap; font-size: .88rem; }
+  .nav-links a { color: var(--muted); text-decoration: none; }
+  .nav-links a:hover { color: var(--accent-ink); }
+  .nav-links a:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  /* hero */
+  header.hero { padding: 64px 0 40px; border-bottom: 1px solid var(--border); }
+  .hero h1 { font-size: clamp(2.1rem, 5.4vw, 3.1rem); font-weight: 800; line-height: 1.06; }
+  .hero .thesis { margin-top: 16px; font-size: 1.18rem; color: var(--muted); max-width: 60ch; }
+  .spec-sheet {
+    margin-top: 32px; display: grid; grid-template-columns: repeat(auto-fit, minmax(160px,1fr));
+    gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 10px; overflow: hidden;
+  }
+  .spec-item { background: var(--surface); padding: 12px 16px; }
+  .spec-item .k { font-family: 'Montserrat', sans-serif; font-size: .68rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+  .spec-item .v { margin-top: 4px; font-size: .93rem; font-weight: 500; }
+
+  section { padding: 56px 0; border-bottom: 1px solid var(--border); scroll-margin-top: 76px; }
+  section:last-of-type { border-bottom: none; }
+  .section-head { margin-bottom: 28px; }
+  .section-head h2 { font-size: 1.6rem; font-weight: 700; }
+  .section-head .eyebrow { display: block; margin-bottom: 8px; }
+
+  p { margin: 0 0 1em; max-width: 68ch; }
+  p:last-child { margin-bottom: 0; }
+
+  blockquote {
+    margin: 0; padding: 18px 22px; border-left: 3px solid var(--accent);
+    background: var(--surface); border-radius: 0 8px 8px 0; font-style: italic; color: var(--text);
+  }
+
+  .rhythm { display: flex; align-items: center; gap: 14px; margin: 28px 0; flex-wrap: wrap; }
+  .rhythm-step {
+    flex: 1 1 220px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+    padding: 16px 18px; box-shadow: var(--shadow);
+  }
+  .rhythm-step .k { font-family: 'Montserrat', sans-serif; font-size: .68rem; text-transform: uppercase; letter-spacing: .08em; color: var(--accent-ink); }
+  .rhythm-step p { margin-top: 6px; font-size: .93rem; color: var(--muted); }
+  .rhythm-arrow { font-size: 1.4rem; color: var(--accent); flex: 0 0 auto; }
+
+  .callout {
+    background: color-mix(in srgb, var(--accent) 10%, var(--surface));
+    border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--border));
+    border-radius: 10px; padding: 20px 22px; margin: 24px 0;
+  }
+  .callout .eyebrow { margin-bottom: 8px; }
+  .callout p { margin-bottom: .6em; font-size: .96rem; }
+  .callout p:last-child { margin-bottom: 0; }
+
+  ul.outcomes { margin: 0; padding-left: 1.2em; }
+  ul.outcomes li { margin-bottom: 10px; }
+  ul.outcomes li:last-child { margin-bottom: 0; }
+
+  .week-row { display: grid; grid-template-columns: 96px 1fr; gap: 20px; padding: 20px 0; border-top: 1px solid var(--border); }
+  .week-row:first-child { border-top: none; }
+  .week-row .wk { font-family: 'Montserrat', sans-serif; }
+  .week-row .wk .n { font-size: 1.3rem; font-weight: 700; display: block; }
+  .week-row .wk .d { font-size: .78rem; color: var(--muted); }
+  .week-row h3 { font-size: 1.06rem; font-weight: 600; margin-bottom: 6px; }
+  .week-row .desc { font-size: .95rem; color: var(--text); margin-bottom: 8px; }
+  .week-row ul.desc-list { margin: 0 0 8px; padding-left: 1.15em; font-size: .95rem; color: var(--text); }
+  .week-row ul.desc-list li { margin-bottom: 4px; }
+  .week-row .assign { font-size: .87rem; color: var(--muted); }
+  .week-row .assign .mono { color: var(--accent-ink); }
+  .week-row.shared {
+    grid-template-columns: 1fr; background: color-mix(in srgb, var(--accent) 8%, var(--surface));
+    border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--border)); border-top: 1px solid color-mix(in srgb, var(--accent) 30%, var(--border));
+    border-radius: 10px; padding: 18px 20px; margin: 10px 0;
+  }
+  .week-row.shared .tag { font-family: 'Montserrat', sans-serif; font-size: .68rem; text-transform: uppercase; letter-spacing: .08em; color: var(--accent-ink); display:block; margin-bottom: 6px; }
+
+  dl.spec { margin: 0; }
+  dl.spec > div { padding: 16px 0; border-top: 1px solid var(--border); display: grid; grid-template-columns: 180px 1fr; gap: 20px; }
+  dl.spec > div:first-child { border-top: none; }
+  dl.spec dt { font-family: 'Montserrat', sans-serif; font-size: .78rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+  dl.spec dd { margin: 0; font-size: .95rem; }
+
+  .bar { height: 10px; border-radius: 6px; overflow: hidden; display: flex; border: 1px solid var(--border); }
+  .bar span { display:block; height: 100%; }
+  .bar-legend { display: flex; gap: 18px; margin-top: 10px; flex-wrap: wrap; font-size: .82rem; color: var(--muted); }
+  .bar-legend .dot { display:inline-block; width:8px; height:8px; border-radius:2px; margin-right:6px; vertical-align: middle; }
+
+  .scale-bar { display: grid; grid-template-columns: repeat(4,1fr); border-radius: 6px; overflow: hidden; border: 1px solid var(--border); }
+  .scale-bar div { padding: 10px 8px; text-align: center; font-family: 'Montserrat', sans-serif; font-size: .78rem; }
+  .scale-bar .hp { background: var(--accent); color: var(--on-accent); }
+  .scale-bar .p { background: color-mix(in srgb, var(--accent) 55%, var(--surface-2)); }
+  .scale-bar .lp { background: color-mix(in srgb, var(--accent) 25%, var(--surface-2)); }
+  .scale-bar .nc { background: var(--surface-2); color: var(--muted); }
+
+  ul.plain { margin: 0; padding-left: 1.2em; }
+  ul.plain li { margin-bottom: 8px; }
+
+  footer { padding: 40px 0 64px; }
+  footer p { font-size: .85rem; color: var(--muted); }
+  footer a { color: var(--muted); }
+
+  @media (max-width: 560px) {
+    .week-row { grid-template-columns: 1fr; }
+    dl.spec > div { grid-template-columns: 1fr; gap: 4px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-title"><a href="#top">Coding Music Fundamentals</a></div>
+    <div class="nav-links">
+      <a href="#credit-load">Credit Load</a>
+      <a href="#overview">Overview</a>
+      <a href="#weekly">Weekly</a>
+      <a href="#final">Final Project</a>
+      <a href="#grading">Grading</a>
+      <a href="#materials">Materials</a>
+      <a href="index.html">&larr; All courses</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <header class="hero" id="top">
+    <span class="eyebrow">CalArts &middot; Fall 2026 &middot; Instructor: Luisa Pinzon</span>
+    <h1 style="margin-top:10px;">Coding Music Fundamentals</h1>
+    <p class="thesis">This course teaches ChucK, a programming language for sound, through a pre-recorded video series paired with a weekly in-person class. Each week, students bring in the assignment they made and share it with the class. The semester ends with a group performance built from pieces students write themselves, whether that&rsquo;s an instrument, a composition, or an interactive sound piece.</p>
+    <div class="spec-sheet">
+      <div class="spec-item"><div class="k">Meets</div><div class="v">Wed, 3:00&ndash;4:50 PM</div></div>
+      <div class="spec-item"><div class="k">Location</div><div class="v">Main Bldg, B214A</div></div>
+      <div class="spec-item"><div class="k">Credits</div><div class="v">3</div></div>
+      <div class="spec-item"><div class="k">Format</div><div class="v">Kadenze video series plus live class</div></div>
+    </div>
+  </header>
+
+  <section id="credit-load">
+    <div class="section-head">
+      <span class="eyebrow">Credit Load</span>
+      <h2>Credit Load</h2>
+    </div>
+    <p>This is a 3-credit course, following CalArts&rsquo; standard credit-hour policy: 45 hours of work per credit for BFA students, 60 hours per credit for Masters students. That comes to 135 total hours for BFA students and 180 for Masters students across the semester. In-class time adds up to about 25.7 hours over the semester. The rest is independent work: roughly 7.8 hours a week for BFA students, and roughly 11 hours a week for Masters students.</p>
+  </section>
+
+  <section id="overview">
+    <div class="section-head">
+      <span class="eyebrow">Overview</span>
+      <h2>Course Description</h2>
+    </div>
+    <blockquote>This course extends previous graphics related programming experience into the audio domain. ChucK, a strongly-timed computer music language, will be the focal language of the class, with opportunities to communicate to physical computing platforms like Arduino, or graphics frameworks like p5.js. Various facets of digital audio will be explored, including synthesis, analysis, and interactive performance tools for live performance or composition.</blockquote>
+
+    <p style="margin-top:24px;">The course follows Kadenze&rsquo;s <em>Introduction to Real-Time Audio Programming in ChucK</em>, a series of eight pre-recorded video sessions. Starting in Week 2, each class period has two parts:</p>
+
+    <div class="rhythm">
+      <div class="rhythm-step">
+        <div class="k">First half of class</div>
+        <p>Students share the assignment from the video they watched the previous week, and the class listens to the work together.</p>
+      </div>
+      <div class="rhythm-arrow">&#8594;</div>
+      <div class="rhythm-step">
+        <div class="k">Second half of class</div>
+        <p>The instructor previews the next video in plain language, so students can ask questions before watching it and completing that week&rsquo;s assignment on their own.</p>
+      </div>
+    </div>
+
+    <p>No musical background is required. This isn&rsquo;t a music-theory class. Week 1 covers just enough shared vocabulary (pitch, rhythm, timbre) to make later conversations easier. It&rsquo;s context, not a prerequisite.</p>
+
+    <h3 style="margin-top:36px; margin-bottom:14px; font-size:1.1rem;">Learning outcomes</h3>
+    <ul class="outcomes">
+      <li><strong>Foundational literacy in audio programming and sound systems.</strong> Explain and apply core concepts in audio programming, sound synthesis, and signal processing using ChucK.</li>
+      <li><strong>Create original works that integrate code, sound, and interactivity.</strong> Design and build digital instruments, generative compositions, or interactive audio pieces.</li>
+      <li><strong>Develop technical proficiency across music technology tools and workflows.</strong> Build and prototype sound-based systems using creative coding, hardware integration, and real-time audio-visual environments.</li>
+    </ul>
+    <p style="margin-top:14px; font-size:.92rem; color:var(--muted);">Masters students additionally build toward independent research beyond what&rsquo;s shown in class, taking a lead technical role in the required group final, and articulating the thinking behind their own work.</p>
+  </section>
+
+  <section id="weekly">
+    <div class="section-head">
+      <span class="eyebrow">Weekly Breakdown</span>
+      <h2>Weekly Schedule</h2>
+    </div>
+
+    <div class="callout">
+      <span class="eyebrow">Weekly homework, in one line</span>
+      <p>Watch that week&rsquo;s pre-recorded video and complete the assignment that goes with it, then present it in class. Assignments aren&rsquo;t submitted digitally: presenting in class is the deadline. Assignments not presented in class don&rsquo;t receive a grade, and weekly assignments combine for 50% of your final grade, so presenting each week matters.</p>
+      <p><strong>Final project:</strong> Week 13 is a live in-person performance and Week 14 is a required digital submission, identical to Coding Art Fundamentals and Intro to TouchDesigner. See Final Project below.</p>
+    </div>
+
+    <div class="week-row">
+      <div class="wk"><span class="n">01</span><span class="d">Sept 9</span></div>
+      <div>
+        <h3>Getting Started</h3>
+        <ul class="desc-list">
+          <li>Introductions and a relaxed conversation about music basics.</li>
+          <li>A short in-class demonstration on how we&rsquo;ll think about AI this semester, using a calculator exercise.</li>
+          <li>Installing ChucK and miniAudicle, and getting sound working on every laptop before leaving class.</li>
+        </ul>
+        <p class="assign">Assignment: look through a beginner music-basics site, and spend some time in a simple, free music-making app. No musical experience expected.</p>
+      </div>
+    </div>
+    <div class="week-row">
+      <div class="wk"><span class="n">02</span><span class="d">Sept 16</span></div>
+      <div>
+        <h3>First Sounds</h3>
+        <ul class="desc-list">
+          <li>What makes ChucK different: it&rsquo;s &ldquo;strongly timed,&rdquo; meaning code and sound stay precisely in sync.</li>
+          <li>The <span class="mono">=&gt;</span> operator, core data types, and how <span class="mono">now</span> works.</li>
+          <li><span class="mono">if</span>/<span class="mono">else</span>, <span class="mono">for</span>/<span class="mono">while</span> loops.</li>
+          <li>Building your first oscillator.</li>
+        </ul>
+        <p class="assign">Assignment: <span class="mono">Session 1 video</span>.</p>
+      </div>
+    </div>
+    <div class="week-row">
+      <div class="wk"><span class="n">03</span><span class="d">Sept 23</span></div>
+      <div>
+        <h3>Libraries, Randomness &amp; Arrays</h3>
+        <ul class="desc-list">
+          <li>ChucK&rsquo;s standard and math libraries: unit conversion, randomness, panning.</li>
+          <li>Arrays: declaring, indexing, and looping through them.</li>
+          <li>Using an array to build a melody instead of a single note.</li>
+        </ul>
+        <p class="assign">Assignment: <span class="mono">Session 2 video</span>.</p>
+      </div>
+    </div>
+    <div class="week-row">
+      <div class="wk"><span class="n">04</span><span class="d">Sept 30</span></div>
+      <div>
+        <h3>Working with Sound Files</h3>
+        <ul class="desc-list">
+          <li><span class="mono">SndBuf</span>, ChucK&rsquo;s object for playing sound files.</li>
+          <li>Looping and reverse playback, switching between samples.</li>
+          <li>The modulo operator, the technique behind a step sequencer.</li>
+        </ul>
+        <p class="assign">Assignment: <span class="mono">Session 3 video</span>.</p>
+      </div>
+    </div>
+    <div class="week-row">
+      <div class="wk"><span class="n">05</span><span class="d">Oct 7</span></div>
+      <div>
+        <h3>Functions &amp; Musical Structure</h3>
+        <ul class="desc-list">
+          <li>Writing a function and passing it arguments.</li>
+          <li>Local versus global scope.</li>
+          <li>Using functions to build chords and give a piece musical structure.</li>
+          <li>Recursion, through the classic factorial example.</li>
+        </ul>
+        <p class="assign">Assignment: <span class="mono">Session 4 video</span>.</p>
+      </div>
+    </div>
+    <div class="week-row">
+      <div class="wk"><span class="n">06</span><span class="d">Oct 14</span></div>
+      <div>
+        <h3>Synthesis &amp; Physical Models</h3>
+        <ul class="desc-list">
+          <li>Envelopes and ADSR shaping.</li>
+          <li>FM synthesis.</li>
+          <li>Filters and effects, including pitch-shifting and reverb.</li>
+          <li>Physical modeling instruments: a mandolin, a flute, a mallet instrument, shakers.</li>
+        </ul>
+        <p class="assign">Assignment: no separate assignment this week. This material is covered by the midterm instead (see Week 7).</p>
+      </div>
+    </div>
+    <div class="week-row shared">
+      <span class="tag">Shared across all three courses</span>
+      <h3 style="margin-bottom:6px;">Week 7 &middot; Oct 21 &middot; Midterm</h3>
+      <p class="desc" style="margin-bottom:0;">The midterm covers everything from Weeks 1 through 6, including the physical modeling material from Week 6. Share a piece built using this material. No fixed time slot this week; scheduling is coordinated across all three classes.</p>
+    </div>
+    <div class="week-row">
+      <div class="wk"><span class="n">08</span><span class="d">Oct 28</span></div>
+      <div>
+        <h3>Running Things at Once</h3>
+        <ul class="desc-list">
+          <li>The shred, ChucK&rsquo;s term for a single running thread of code, and <span class="mono">spork</span>, which launches a new one.</li>
+          <li>Managing several shreds with <span class="mono">Machine.add</span>, <span class="mono">remove</span>, and <span class="mono">replace</span>.</li>
+        </ul>
+        <p class="assign">Assignment: <span class="mono">Session 6 video</span>.</p>
+      </div>
+    </div>
+    <div class="week-row">
+      <div class="wk"><span class="n">09</span><span class="d">Nov 4</span></div>
+      <div>
+        <h3>Classes &amp; Building Instruments</h3>
+        <ul class="desc-list">
+          <li>Classes and objects: member variables, methods, public versus private, inheritance.</li>
+          <li>Building a reusable instrument instead of a one-off patch.</li>
+        </ul>
+        <p class="assign">Assignment: <span class="mono">Session 7 video</span>. This week is also the deadline to have your final group formed (minimum 2, maximum 3).</p>
+      </div>
+    </div>
+    <div class="week-row">
+      <div class="wk"><span class="n">10</span><span class="d">Nov 11</span></div>
+      <div>
+        <h3>Playing Live</h3>
+        <ul class="desc-list">
+          <li>Events, keyboard and mouse input.</li>
+          <li>MIDI in and out.</li>
+          <li>OSC: what lets a patch respond to a live performer.</li>
+        </ul>
+        <p class="assign">Assignment: <span class="mono">Session 8 video</span>. Your group&rsquo;s presentation slot for Dec 2 also goes out this week.</p>
+      </div>
+    </div>
+    <div class="week-row shared">
+      <span class="tag">Shared across all three courses</span>
+      <h3 style="margin-bottom:6px;">Week 11 &middot; Nov 18 &middot; Talking to Other Software</h3>
+      <p class="desc" style="margin-bottom:0;">Connecting ChucK outward: OSC to p5.js, MIDI to Ableton, using the same concepts from Session 8.</p>
+    </div>
+    <div class="week-row shared">
+      <span class="tag">Shared across all three courses</span>
+      <h3 style="margin-bottom:6px;">Week 12 &middot; Nov 25 &middot; A Visit from Stanford CCRMA</h3>
+      <p class="desc" style="margin-bottom:0;">A remote conversation with the research center where ChucK and ChuGL were built, plus 1:1 remote help slots. Specs for the Week 14 digital submission go out today.</p>
+    </div>
+    <div class="week-row shared">
+      <span class="tag">Shared across all three courses</span>
+      <h3 style="margin-bottom:6px;">Week 13 &middot; Dec 2 &middot; Final Performance</h3>
+      <p class="desc" style="margin-bottom:0;">Your group performs in person, 1 to 6 PM. Your slot within that window was sent out in Week 10.</p>
+    </div>
+    <div class="week-row shared">
+      <span class="tag">Shared across all three courses</span>
+      <h3 style="margin-bottom:6px;">Week 14 &middot; Dec 9 &middot; AI Workshop &amp; Portfolio Day</h3>
+      <p class="desc" style="margin-bottom:0;">Digital submission of your recorded performance is due, along with a required remote AI workshop (attendance counts toward your final project grade, see Grading) and your Digital Expo portfolio.</p>
+    </div>
+  </section>
+
+  <section id="final">
+    <div class="section-head">
+      <span class="eyebrow">Final Project</span>
+      <h2>Final Project</h2>
+    </div>
+    <p>This is a live group performance. Solo final projects aren&rsquo;t allowed. Everyone also submits a digital recording in Week 14, the same requirement as Coding Art Fundamentals and Intro to TouchDesigner. The only difference for this course is how weekly homework works, not the final project.</p>
+    <dl class="spec" style="margin-top:24px;">
+      <div><dt>Group size</dt><dd>Minimum 2 people, maximum 3.</dd></div>
+      <div><dt>Forming your group</dt><dd>Around Week 4, once rosters are settled, a chart goes out where each student checks off their own background (musician, visual artist, prior coding experience) plus notes, so students who don&rsquo;t know each other can find a match. Week 9 is the deadline to have a group formed. Unformed groups get assigned that day, and members exchange contact information.</dd></div>
+      <div><dt>ChucK requirement</dt><dd>Every group needs at least one properly coded ChucK instrument per person: real logic, synthesis, signal processing, sequencing, or control, not just triggering pre-made audio. A group of 3 needs at least 3.</dd></div>
+      <div><dt>Masters student leadership</dt><dd>Each group should include at least one Masters student, when enrollment allows. Masters students are expected to take a leading role in their group. It&rsquo;s a chance to practice the leadership and professionalism needed on mixed-experience teams, in school and afterward.</dd></div>
+      <div><dt>Connecting outward</dt><dd>Every group&rsquo;s ChucK content needs to connect to at least one other piece of software or language, such as Ableton, TouchDesigner, p5.js, or openFrameworks, or anything that speaks OSC, MIDI, or another live protocol. You aren&rsquo;t limited to this list; any tool that fits the piece works.</dd></div>
+      <div><dt>Reusing one project</dt><dd>If a group&rsquo;s project counts as the final for more than one of Luisa&rsquo;s three Fall 2026 courses, it has to incorporate each tool it&rsquo;s counting for: two tools if double-counted, all three if triple-counted.</dd></div>
+      <div><dt>Presenting</dt><dd>Week 13 (Dec 2), in person, 1&ndash;6 PM. Your group&rsquo;s exact slot inside that window is sent three weeks ahead, by Week 10.</dd></div>
+      <div><dt>Digital submission</dt><dd>Week 14 (Dec 9): a high-quality video/audio recording of the performance, doubling as portfolio material. Specs go out two weeks ahead, by Week 12. It doesn&rsquo;t have to be a straight capture of the live show; groups can re-record for better quality.</dd></div>
+    </dl>
+  </section>
+
+  <section id="grading">
+    <div class="section-head">
+      <span class="eyebrow">Grading</span>
+      <h2>Grading</h2>
+    </div>
+    <div class="bar" style="margin-top:0;">
+      <span style="width:50%; background: var(--accent);"></span>
+      <span style="width:20%; background: color-mix(in srgb, var(--accent) 60%, var(--surface-2));"></span>
+      <span style="width:30%; background: color-mix(in srgb, var(--accent) 30%, var(--surface-2));"></span>
+    </div>
+    <div class="bar-legend">
+      <span><span class="dot" style="background:var(--accent);"></span>Weekly assignments: 50%</span>
+      <span><span class="dot" style="background:color-mix(in srgb, var(--accent) 60%, var(--surface-2));"></span>Midterm: 20%</span>
+      <span><span class="dot" style="background:color-mix(in srgb, var(--accent) 30%, var(--surface-2));"></span>Final project: 30%</span>
+    </div>
+    <h3 style="margin-top:32px; margin-bottom:12px; font-size:1.02rem;">Grade scale</h3>
+    <div class="scale-bar">
+      <div class="hp">HP<br>80&ndash;100</div>
+      <div class="p">P<br>60&ndash;79</div>
+      <div class="lp">LP<br>30&ndash;59</div>
+      <div class="nc">NC<br>0&ndash;29</div>
+    </div>
+    <p style="margin-top:24px; font-size:.92rem; color:var(--muted);">Attendance at the Week 14 AI workshop counts for 10% of your final project grade. If you miss it, you lose that part of your grade.</p>
+    <p style="margin-top:14px; font-size:.92rem; color:var(--muted);">If you miss 3 or more classes without an excused absence, you will receive a No Credit for the course. Sign in with the TA every class. A Zoom link is available if you truly can&rsquo;t be in the room, as long as you request it ahead of time.</p>
+  </section>
+
+  <section id="materials">
+    <div class="section-head">
+      <span class="eyebrow">Materials</span>
+      <h2>Materials</h2>
+    </div>
+    <ul class="plain">
+      <li>ChucK (free, open source) and the miniAudicle IDE, installed and tested in Week 1.</li>
+      <li>A laptop that can run audio, Mac or PC, plus a charger and headphones if you have them.</li>
+      <li><a href="https://www.musictheory.net/lessons">musictheory.net</a> or <a href="https://www.teoria.com/">teoria.com</a>, for Week 1 self-study.</li>
+      <li>A GitHub account, plus a hosting account (Vimeo, SoundCloud, or YouTube) for the Week 14 Digital Expo portfolio.</li>
+    </ul>
+  </section>
+
+  <footer>
+    <p>Coding Music Fundamentals &middot; CalArts, Fall 2026 &middot; Luisa Pinzon</p>
+  </footer>
+
+</div>
+</body>
+</html>

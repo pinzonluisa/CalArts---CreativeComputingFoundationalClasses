@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Creative Computing Foundations</title>
+<meta name="theme-color" content="#e5aa70">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* Palette pulled directly from luisapinzon.com: sand background, black-brown ink,
+     rust-red accent, Montserrat everywhere. Single fixed theme, matching the live site
+     (which has no dark mode). The three lane colors are tonal variants within that same
+     warm family (rust, terracotta, umber), not fabricated hues. */
+  :root {
+    --bg: #e5aa70;
+    --surface: color-mix(in srgb, #e5aa70 55%, #fff8ec);
+    --surface-2: color-mix(in srgb, #e5aa70 78%, #fff8ec);
+    --text: #3d2b1f;
+    --muted: #59260b;
+    --border: color-mix(in srgb, #a81c07 18%, #e5aa70);
+    --shadow: 0 1px 3px rgba(61,43,31,.16);
+
+    --chuck: #a81c07;
+    --caf: #c9642f;
+    --td: #6b4a2f;
+    --shared: #3d2b1f;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: 'Montserrat', system-ui, sans-serif;
+    font-size: 16.5px; line-height: 1.65; -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3 { font-family: 'Montserrat', system-ui, sans-serif; font-weight: 800; text-wrap: balance; margin: 0; color: var(--text); }
+  .mono { font-family: 'Montserrat', sans-serif; font-weight: 600; }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 0 24px; }
+  a { color: inherit; }
+  .eyebrow {
+    font-family: 'Montserrat', sans-serif; font-size: .78rem; letter-spacing: .16em;
+    text-transform: uppercase; color: var(--muted); font-weight: 400;
+  }
+
+  header.hero { padding: 72px 0 48px; }
+  .hero h1 { font-size: clamp(2.3rem, 6vw, 3.4rem); font-weight: 800; line-height: 1.05; margin-top: 10px; }
+  .hero p.thesis { margin-top: 18px; font-size: 1.2rem; color: var(--muted); max-width: 62ch; }
+
+  section.credit-load { padding: 0 0 48px; }
+  section.credit-load p { color: var(--muted); max-width: 68ch; margin: 0; }
+
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 18px; padding: 8px 0 56px; }
+  .tile {
+    display: block; text-decoration: none; color: var(--text);
+    background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+    padding: 22px 22px 20px; box-shadow: var(--shadow);
+    border-top: 4px solid var(--tile-accent);
+    transition: transform .15s ease, box-shadow .15s ease;
+  }
+  .tile:hover { transform: translateY(-2px); }
+  .tile:focus-visible { outline: 2px solid var(--tile-accent); outline-offset: 3px; }
+  .tile .k { font-family: 'Montserrat', sans-serif; font-size: .7rem; text-transform: uppercase; letter-spacing: .08em; color: var(--tile-accent); }
+  .tile h2 { font-size: 1.28rem; font-weight: 700; margin-top: 8px; }
+  .tile p { font-size: .92rem; color: var(--muted); margin: 10px 0 16px; }
+  .tile .meta { font-family: 'Montserrat', sans-serif; font-size: .78rem; color: var(--muted); display: flex; justify-content: space-between; align-items: center; }
+  .tile .go { color: var(--tile-accent); font-weight: 600; }
+
+  section.together { padding: 8px 0 64px; border-top: 1px solid var(--border); padding-top: 48px; }
+  section.together .section-head { margin-bottom: 26px; }
+  section.together h2 { font-size: 1.5rem; font-weight: 700; }
+  section.together p.lede { color: var(--muted); max-width: 68ch; margin-top: 10px; }
+
+  .timeline { margin-top: 32px; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 24px 22px 20px; box-shadow: var(--shadow); overflow-x: auto; }
+  .tl-row { display: grid; grid-template-columns: 116px repeat(14, 1fr); gap: 4px; align-items: center; margin-bottom: 6px; min-width: 660px; }
+  .tl-row:last-of-type { margin-bottom: 0; }
+  .tl-label { font-family: 'Montserrat', sans-serif; font-size: .72rem; color: var(--muted); white-space: nowrap; }
+  .seg { height: 16px; border-radius: 3px; background: var(--surface-2); }
+  .seg-own { opacity: .9; }
+  .seg-shared { background: var(--shared); opacity: .85; }
+  .tl-weeks { display: grid; grid-template-columns: 116px repeat(14, 1fr); gap: 4px; min-width: 660px; margin-top: 8px; }
+  .tl-weeks span { text-align: center; font-family: 'Montserrat', sans-serif; font-size: .66rem; color: var(--muted); }
+  .tl-legend { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 20px; font-size: .82rem; color: var(--muted); }
+  .tl-legend .dot { display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-right: 6px; vertical-align: middle; }
+  .tl-note { margin-top: 16px; font-size: .85rem; color: var(--muted); }
+
+  footer { padding: 40px 0 72px; border-top: 1px solid var(--border); }
+  footer p { font-size: .85rem; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header class="hero">
+    <span class="eyebrow">CalArts &middot; Fall 2026 &middot; Instructor: Luisa Pinzon</span>
+    <h1>Creative Computing Foundations</h1>
+    <p class="thesis">Coding Music Fundamentals, Coding Art Fundamentals, and Intro to TouchDesigner are three separate courses taught in the same semester, each meeting on its own weekly schedule. Each course covers its own material and has its own weekly work. They share a common calendar, and each course&rsquo;s final project must connect to at least one of the other two.</p>
+  </header>
+
+  <section class="credit-load">
+    <span class="eyebrow">Credit Load</span>
+    <p style="margin-top:8px;">All three courses are 3 credits, and follow CalArts&rsquo; standard credit-hour policy: 45 hours of work per credit for BFA students, 60 hours per credit for Masters students. That&rsquo;s 135 total hours for BFA students and 180 for Masters students across the semester, per course. On top of class time, that works out to roughly 7.8 hours of independent work a week for BFA students, and roughly 11 hours a week for Masters students. This workload is per course; it doesn&rsquo;t shrink for a student taking more than one of the three in the same semester.</p>
+  </section>
+
+  <div class="tiles">
+    <a class="tile" style="--tile-accent: #a81c07;" href="coding-music-fundamentals.html">
+      <div class="k">ChucK</div>
+      <h2>Coding Music Fundamentals</h2>
+      <p>A pre-recorded video series paired with a weekly class. Students learn ChucK by building sound step by step, then perform a final piece as a group.</p>
+      <div class="meta"><span>Wed 3:00&ndash;4:50 PM</span><span class="go">View site &rarr;</span></div>
+    </a>
+    <a class="tile" style="--tile-accent: #c9642f;" href="coding-art-fundamentals.html">
+      <div class="k">p5.js &middot; openFrameworks</div>
+      <h2>Coding Art Fundamentals</h2>
+      <p>Starts in p5.js, moves into openFrameworks and C++ halfway through. The same ideas, taught twice, in two different languages.</p>
+      <div class="meta"><span>Wed 5:00&ndash;6:50 PM</span><span class="go">View site &rarr;</span></div>
+    </a>
+    <a class="tile" style="--tile-accent: #6b4a2f;" href="touchdesigner.html">
+      <div class="k">TouchDesigner</div>
+      <h2>Intro to TouchDesigner</h2>
+      <p>A weekly hands-on class in TouchDesigner, building from a simple color palette up to real-time, audio-reactive visuals.</p>
+      <div class="meta"><span>Wed 1:00&ndash;2:50 PM</span><span class="go">View site &rarr;</span></div>
+    </a>
+  </div>
+
+  <section class="together">
+    <div class="section-head">
+      <span class="eyebrow">Schedule</span>
+      <h2>Calendar</h2>
+      <p class="lede">Each course teaches its own weekly material. But at the midterm, and again from Week 11 through the end of the semester, all three classes are doing the same thing at the same time.</p>
+    </div>
+
+    <div class="timeline">
+      <div class="tl-row">
+        <span class="tl-label">ChucK</span>
+        <span class="seg seg-own" style="background: var(--chuck);"></span>
+        <span class="seg seg-own" style="background: var(--chuck);"></span>
+        <span class="seg seg-own" style="background: var(--chuck);"></span>
+        <span class="seg seg-own" style="background: var(--chuck);"></span>
+        <span class="seg seg-own" style="background: var(--chuck);"></span>
+        <span class="seg seg-own" style="background: var(--chuck);"></span>
+        <span class="seg seg-shared"></span>
+        <span class="seg seg-own" style="background: var(--chuck);"></span>
+        <span class="seg seg-own" style="background: var(--chuck);"></span>
+        <span class="seg seg-own" style="background: var(--chuck);"></span>
+        <span class="seg seg-shared"></span>
+        <span class="seg seg-shared"></span>
+        <span class="seg seg-shared"></span>
+        <span class="seg seg-shared"></span>
+      </div>
+      <div class="tl-row">
+        <span class="tl-label">Coding Art</span>
+        <span class="seg seg-own" style="background: var(--caf);"></span>
+        <span class="seg seg-own" style="background: var(--caf);"></span>
+        <span class="seg seg-own" style="background: var(--caf);"></span>
+        <span class="seg seg-own" style="background: var(--caf);"></span>
+        <span class="seg seg-own" style="background: var(--caf);"></span>
+        <span class="seg seg-own" style="background: var(--caf);"></span>
+        <span class="seg seg-shared"></span>
+        <span class="seg seg-own" style="background: var(--caf);"></span>
+        <span class="seg seg-own" style="background: var(--caf);"></span>
+        <span class="seg seg-own" style="background: var(--caf);"></span>
+        <span class="seg seg-shared"></span>
+        <span class="seg seg-shared"></span>
+        <span class="seg seg-shared"></span>
+        <span class="seg seg-shared"></span>
+      </div>
+      <div class="tl-row">
+        <span class="tl-label">TouchDesigner</span>
+        <span class="seg seg-own" style="background: var(--td);"></span>
+        <span class="seg seg-own" style="background: var(--td);"></span>
+        <span class="seg seg-own" style="background: var(--td);"></span>
+        <span class="seg seg-own" style="background: var(--td);"></span>
+        <span class="seg seg-own" style="background: var(--td);"></span>
+        <span class="seg seg-own" style="background: var(--td);"></span>
+        <span class="seg seg-shared"></span>
+        <span class="seg seg-own" style="background: var(--td);"></span>
+        <span class="seg seg-own" style="background: var(--td);"></span>
+        <span class="seg seg-own" style="background: var(--td);"></span>
+        <span class="seg seg-shared"></span>
+        <span class="seg seg-shared"></span>
+        <span class="seg seg-shared"></span>
+        <span class="seg seg-shared"></span>
+      </div>
+      <div class="tl-weeks">
+        <span></span>
+        <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span>
+        <span>8</span><span>9</span><span>10</span><span>11</span><span>12</span><span>13</span><span>14</span>
+      </div>
+      <div class="tl-legend">
+        <span><span class="dot" style="background:var(--chuck);"></span>ChucK content</span>
+        <span><span class="dot" style="background:var(--caf);"></span>Coding Art content</span>
+        <span><span class="dot" style="background:var(--td);"></span>TouchDesigner content</span>
+        <span><span class="dot" style="background:var(--shared);"></span>Shared: midterm, groups deadline, CCRMA, final performance, digital submission</span>
+      </div>
+      <p class="tl-note">Week 7 is the shared midterm. Week 9 is the deadline for final groups. Weeks 12 through 14 are the shared closing run: a remote CCRMA visit during Fall Break (Thanksgiving), the in-person final performance, and digital submission day.</p>
+    </div>
+  </section>
+
+  <footer>
+    <p>Creative Computing Foundations &middot; CalArts, Fall 2026 &middot; Luisa Pinzon</p>
+  </footer>
+
+</div>
+</body>
+</html>

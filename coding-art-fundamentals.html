@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Coding Art Fundamentals</title>
+<meta name="theme-color" content="#e5aa70">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* Palette pulled directly from luisapinzon.com: sand background, black-brown ink,
+     Montserrat everywhere. This course's own lane accent (terracotta) is a tint
+     between the site's sand background and its rust-red accent, single fixed theme. */
+  :root {
+    --bg: #e5aa70;
+    --surface: color-mix(in srgb, #e5aa70 55%, #fff8ec);
+    --surface-2: color-mix(in srgb, #e5aa70 78%, #fff8ec);
+    --text: #3d2b1f;
+    --muted: #59260b;
+    --border: color-mix(in srgb, #c9642f 22%, #e5aa70);
+    --accent: #c9642f;
+    --accent-ink: #c9642f;
+    --on-accent: #fdf1e3;
+    --shadow: 0 1px 3px rgba(61,43,31,.16);
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Montserrat', system-ui, sans-serif;
+    font-size: 16.5px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: var(--accent); color: var(--on-accent); }
+  a { color: var(--accent); font-weight: 600; }
+  h1, h2, h3 { font-family: 'Montserrat', system-ui, sans-serif; font-weight: 800; text-wrap: balance; margin: 0; color: var(--text); }
+  .mono { font-family: 'Montserrat', sans-serif; font-weight: 600; }
+  .wrap { max-width: 780px; margin: 0 auto; padding: 0 24px; }
+  .eyebrow {
+    font-family: 'Montserrat', sans-serif;
+    font-size: .78rem;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 400;
+  }
+
+  nav {
+    position: sticky; top: 0; z-index: 10;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-inner {
+    max-width: 780px; margin: 0 auto; padding: 14px 24px;
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 16px; flex-wrap: wrap;
+  }
+  .nav-title { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1.02rem; text-transform: uppercase; letter-spacing: .02em; }
+  .nav-title a { color: var(--text); text-decoration: none; }
+  .nav-links { display: flex; gap: 20px; flex-wrap: wrap; font-size: .88rem; }
+  .nav-links a { color: var(--muted); text-decoration: none; }
+  .nav-links a:hover { color: var(--accent-ink); }
+  .nav-links a:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  header.hero { padding: 64px 0 40px; border-bottom: 1px solid var(--border); }
+  .hero h1 { font-size: clamp(2.1rem, 5.4vw, 3.1rem); font-weight: 800; line-height: 1.06; }
+  .hero .thesis { margin-top: 16px; font-size: 1.18rem; color: var(--muted); max-width: 60ch; }
+  .spec-sheet {
+    margin-top: 32px; display: grid; grid-template-columns: repeat(auto-fit, minmax(160px,1fr));
+    gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 10px; overflow: hidden;
+  }
+  .spec-item { background: var(--surface); padding: 12px 16px; }
+  .spec-item .k { font-family: 'Montserrat', sans-serif; font-size: .68rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+  .spec-item .v { margin-top: 4px; font-size: .93rem; font-weight: 500; }
+
+  section { padding: 56px 0; border-bottom: 1px solid var(--border); scroll-margin-top: 76px; }
+  section:last-of-type { border-bottom: none; }
+  .section-head { margin-bottom: 28px; }
+  .section-head h2 { font-size: 1.6rem; font-weight: 700; }
+  .section-head .eyebrow { display: block; margin-bottom: 8px; }
+
+  p { margin: 0 0 1em; max-width: 68ch; }
+  p:last-child { margin-bottom: 0; }
+
+  .split { display: flex; align-items: stretch; gap: 14px; margin: 28px 0; flex-wrap: wrap; }
+  .split-step {
+    flex: 1 1 220px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+    padding: 16px 18px; box-shadow: var(--shadow);
+  }
+  .split-step .k { font-family: 'Montserrat', sans-serif; font-size: .68rem; text-transform: uppercase; letter-spacing: .08em; color: var(--accent-ink); }
+  .split-step p { margin-top: 6px; font-size: .93rem; color: var(--muted); }
+  .split-arrow { font-size: 1.4rem; color: var(--accent); flex: 0 0 auto; align-self: center; }
+
+  .callout {
+    background: color-mix(in srgb, var(--accent) 10%, var(--surface));
+    border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--border));
+    border-radius: 10px; padding: 20px 22px; margin: 24px 0;
+  }
+  .callout .eyebrow { margin-bottom: 8px; }
+  .callout p { margin-bottom: .6em; font-size: .96rem; }
+  .callout p:last-child { margin-bottom: 0; }
+
+  ul.outcomes { margin: 0; padding-left: 1.2em; }
+  ul.outcomes li { margin-bottom: 10px; }
+  ul.outcomes li:last-child { margin-bottom: 0; }
+
+  .week-row { display: grid; grid-template-columns: 96px 1fr; gap: 20px; padding: 20px 0; border-top: 1px solid var(--border); }
+  .week-row:first-child { border-top: none; }
+  .week-row .wk { font-family: 'Montserrat', sans-serif; }
+  .week-row .wk .n { font-size: 1.3rem; font-weight: 700; display: block; }
+  .week-row .wk .d { font-size: .78rem; color: var(--muted); }
+  .week-row .wk .lang { display:inline-block; margin-top:6px; font-size:.66rem; padding:2px 6px; border-radius:4px; background: var(--surface-2); color: var(--muted); }
+  .week-row h3 { font-size: 1.06rem; font-weight: 600; margin-bottom: 6px; }
+  .week-row .desc { font-size: .95rem; color: var(--text); margin-bottom: 8px; }
+  .week-row ul.desc-list { margin: 0 0 8px; padding-left: 1.15em; font-size: .95rem; color: var(--text); }
+  .week-row ul.desc-list li { margin-bottom: 4px; }
+  .week-row .assign { font-size: .87rem; color: var(--muted); }
+  .week-row .assign .mono { color: var(--accent-ink); }
+  .week-row.shared {
+    grid-template-columns: 1fr; background: color-mix(in srgb, var(--accent) 8%, var(--surface));
+    border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--border));
+    border-radius: 10px; padding: 18px 20px; margin: 10px 0;
+  }
+  .week-row.shared .tag { font-family: 'Montserrat', sans-serif; font-size: .68rem; text-transform: uppercase; letter-spacing: .08em; color: var(--accent-ink); display:block; margin-bottom: 6px; }
+
+  dl.spec { margin: 0; }
+  dl.spec > div { padding: 16px 0; border-top: 1px solid var(--border); display: grid; grid-template-columns: 180px 1fr; gap: 20px; }
+  dl.spec > div:first-child { border-top: none; }
+  dl.spec dt { font-family: 'Montserrat', sans-serif; font-size: .78rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+  dl.spec dd { margin: 0; font-size: .95rem; }
+
+  .bar { height: 10px; border-radius: 6px; overflow: hidden; display: flex; border: 1px solid var(--border); }
+  .bar span { display:block; height: 100%; }
+  .bar-legend { display: flex; gap: 18px; margin-top: 10px; flex-wrap: wrap; font-size: .82rem; color: var(--muted); }
+  .bar-legend .dot { display:inline-block; width:8px; height:8px; border-radius:2px; margin-right:6px; vertical-align: middle; }
+
+  .scale-bar { display: grid; grid-template-columns: repeat(4,1fr); border-radius: 6px; overflow: hidden; border: 1px solid var(--border); }
+  .scale-bar div { padding: 10px 8px; text-align: center; font-family: 'Montserrat', sans-serif; font-size: .78rem; }
+  .scale-bar .hp { background: var(--accent); color: var(--on-accent); }
+  .scale-bar .p { background: color-mix(in srgb, var(--accent) 55%, var(--surface-2)); }
+  .scale-bar .lp { background: color-mix(in srgb, var(--accent) 25%, var(--surface-2)); }
+  .scale-bar .nc { background: var(--surface-2); color: var(--muted); }
+
+  ul.plain { margin: 0; padding-left: 1.2em; }
+  ul.plain li { margin-bottom: 8px; }
+
+  footer { padding: 40px 0 64px; }
+  footer p { font-size: .85rem; color: var(--muted); }
+  footer a { color: var(--muted); }
+
+  @media (max-width: 560px) {
+    .week-row { grid-template-columns: 1fr; }
+    dl.spec > div { grid-template-columns: 1fr; gap: 4px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-title"><a href="#top">Coding Art Fundamentals</a></div>
+    <div class="nav-links">
+      <a href="#credit-load">Credit Load</a>
+      <a href="#overview">Overview</a>
+      <a href="#weekly">Weekly</a>
+      <a href="#final">Final Project</a>
+      <a href="#grading">Grading</a>
+      <a href="#materials">Materials</a>
+      <a href="index.html">&larr; All courses</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <header class="hero" id="top">
+    <span class="eyebrow">CalArts &middot; Fall 2026 &middot; Instructor: Luisa Pinzon</span>
+    <h1 style="margin-top:10px;">Coding Art Fundamentals</h1>
+    <p class="thesis">This course teaches the same programming ideas twice: first in p5.js, then in openFrameworks and C++. Students build something new almost every week, and the semester ends with a group project that connects to at least one other course's software.</p>
+    <div class="spec-sheet">
+      <div class="spec-item"><div class="k">Meets</div><div class="v">Wed, 5:00&ndash;6:50 PM</div></div>
+      <div class="spec-item"><div class="k">Location</div><div class="v">TBD</div></div>
+      <div class="spec-item"><div class="k">Credits</div><div class="v">3</div></div>
+      <div class="spec-item"><div class="k">Format</div><div class="v">p5.js, then openFrameworks/C++</div></div>
+    </div>
+  </header>
+
+  <section id="credit-load">
+    <div class="section-head">
+      <span class="eyebrow">Credit Load</span>
+      <h2>Credit Load</h2>
+    </div>
+    <p>This is a 3-credit course, following CalArts&rsquo; standard credit-hour policy: 45 hours of work per credit for BFA students, 60 hours per credit for Masters students. That comes to 135 total hours for BFA students and 180 for Masters students across the semester. In-class time adds up to about 25.7 hours over the semester. The rest is independent work: roughly 7.8 hours a week for BFA students, and roughly 11 hours a week for Masters students.</p>
+  </section>
+
+  <section id="overview">
+    <div class="section-head">
+      <span class="eyebrow">Overview</span>
+      <h2>Course Description</h2>
+    </div>
+    <p>Most students take this alongside Coding Music Fundamentals in the same semester. The goal isn&rsquo;t just a shared calendar. It&rsquo;s the same programming vocabulary landing in the same week in both rooms, so a student hears &ldquo;for loop&rdquo; or &ldquo;function&rdquo; from two instructors within the same seven days, once for sound and once for image.</p>
+    <p>This course is two languages, back to back. <strong>p5.js first</strong>, for easy entry and immediate visual feedback, then <strong>openFrameworks/C++</strong> for the back half, reinforcing the same concepts in a compiled, typed, object-oriented environment, laying groundwork for next semester&rsquo;s C++ track.</p>
+
+    <div class="split">
+      <div class="split-step">
+        <div class="k">Weeks 1&ndash;7 &middot; p5.js</div>
+        <p>Variables, conditionals, loops, randomness, arrays, functions, and classes, ending in the midterm.</p>
+      </div>
+      <div class="split-arrow">&#8594;</div>
+      <div class="split-step">
+        <div class="k">Weeks 8&ndash;14 &middot; openFrameworks / C++</div>
+        <p>The same ideas again, in a compiled language, arriving at vectors and noise: a working, well-understood mover, not a particle system.</p>
+      </div>
+    </div>
+
+    <h3 style="margin-top:36px; margin-bottom:14px; font-size:1.1rem;">Submission model</h3>
+    <p>Every weekly assignment is submitted as a live <strong>GitHub Pages</strong> link hosting that week&rsquo;s sketch, not just a committed repo. This gets set up together in class in Week 2, then is treated as understood for the rest of the semester.</p>
+  </section>
+
+  <section id="weekly">
+    <div class="section-head">
+      <span class="eyebrow">Weekly Breakdown</span>
+      <h2>Weekly Schedule</h2>
+    </div>
+
+    <div class="callout">
+      <span class="eyebrow">Weekly homework, in one line</span>
+      <p>Classes get recorded and the class code isn&rsquo;t handed out. Homework is: rewatch the recording, redo what we built in class that day, then add one small thing, such as a renamed variable, an extra function, or an extra loop. Due <strong>11:59 PM the night of class</strong>, then submission closes, no late work.</p>
+      <p><strong>Final project:</strong> identical structure and deadlines to Coding Music Fundamentals and Intro to TouchDesigner. See Final Project below.</p>
+      <p><strong>Standing assignment, given in Week 1:</strong> read the Vectors and Noise chapters of <em>The Nature of Code</em>, or watch the equivalent Coding Train video series. Do this at your own pace, but the Vectors material needs to be done by Week 10 and the Noise material by Week 11. Each of those weeks has a short in-class quiz checking basic understanding, not coding fluency.</p>
+    </div>
+
+    <div class="week-row">
+      <div class="wk"><span class="n">01</span><span class="d">Sept 9</span><span class="lang">p5.js</span></div>
+      <div>
+        <h3>Foundations Review</h3>
+        <ul class="desc-list">
+          <li>Installing VS Code and the p5.js local template together in class.</li>
+          <li>A live instructor demo introducing XY coordinates and RGB color on screen.</li>
+        </ul>
+        <p class="assign">Assignment: a short written description of color, coordinates, and sine/cosine, submitted as text.</p>
+      </div>
+    </div>
+    <div class="week-row">
+      <div class="wk"><span class="n">02</span><span class="d">Sept 16</span><span class="lang">p5.js</span></div>
+      <div>
+        <h3>First Real Code</h3>
+        <ul class="desc-list">
+          <li>GitHub Pages goes live: your first hosted assignment.</li>
+          <li>Variables, <span class="mono">setup()</span>/<span class="mono">draw()</span>, <span class="mono">if</span>/<span class="mono">else</span>, and <span class="mono">for</span>/<span class="mono">while</span> loops.</li>
+          <li>Drawing shapes at XY positions.</li>
+        </ul>
+        <p class="assign">Assignment: redo today&rsquo;s class exercise, plus one small addition.</p>
+      </div>
+    </div>
+    <div class="week-row">
+      <div class="wk"><span class="n">03</span><span class="d">Sept 23</span><span class="lang">p5.js</span></div>
+      <div>
+        <h3>Randomness, Arrays &amp; Sine/Cosine</h3>
+        <ul class="desc-list">
+          <li>A random-driven shape.</li>
+          <li>An array-driven row of shapes.</li>
+          <li>A shape oscillating with <span class="mono">sin()</span>/<span class="mono">cos()</span>.</li>
+          <li>One combined piece pulling all three together.</li>
+        </ul>
+        <p class="assign">Assignment: redo today&rsquo;s class exercise, plus one small addition.</p>
+      </div>
+    </div>
+    <div class="week-row">
+      <div class="wk"><span class="n">04</span><span class="d">Sept 30</span><span class="lang">p5.js</span></div>
+      <div>
+        <h3>Modulo</h3>
+        <ul class="desc-list">
+          <li>The modulo operator, and how it&rsquo;s used to index into an array.</li>
+          <li>Soft lines drifting around the canvas, each drawn from a small array of trailing points connected end to end.</li>
+          <li>Using modulo indexing so each line always closes into a loop.</li>
+        </ul>
+        <p class="assign">Assignment: redo today&rsquo;s class exercise, plus one small addition.</p>
+      </div>
+    </div>
+    <div class="week-row">
+      <div class="wk"><span class="n">05</span><span class="d">Oct 7</span><span class="lang">p5.js</span></div>
+      <div>
+        <h3>Functions &amp; Oscillation Revisited</h3>
+        <ul class="desc-list">
+          <li>Declaring and calling functions.</li>
+          <li>Local versus global scope.</li>
+          <li>Using a function to add oscillating movement, revisiting Week 3&rsquo;s sine/cosine.</li>
+        </ul>
+        <p class="assign">Assignment: redo today&rsquo;s class exercise, plus one small addition.</p>
+      </div>
+    </div>
+    <div class="week-row">
+      <div class="wk"><span class="n">06</span><span class="d">Oct 14</span><span class="lang">p5.js</span></div>
+      <div>
+        <h3>Classes</h3>
+        <ul class="desc-list">
+          <li>A custom class: constructor, member variables, <span class="mono">display()</span>/<span class="mono">update()</span> methods.</li>
+          <li>Getting two instances on screen.</li>
+          <li>Pre-midterm consolidation.</li>
+        </ul>
+        <p class="assign">Assignment: no separate assignment this week. This material is covered by the midterm instead (see Week 7).</p>
+      </div>
+    </div>
+    <div class="week-row shared">
+      <span class="tag">Shared across all three courses</span>
+      <h3 style="margin-bottom:6px;">Week 7 &middot; Oct 21 &middot; Midterm</h3>
+      <p class="desc" style="margin-bottom:0;">The midterm covers everything from Weeks 1 through 6, including the custom class from Week 6. An interactive p5.js sketch demonstrating variables, conditionals, loops, randomness, arrays, a custom function, and a custom class. No fixed time slot; scheduling is coordinated across all three classes.</p>
+    </div>
+    <div class="week-row">
+      <div class="wk"><span class="n">08</span><span class="d">Oct 28</span><span class="lang">oF / C++</span></div>
+      <div>
+        <h3>oF/C++ Onboarding, and Port to C++</h3>
+        <ul class="desc-list">
+          <li>C++ syntax and oF&rsquo;s <span class="mono">setup()</span>/<span class="mono">update()</span>/<span class="mono">draw()</span> structure.</li>
+          <li>Header files (<span class="mono">.h</span>/<span class="mono">.cpp</span>).</li>
+          <li>Porting Week 6&rsquo;s class into a C++ class.</li>
+        </ul>
+        <p class="assign">Assignment: redo today&rsquo;s class exercise, plus one small addition.</p>
+      </div>
+    </div>
+    <div class="week-row">
+      <div class="wk"><span class="n">09</span><span class="d">Nov 4</span><span class="lang">oF / C++</span></div>
+      <div>
+        <h3>Connecting to Other Software</h3>
+        <ul class="desc-list">
+          <li>Sending OSC from an oF sketch to a ChucK patch using <span class="mono">ofxOsc</span>.</li>
+          <li>A concrete example of two Fall 2026 courses talking to each other.</li>
+        </ul>
+        <p class="assign">Assignment: redo today&rsquo;s class exercise, plus one small addition. This week is also the deadline to have your final group formed (minimum 2, maximum 3).</p>
+      </div>
+    </div>
+    <div class="week-row">
+      <div class="wk"><span class="n">10</span><span class="d">Nov 11</span><span class="lang">oF / C++</span></div>
+      <div>
+        <h3>Vectors</h3>
+        <ul class="desc-list">
+          <li>Refactoring position and velocity into a single <span class="mono">ofVec2f</span> each.</li>
+          <li>Following the mouse.</li>
+        </ul>
+        <p class="assign">Assignment: redo today&rsquo;s class exercise, plus one small addition. Your group&rsquo;s presentation slot for Dec 2 also goes out this week. Also: the Vectors quiz, on the standing reading assignment from Week 1.</p>
+      </div>
+    </div>
+    <div class="week-row shared">
+      <span class="tag">Shared across all three courses</span>
+      <h3 style="margin-bottom:6px;">Week 11 &middot; Nov 18 &middot; Noise</h3>
+      <p class="desc" style="margin-bottom:0;">Driving your mover with <span class="mono">ofNoise()</span> instead of randomness. Also: the Noise quiz, on the standing reading assignment from Week 1.</p>
+    </div>
+    <div class="week-row shared">
+      <span class="tag">Shared across all three courses</span>
+      <h3 style="margin-bottom:6px;">Week 12 &middot; Nov 25 &middot; Remote Day</h3>
+      <p class="desc" style="margin-bottom:0;">Shared CCRMA session, plus 1:1 help for troubleshooting and cross-tool wiring. Specs for the Week 14 digital submission go out today.</p>
+    </div>
+    <div class="week-row shared">
+      <span class="tag">Shared across all three courses</span>
+      <h3 style="margin-bottom:6px;">Week 13 &middot; Dec 2 &middot; Final Performance</h3>
+      <p class="desc" style="margin-bottom:0;">Final project presented in person, in your group&rsquo;s assigned slot within the 1&ndash;6 PM window.</p>
+    </div>
+    <div class="week-row shared">
+      <span class="tag">Shared across all three courses</span>
+      <h3 style="margin-bottom:6px;">Week 14 &middot; Dec 9 &middot; Digital Submission &amp; Portfolio</h3>
+      <p class="desc" style="margin-bottom:0;">Digital submission due, along with a required remote AI workshop (attendance counts toward your final project grade, see Grading) and your Digital Expo portfolio.</p>
+    </div>
+  </section>
+
+  <section id="final">
+    <div class="section-head">
+      <span class="eyebrow">Final Project</span>
+      <h2>Final Project</h2>
+    </div>
+    <p>This is a required group performance. Solo work is not allowed. Students can use p5.js or openFrameworks, whichever fits the piece, as long as it connects outward.</p>
+    <dl class="spec" style="margin-top:24px;">
+      <div><dt>Group size</dt><dd>Minimum 2 people, maximum 3.</dd></div>
+      <div><dt>Forming your group</dt><dd>Around Week 4, once rosters are settled, a chart goes out where each student checks off their own background (musician, visual artist, prior coding experience) plus notes, so students who don&rsquo;t know each other can find a match. Week 9 is the deadline to have a group formed. Unformed groups get assigned that day, and members exchange contact information.</dd></div>
+      <div><dt>Masters student leadership</dt><dd>Each group should include at least one Masters student, when enrollment allows. Masters students are expected to take a leading role in their group. It&rsquo;s a chance to practice the leadership and professionalism needed on mixed-experience teams, in school and afterward.</dd></div>
+      <div><dt>Connecting outward</dt><dd>Every final project needs to connect to at least one other piece of software or language outside p5.js and openFrameworks, such as ChucK, TouchDesigner, or Ableton, or anything that speaks OSC, MIDI, or another live protocol. You aren&rsquo;t limited to this list; any tool that fits the piece works.</dd></div>
+      <div><dt>Reusing one project</dt><dd>If a project counts as the final for more than one of Luisa&rsquo;s three Fall 2026 courses, it has to incorporate each tool it&rsquo;s counting for: two tools if double-counted, all three if triple-counted.</dd></div>
+      <div><dt>Presenting</dt><dd>Week 13 (Dec 2), in person, within the shared 1&ndash;6 PM window. Your exact slot is sent by Week 10.</dd></div>
+      <div><dt>Digital submission</dt><dd>Week 14 (Dec 9): a polished video/audio recording for grading and the Digital Expo portfolio. Specs go out by Week 12. It doesn&rsquo;t have to be a straight capture of the live show; you can re-record for better quality. This matches Coding Music Fundamentals and Intro to TouchDesigner exactly; there are no exceptions for any of the three courses.</dd></div>
+    </dl>
+  </section>
+
+  <section id="grading">
+    <div class="section-head">
+      <span class="eyebrow">Grading</span>
+      <h2>Grading</h2>
+    </div>
+    <div class="bar" style="margin-top:0;">
+      <span style="width:50%; background: var(--accent);"></span>
+      <span style="width:20%; background: color-mix(in srgb, var(--accent) 60%, var(--surface-2));"></span>
+      <span style="width:30%; background: color-mix(in srgb, var(--accent) 30%, var(--surface-2));"></span>
+    </div>
+    <div class="bar-legend">
+      <span><span class="dot" style="background:var(--accent);"></span>Weekly exercises: 50%</span>
+      <span><span class="dot" style="background:color-mix(in srgb, var(--accent) 60%, var(--surface-2));"></span>Midterm: 20%</span>
+      <span><span class="dot" style="background:color-mix(in srgb, var(--accent) 30%, var(--surface-2));"></span>Final project: 30%</span>
+    </div>
+    <h3 style="margin-top:32px; margin-bottom:12px; font-size:1.02rem;">Grade scale</h3>
+    <div class="scale-bar">
+      <div class="hp">HP<br>80&ndash;100</div>
+      <div class="p">P<br>60&ndash;79</div>
+      <div class="lp">LP<br>30&ndash;59</div>
+      <div class="nc">NC<br>0&ndash;29</div>
+    </div>
+    <p style="margin-top:24px; font-size:.92rem; color:var(--muted);">Attendance at the Week 14 AI workshop counts for 10% of your final project grade. If you miss it, you lose that part of your grade.</p>
+  </section>
+
+  <section id="materials">
+    <div class="section-head">
+      <span class="eyebrow">Materials</span>
+      <h2>Materials</h2>
+    </div>
+    <ul class="plain">
+      <li>A laptop that can run VS Code and, later, Xcode (Mac) or Visual Studio (Windows) for openFrameworks.</li>
+      <li>p5.js (web editor, then local/VS Code template) for Weeks 1&ndash;7.</li>
+      <li>openFrameworks plus a C++ toolchain for Weeks 8&ndash;14.</li>
+      <li>A GitHub account. GitHub Pages hosts every weekly submission, all semester.</li>
+      <li>A YouTube, Vimeo, or SoundCloud account for the Week 14 Digital Expo portfolio.</li>
+    </ul>
+  </section>
+
+  <footer>
+    <p>Coding Art Fundamentals &middot; CalArts, Fall 2026 &middot; Luisa Pinzon</p>
+  </footer>
+
+</div>
+</body>
+</html>
