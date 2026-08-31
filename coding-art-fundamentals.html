@@ -124,6 +124,15 @@
   .callout p { margin-bottom: .6em; font-size: .96rem; }
   .callout p:last-child { margin-bottom: 0; }
 
+  .standing-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--accent);
+    border-radius: 10px; padding: 20px 22px; margin: 20px 0;
+  }
+  .standing-box .eyebrow { margin-bottom: 8px; color: var(--accent-ink); }
+  .standing-box p { margin-bottom: 0; font-size: .96rem; }
+
   ul.outcomes { margin: 0; padding-left: 1.2em; }
   ul.outcomes li { margin-bottom: 10px; }
   ul.outcomes li:last-child { margin-bottom: 0; }
@@ -281,7 +290,7 @@
     </div>
 
     <h3 style="margin-top:36px; margin-bottom:14px; font-size:1.1rem;">Submission model</h3>
-    <p>Every weekly assignment is submitted as a live <strong>GitHub Pages</strong> link hosting that week&rsquo;s sketch, not just a committed repo. This gets set up together in class in Week 2, then is treated as understood for the rest of the semester.</p>
+    <p>Every weekly assignment is submitted as a live <strong>GitHub Pages</strong> link hosting that week&rsquo;s sketch, not just a committed repo. This gets set up together in class in Week 2, then is treated as understood for the rest of the semester. Week 1 is the one exception: that first assignment is a <strong>p5.js web editor sketch link</strong> instead, submitted before GitHub Pages exists yet &mdash; submission mechanics get shown live in class.</p>
   </section>
 
   <section id="weekly">
@@ -294,7 +303,11 @@
       <span class="eyebrow">Weekly homework, in one line</span>
       <p>Classes get recorded and the class code isn&rsquo;t handed out. Homework is: rewatch the recording, redo what we built in class that day, then add one small thing, such as a renamed variable, an extra function, or an extra loop. Due <strong>11:59 PM the night of class</strong>, then submission closes, no late work.</p>
       <p><strong>Final project:</strong> identical structure and deadlines to Coding Music Fundamentals and Intro to TouchDesigner. See Final Project below.</p>
-      <p><strong>Standing assignment, given in Week 1:</strong> read the Vectors and Noise chapters of <em>The Nature of Code</em>, or watch the equivalent Coding Train video series. Do this at your own pace, but the Vectors material needs to be done by Week 10 and the Noise material by Week 11. Each of those weeks has a short in-class quiz checking basic understanding, not coding fluency.</p>
+    </div>
+
+    <div class="standing-box">
+      <span class="eyebrow">Standing assignment &middot; given Week 1</span>
+      <p>Read the Vectors and Noise chapters of <em>The Nature of Code</em>, or watch the equivalent Coding Train video series. Do this at your own pace, but the Vectors material needs to be done by Week 10 and the Noise material by Week 11. Each of those weeks has a short in-class quiz checking basic understanding, not coding fluency.</p>
     </div>
 
     <div class="week-row">
@@ -302,10 +315,18 @@
       <div>
         <h3>Foundations Review</h3>
         <ul class="desc-list">
-          <li>Installing VS Code and the p5.js local template together in class.</li>
-          <li>A live instructor demo introducing XY coordinates and RGB color on screen.</li>
+          <li>Opening the <a href="https://editor.p5js.org/" target="_blank" rel="noopener">p5.js web editor</a> together in class for this first session, not VS Code &mdash; VS Code still gets installed today, just not used yet.</li>
+          <li>A simple instructor example first, then the class types a few things together in p5.js, live.</li>
         </ul>
-        <p class="assign">Assignment: a short written description of color, coordinates, and sine/cosine, submitted as text.</p>
+        <p class="assign">Assignment: watch this short, beginner-friendly series on creative coding, then build a first p5.js sketch &mdash; a shape, placed at a position, given an RGB color, moved with sine/cosine. Copy-pasting the code shown in the videos is completely fine here &mdash; the goal is refreshing the vocabulary (coordinates, RGB, sine/cos) and getting some initial hands-on coding in, not understanding concepts like variables yet (that comes later). Submit as a p5.js web editor sketch link, submission mechanics shown live in class.</p>
+        <ul class="desc-list" style="margin-top:10px;">
+          <li><a href="https://www.youtube.com/watch?v=yPWkPOfnGsw" target="_blank" rel="noopener">Video 1</a></li>
+          <li><a href="https://www.youtube.com/watch?v=MXs1cOlidWs" target="_blank" rel="noopener">Video 2</a></li>
+          <li><a href="https://www.youtube.com/watch?v=c3TeLi6Ns1E" target="_blank" rel="noopener">Video 3</a></li>
+          <li><a href="https://www.youtube.com/watch?v=riiJTF5-N7c" target="_blank" rel="noopener">Video 4</a></li>
+          <li><a href="https://www.youtube.com/watch?v=LuGsp5KeJMM" target="_blank" rel="noopener">Video 5</a></li>
+          <li><em>Video 6, on sine/cosine &mdash; link pending</em></li>
+        </ul>
       </div>
     </div>
     <div class="week-row">
