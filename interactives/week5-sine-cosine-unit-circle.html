@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unwrapping Sine and Cosine</title>
+<style>
+  /* layout: vertical stack — unit circle on top, sine wave unrolling below it, cosine wave below that */
+  :root{
+    --bg:#fbf7f1;
+    --panel:#f3ebdd;
+    --ink:#171717;
+    --body:#3a352e;
+    --muted:#9a8f7c;
+    --line:#d9cdb8;
+    --sine:#b0501f;
+    --sine-soft:#b0501f33;
+    --cosine:#1f6f6a;
+    --cosine-soft:#1f6f6a33;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#171717;
+      --panel:#211f1b;
+      --ink:#f5efe3;
+      --body:#d9cfbd;
+      --muted:#8a8070;
+      --line:#3a362c;
+      --sine:#e07a3f;
+      --sine-soft:#e07a3f33;
+      --cosine:#4fb3ac;
+      --cosine-soft:#4fb3ac33;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#171717;
+    --panel:#211f1b;
+    --ink:#f5efe3;
+    --body:#d9cfbd;
+    --muted:#8a8070;
+    --line:#3a362c;
+    --sine:#e07a3f;
+    --sine-soft:#e07a3f33;
+    --cosine:#4fb3ac;
+    --cosine-soft:#4fb3ac33;
+    color-scheme: dark;
+  }
+
+  *{ box-sizing:border-box; }
+  html, body{ height:100%; }
+  body{
+    background:var(--bg);
+    color:var(--body);
+    font-family: Arial, Helvetica, sans-serif;
+    padding-inline: 16px;
+    padding-block: 14px;
+    display:flex;
+    flex-direction:column;
+  }
+  .wrap{ max-width: 1180px; width:100%; margin: 0 auto; display:flex; flex-direction:column; gap:12px; flex:1; min-height:0; }
+
+  .eyebrow{
+    font-family: 'Courier New', Courier, monospace;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-size: 11px;
+    color: var(--sine);
+    font-weight: 700;
+  }
+  h1{
+    font-family: 'Courier New', Courier, monospace;
+    color: var(--ink);
+    font-size: clamp(18px, 2.6vw, 26px);
+    margin: 2px 0 1px;
+    text-wrap: balance;
+  }
+  .sub{
+    font-size: 13px;
+    color: var(--muted);
+    max-width: 70ch;
+  }
+
+  .layout{
+    display:flex;
+    gap: 14px;
+    flex: 1;
+    min-height: 0;
+    align-items: stretch;
+  }
+  .layout .panel.circle-panel{ flex: 0 0 min(42%, 470px); display:flex; flex-direction:column; }
+  .layout .waves-col{ flex:1; display:flex; flex-direction:column; gap:12px; min-width:0; }
+  .layout .waves-col .panel{ flex:1; display:flex; flex-direction:column; min-height:0; }
+  .layout .waves-col canvas{ flex:1; min-height:0; }
+  #circleCanvas{ flex:1; min-height:0; }
+
+  .panel{
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 12px 14px;
+  }
+
+  .readout-row{
+    display:flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: baseline;
+    justify-content: center;
+    margin-bottom: 8px;
+    font-family: 'Courier New', Courier, monospace;
+  }
+  .readout{
+    display:flex;
+    align-items:baseline;
+    gap:6px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 6px 12px;
+  }
+  .readout .k{ color: var(--muted); font-size: 12px; }
+  .readout .v{ font-size: 20px; font-weight: 700; color: var(--ink); min-width: 3.2ch; text-align:right; font-variant-numeric: tabular-nums; }
+  .readout.theta .v{ color: var(--ink); }
+  .readout.sine .v{ color: var(--sine); }
+  .readout.cosine .v{ color: var(--cosine); }
+
+  canvas{ display:block; width:100%; touch-action: none; }
+  #circleCanvas{ cursor: grab; }
+  #circleCanvas.dragging{ cursor: grabbing; }
+
+  .controls{
+    display:flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items:center;
+    justify-content:center;
+    margin-top: 8px;
+  }
+  button{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: var(--bg);
+    color: var(--ink);
+    padding: 6px 12px;
+    cursor: pointer;
+  }
+  button:hover{ border-color: var(--sine); }
+  button:focus-visible{ outline: 2px solid var(--sine); outline-offset: 2px; }
+  button.primary{
+    background: var(--sine);
+    border-color: var(--sine);
+    color: #fff;
+  }
+  button.step{ padding: 6px 9px; min-width: 46px; }
+  .controls .divider{ width:1px; align-self:stretch; background:var(--line); margin: 0 2px; }
+
+  .hint{
+    text-align:center;
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 6px;
+  }
+
+  .wave-label{
+    display:flex;
+    align-items:center;
+    gap: 8px;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 700;
+    font-size: 13px;
+    margin-bottom: 6px;
+  }
+  .wave-label .swatch{ width: 12px; height: 12px; border-radius: 3px; display:inline-block; }
+  .wave-label.sine .swatch{ background: var(--sine); }
+  .wave-label.cosine .swatch{ background: var(--cosine); }
+  .wave-label.sine{ color: var(--sine); }
+  .wave-label.cosine{ color: var(--cosine); }
+
+  footer{
+    text-align:center;
+    font-size: 11px;
+    color: var(--muted);
+    padding-top: 2px;
+  }
+  footer a{ color: var(--muted); }
+
+  @media (max-width: 760px){
+    .layout{ flex-direction:column; }
+    .layout .panel.circle-panel{ flex: 0 0 auto; }
+    #circleCanvas{ flex:none; aspect-ratio: 1 / 1; }
+    .layout .waves-col .panel{ flex: 0 0 auto; }
+    .layout .waves-col canvas{ flex:none; aspect-ratio: 700 / 220; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    * { scroll-behavior: auto !important; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div>
+    <div class="eyebrow">Coding Art Fundamentals · Week 5 prep</div>
+    <h1>How a circle becomes a wave</h1>
+    <div class="sub">As the point goes around the circle, its Y position (up/down) traces out sine, and its X position (side to side) traces out cosine. Press play, drag the point, or jump straight to a key angle.</div>
+  </div>
+
+  <div class="layout">
+    <div class="panel circle-panel">
+      <div class="readout-row">
+        <div class="readout theta"><span class="k">&theta;</span><span class="v" id="readTheta">0&deg;</span></div>
+        <div class="readout sine"><span class="k">sin&theta;</span><span class="v" id="readSin">0.00</span></div>
+        <div class="readout cosine"><span class="k">cos&theta;</span><span class="v" id="readCos">0.00</span></div>
+      </div>
+      <canvas id="circleCanvas" width="600" height="600" aria-label="Unit circle with a point rotating around it"></canvas>
+      <div class="controls">
+        <button class="primary" id="playBtn">Play</button>
+        <button id="resetBtn">Reset</button>
+        <div class="divider"></div>
+        <button class="step" data-angle="0">0&deg;</button>
+        <button class="step" data-angle="90">90&deg;</button>
+        <button class="step" data-angle="180">180&deg;</button>
+        <button class="step" data-angle="270">270&deg;</button>
+        <button class="step" data-angle="360">360&deg;</button>
+      </div>
+      <div class="hint">Drag the dot around the circle to move &theta; by hand.</div>
+    </div>
+
+    <div class="waves-col">
+      <div class="panel">
+        <div class="wave-label sine"><span class="swatch"></span> sin&theta; — the point's Y position (height), unrolled</div>
+        <canvas id="sineCanvas" width="700" height="220"></canvas>
+      </div>
+
+      <div class="panel">
+        <div class="wave-label cosine"><span class="swatch"></span> cos&theta; — the point's X position (sideways), unrolled</div>
+        <canvas id="cosineCanvas" width="700" height="220"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <footer>Built for Luisa's Coding Art Fundamentals, Fall 2026 &middot; <a href="../coding-art-fundamentals.html">&larr; Back to Coding Art Fundamentals</a></footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var state = {
+    angle: 0,        // degrees, 0..360
+    playing: false,
+    dragging: false,
+    animatingTo: null,
+    animFrom: 0,
+    animStart: 0,
+    animDur: reduceMotion ? 1 : 550
+  };
+
+  var KEY_ANGLES = [0, 90, 180, 270, 360];
+
+  function cssVar(name){
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  }
+
+  function setupCanvas(canvas){
+    var ratio = window.devicePixelRatio || 1;
+    var rect = canvas.getBoundingClientRect();
+    var w = rect.width || canvas.width;
+    var h = rect.height || canvas.height;
+    canvas.width = Math.round(w * ratio);
+    canvas.height = Math.round(h * ratio);
+    var ctx = canvas.getContext('2d');
+    ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+    return { ctx: ctx, w: w, h: h };
+  }
+
+  var circleCanvas = document.getElementById('circleCanvas');
+  var sineCanvas = document.getElementById('sineCanvas');
+  var cosineCanvas = document.getElementById('cosineCanvas');
+
+  var circleDims, sineDims, cosineDims;
+
+  function resizeAll(){
+    circleDims = setupCanvas(circleCanvas);
+    sineDims = setupCanvas(sineCanvas);
+    cosineDims = setupCanvas(cosineCanvas);
+    drawAll();
+  }
+
+  function deg2rad(d){ return d * Math.PI / 180; }
+
+  // ---------- circle ----------
+  function drawCircle(){
+    var ctx = circleDims.ctx, w = circleDims.w, h = circleDims.h;
+    ctx.clearRect(0,0,w,h);
+
+    var cx = w/2, cy = h/2;
+    var pad = 48; // room for axis arrows/labels and the sinθ/cosθ callouts
+    var R = Math.max(40, (Math.min(w,h) - pad*2) / 2);
+
+    var ink = cssVar('--ink');
+    var muted = cssVar('--muted');
+    var line = cssVar('--line');
+    var sine = cssVar('--sine');
+    var cosine = cssVar('--cosine');
+    var panel = cssVar('--panel');
+
+    var theta = deg2rad(state.angle);
+    var px = cx + R * Math.cos(theta);
+    var py = cy - R * Math.sin(theta);
+
+    // guide cross through center, drawn as X/Y axes with arrowheads
+    var axisExtend = 22;
+    var axTop = cy - R - axisExtend, axRight = cx + R + axisExtend;
+    ctx.strokeStyle = line;
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(cx - R - 14, cy); ctx.lineTo(axRight, cy);
+    ctx.moveTo(cx, cy + R + 14); ctx.lineTo(cx, axTop);
+    ctx.stroke();
+
+    function arrowhead(x, y, angleRad, col){
+      ctx.fillStyle = col;
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(angleRad);
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(-8, 4);
+      ctx.lineTo(-8, -4);
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+    }
+    arrowhead(axRight, cy, 0, muted);
+    arrowhead(cx, axTop, -Math.PI/2, muted);
+
+    // axis labels, matching the "Y is up / X is sideways" framing from the reference diagram
+    ctx.font = "700 15px 'Courier New', monospace";
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillStyle = cosine;
+    ctx.textAlign = 'left';
+    ctx.fillText('X', axRight + 6, cy + 5);
+    ctx.fillStyle = sine;
+    ctx.textAlign = 'center';
+    ctx.fillText('Y', cx, axTop - 8);
+
+    // circle outline
+    ctx.strokeStyle = muted;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(cx, cy, R, 0, Math.PI*2);
+    ctx.stroke();
+
+    // degree + (x,y) coordinate markers at the four basic angles, just inside the rim
+    var DEG_MARKS = [
+      {a:0,   coord:'(1, 0)',  lx: cx + R - 15, ly: cy + 17, align:'right'},
+      {a:90,  coord:'(0, 1)',  lx: cx + 8,       ly: cy - R + 14, align:'left'},
+      {a:180, coord:'(-1, 0)', lx: cx - R + 15, ly: cy - 17, align:'left'},
+      {a:270, coord:'(0, -1)', lx: cx + 8,       ly: cy + R - 12, align:'left'}
+    ];
+    ctx.fillStyle = muted;
+    ctx.textBaseline = 'middle';
+    DEG_MARKS.forEach(function(m){
+      var mr = deg2rad(m.a);
+      var tx = cx + R*Math.cos(mr), ty = cy - R*Math.sin(mr);
+      var tx2 = cx + (R-6)*Math.cos(mr), ty2 = cy - (R-6)*Math.sin(mr);
+      ctx.strokeStyle = muted;
+      ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.moveTo(tx,ty); ctx.lineTo(tx2,ty2); ctx.stroke();
+      ctx.textAlign = m.align;
+      ctx.font = "700 11px 'Courier New', monospace";
+      ctx.fillText(m.a + '°', m.lx, m.ly);
+      ctx.font = "10px 'Courier New', monospace";
+      ctx.fillText(m.coord, m.lx, m.ly + 13);
+    });
+
+    // (0,0) at the center
+    ctx.fillStyle = muted;
+    ctx.font = "10px 'Courier New', monospace";
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('(0, 0)', cx - 10, cy + 13);
+
+    // angle arc
+    ctx.strokeStyle = ink;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(cx, cy, R*0.22, -theta, 0, state.angle >= 0);
+    ctx.stroke();
+
+    // right-triangle legs: cosine (horizontal) then sine (vertical)
+    ctx.setLineDash([6,6]);
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = cosine;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy); ctx.lineTo(px, cy);
+    ctx.stroke();
+
+    ctx.strokeStyle = sine;
+    ctx.beginPath();
+    ctx.moveTo(px, cy); ctx.lineTo(px, py);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // radius line
+    ctx.strokeStyle = ink;
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy); ctx.lineTo(px, py);
+    ctx.stroke();
+
+    // "1" label marking the radius as a unit length
+    var rdx = (px-cx)/R, rdy = (py-cy)/R;
+    var perpx = -rdy, perpy = rdx;
+    var rmidx = (cx+px)/2, rmidy = (cy+py)/2;
+    ctx.font = "700 12px 'Courier New', monospace";
+    ctx.fillStyle = ink;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('1', rmidx + perpx*13, rmidy + perpy*13);
+
+    // center point
+    ctx.fillStyle = ink;
+    ctx.beginPath(); ctx.arc(cx, cy, 3.5, 0, Math.PI*2); ctx.fill();
+
+    // the moving point
+    ctx.fillStyle = panel;
+    ctx.strokeStyle = ink;
+    ctx.lineWidth = 2.5;
+    ctx.beginPath(); ctx.arc(px, py, 9, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = ink;
+    ctx.beginPath(); ctx.arc(px, py, 3.5, 0, Math.PI*2); ctx.fill();
+
+    // labels
+    ctx.font = "700 13px 'Courier New', monospace";
+    ctx.textBaseline = 'middle';
+
+    ctx.fillStyle = cosine;
+    ctx.textAlign = 'center';
+    ctx.fillText('cosθ (x)', (cx+px)/2, cy + (py < cy ? 16 : -16));
+
+    // sinθ (y) label, clamped so it never runs off the edge of the canvas
+    var sinLabel = 'sinθ (y)';
+    var sinLabelW = ctx.measureText(sinLabel).width;
+    var sinAlign = px >= cx ? 'left' : 'right';
+    var sinX = px + (px >= cx ? 10 : -10);
+    if (sinAlign === 'left' && sinX + sinLabelW > w - 4){ sinX = w - 4; sinAlign = 'right'; }
+    if (sinAlign === 'right' && sinX - sinLabelW < 4){ sinX = 4; sinAlign = 'left'; }
+    ctx.fillStyle = sine;
+    ctx.textAlign = sinAlign;
+    ctx.fillText(sinLabel, sinX, (cy+py)/2);
+
+    ctx.fillStyle = ink;
+    ctx.textAlign = 'left';
+    ctx.font = "700 12px 'Courier New', monospace";
+    var labelAngle = theta/2;
+    ctx.fillText('θ', cx + R*0.33*Math.cos(-labelAngle) + 4, cy + R*0.33*Math.sin(-labelAngle));
+  }
+
+  // ---------- waves ----------
+  var RAD_LABELS = {0:'0', 90:'π/2', 180:'π', 270:'3π/2', 360:'2π'};
+
+  function waveLayout(w, h){
+    var padL = 34, padR = 16, padT = 18, padB = 40;
+    return {
+      x0: padL, x1: w - padR,
+      y0: padT, y1: h - padB,
+      midY: padT + (h - padT - padB) / 2
+    };
+  }
+
+  function drawWave(dims, fn, color, softColor, keyVals){
+    var ctx = dims.ctx, w = dims.w, h = dims.h;
+    ctx.clearRect(0,0,w,h);
+    var L = waveLayout(w,h);
+    var line = cssVar('--line');
+    var muted = cssVar('--muted');
+    var ink = cssVar('--ink');
+
+    function xOf(angleDeg){ return L.x0 + (L.x1 - L.x0) * (angleDeg/360); }
+    function yOf(val){ return L.midY - val * (L.midY - L.y0) * 0.92; }
+
+    // gridlines at -1, 0, 1
+    ctx.strokeStyle = line;
+    ctx.lineWidth = 1;
+    [-1,0,1].forEach(function(v){
+      var y = yOf(v);
+      ctx.beginPath(); ctx.moveTo(L.x0, y); ctx.lineTo(L.x1, y); ctx.stroke();
+    });
+    ctx.fillStyle = muted;
+    ctx.font = "11px Arial, Helvetica, sans-serif";
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'middle';
+    [-1,0,1].forEach(function(v){
+      ctx.fillText(String(v), L.x0 - 6, yOf(v));
+    });
+
+    // angle ticks — degrees, with radians underneath
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'top';
+    KEY_ANGLES.forEach(function(a){
+      var x = xOf(a);
+      ctx.strokeStyle = line;
+      ctx.beginPath(); ctx.moveTo(x, L.y0); ctx.lineTo(x, L.y1); ctx.stroke();
+      ctx.fillStyle = muted;
+      ctx.font = "11px Arial, Helvetica, sans-serif";
+      ctx.fillText(a + '°', x, L.y1 + 5);
+      ctx.font = "11px 'Courier New', monospace";
+      ctx.fillText(RAD_LABELS[a], x, L.y1 + 19);
+    });
+
+    // ghost full curve
+    ctx.strokeStyle = softColor;
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    for (var a=0; a<=360; a+=2){
+      var x = xOf(a), y = yOf(fn(a));
+      if (a===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    }
+    ctx.stroke();
+
+    // revealed curve up to current angle
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 4;
+    ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+    ctx.beginPath();
+    var steps = Math.max(1, Math.round(state.angle));
+    for (var i=0; i<=steps; i++){
+      var ang = Math.min(i, state.angle);
+      var xx = xOf(ang), yy = yOf(fn(ang));
+      if (i===0) ctx.moveTo(xx,yy); else ctx.lineTo(xx,yy);
+      if (ang >= state.angle) break;
+    }
+    ctx.stroke();
+
+    // key value markers
+    keyVals.forEach(function(kv){
+      var reached = state.angle >= kv.a - 0.001;
+      var x = xOf(kv.a), y = yOf(kv.v);
+      ctx.beginPath();
+      ctx.arc(x, y, reached ? 6 : 4, 0, Math.PI*2);
+      ctx.fillStyle = reached ? color : cssVar('--panel');
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2;
+      ctx.fill(); ctx.stroke();
+      if (reached){
+        ctx.fillStyle = ink;
+        ctx.font = "700 11px 'Courier New', monospace";
+        ctx.textBaseline = kv.v >= 0 ? 'bottom' : 'top';
+        ctx.fillText(String(kv.v), x, y + (kv.v >= 0 ? -9 : 9));
+      }
+    });
+
+    // current point + drop line
+    if (state.angle <= 360){
+      var cxp = xOf(state.angle), cyp = yOf(fn(state.angle));
+      ctx.setLineDash([4,4]);
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.moveTo(cxp, L.midY); ctx.lineTo(cxp, cyp); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = color;
+      ctx.beginPath(); ctx.arc(cxp, cyp, 5, 0, Math.PI*2); ctx.fill();
+    }
+  }
+
+  var sinKeyVals = [{a:0,v:0},{a:90,v:1},{a:180,v:0},{a:270,v:-1},{a:360,v:0}];
+  var cosKeyVals = [{a:0,v:1},{a:90,v:0},{a:180,v:-1},{a:270,v:0},{a:360,v:1}];
+
+  function sinDeg(a){ return Math.sin(deg2rad(a)); }
+  function cosDeg(a){ return Math.cos(deg2rad(a)); }
+
+  function drawAll(){
+    drawCircle();
+    drawWave(sineDims, sinDeg, cssVar('--sine'), cssVar('--sine-soft'), sinKeyVals);
+    drawWave(cosineDims, cosDeg, cssVar('--cosine'), cssVar('--cosine-soft'), cosKeyVals);
+    updateReadouts();
+  }
+
+  function updateReadouts(){
+    document.getElementById('readTheta').textContent = Math.round(state.angle) + '°';
+    document.getElementById('readSin').textContent = sinDeg(state.angle).toFixed(2);
+    document.getElementById('readCos').textContent = cosDeg(state.angle).toFixed(2);
+  }
+
+  // ---------- interaction ----------
+  var playBtn = document.getElementById('playBtn');
+  var resetBtn = document.getElementById('resetBtn');
+
+  var PLAY_DEG_PER_SEC = 60;
+  var lastT = null;
+
+  function frame(t){
+    if (lastT === null) lastT = t;
+    var dt = (t - lastT) / 1000;
+    lastT = t;
+
+    if (state.animatingTo !== null){
+      var elapsed = t - state.animStart;
+      var p = state.animDur <= 0 ? 1 : Math.min(1, elapsed / state.animDur);
+      var eased = 1 - Math.pow(1-p, 3);
+      state.angle = state.animFrom + (state.animatingTo - state.animFrom) * eased;
+      if (p >= 1){ state.angle = state.animatingTo; state.animatingTo = null; }
+      drawAll();
+      requestAnimationFrame(frame);
+      return;
+    }
+
+    if (state.playing){
+      state.angle += PLAY_DEG_PER_SEC * dt;
+      if (state.angle >= 360){
+        state.angle = 360;
+        state.playing = false;
+        playBtn.textContent = 'Replay';
+      }
+      drawAll();
+      requestAnimationFrame(frame);
+      return;
+    }
+
+    lastT = null;
+  }
+
+  function kick(){ lastT = null; requestAnimationFrame(frame); }
+
+  playBtn.addEventListener('click', function(){
+    if (state.playing){
+      state.playing = false;
+      playBtn.textContent = 'Play';
+      return;
+    }
+    if (state.angle >= 360) state.angle = 0;
+    state.playing = true;
+    state.animatingTo = null;
+    playBtn.textContent = 'Pause';
+    kick();
+  });
+
+  resetBtn.addEventListener('click', function(){
+    state.playing = false;
+    state.animatingTo = null;
+    state.angle = 0;
+    playBtn.textContent = 'Play';
+    drawAll();
+  });
+
+  document.querySelectorAll('.step').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      state.playing = false;
+      playBtn.textContent = 'Play';
+      var target = parseFloat(btn.getAttribute('data-angle'));
+      state.animFrom = state.angle;
+      state.animatingTo = target;
+      state.animStart = performance.now();
+      kick();
+    });
+  });
+
+  // drag on circle canvas
+  function angleFromEvent(evt){
+    var rect = circleCanvas.getBoundingClientRect();
+    var x = (evt.touches ? evt.touches[0].clientX : evt.clientX) - rect.left;
+    var y = (evt.touches ? evt.touches[0].clientY : evt.clientY) - rect.top;
+    var cx = rect.width/2, cy = rect.height/2;
+    var dx = x - cx, dy = cy - y;
+    var ang = Math.atan2(dy, dx) * 180 / Math.PI;
+    if (ang < 0) ang += 360;
+    return ang;
+  }
+
+  function startDrag(evt){
+    state.dragging = true;
+    state.playing = false;
+    state.animatingTo = null;
+    playBtn.textContent = 'Play';
+    circleCanvas.classList.add('dragging');
+    moveDrag(evt);
+    evt.preventDefault();
+  }
+  function moveDrag(evt){
+    if (!state.dragging) return;
+    state.angle = angleFromEvent(evt);
+    drawAll();
+    evt.preventDefault();
+  }
+  function endDrag(){
+    state.dragging = false;
+    circleCanvas.classList.remove('dragging');
+  }
+
+  circleCanvas.addEventListener('mousedown', startDrag);
+  window.addEventListener('mousemove', moveDrag);
+  window.addEventListener('mouseup', endDrag);
+  circleCanvas.addEventListener('touchstart', startDrag, {passive:false});
+  window.addEventListener('touchmove', moveDrag, {passive:false});
+  window.addEventListener('touchend', endDrag);
+
+  window.addEventListener('resize', resizeAll);
+  if (window.matchMedia){
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', drawAll);
+  }
+
+  resizeAll();
+})();
+</script>
+</body>
+</html>
