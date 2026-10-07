@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Signal Minus Threshold</title>
+<style>
+  :root{
+    --bg:#fbf7f1;
+    --panel:#f3ebdd;
+    --ink:#171717;
+    --body:#3a352e;
+    --muted:#9a8f7c;
+    --line:#d9cdb8;
+    --signal:#b0501f;
+    --signal-soft:#b0501f33;
+    --threshold:#c9a227;
+    --result:#1f6f6a;
+    --result-soft:#1f6f6a33;
+    --negative:#8a3b3b;
+    --negative-soft:#8a3b3b33;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#171717;
+      --panel:#211f1b;
+      --ink:#f5efe3;
+      --body:#d9cfbd;
+      --muted:#8a8070;
+      --line:#3a362c;
+      --signal:#e07a3f;
+      --signal-soft:#e07a3f33;
+      --threshold:#e0c23f;
+      --result:#4fb3ac;
+      --result-soft:#4fb3ac33;
+      --negative:#c97a7a;
+      --negative-soft:#c97a7a33;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#171717;
+    --panel:#211f1b;
+    --ink:#f5efe3;
+    --body:#d9cfbd;
+    --muted:#8a8070;
+    --line:#3a362c;
+    --signal:#e07a3f;
+    --signal-soft:#e07a3f33;
+    --threshold:#e0c23f;
+    --result:#4fb3ac;
+    --result-soft:#4fb3ac33;
+    --negative:#c97a7a;
+    --negative-soft:#c97a7a33;
+    color-scheme: dark;
+  }
+
+  *{ box-sizing:border-box; }
+  html, body{ height:100%; }
+  body{
+    background:var(--bg);
+    color:var(--body);
+    font-family: Arial, Helvetica, sans-serif;
+    padding-inline: 16px;
+    padding-block: 14px;
+    display:flex;
+    flex-direction:column;
+  }
+  .wrap{ max-width: 1100px; width:100%; margin: 0 auto; display:flex; flex-direction:column; gap:12px; flex:1; min-height:0; }
+
+  .eyebrow{
+    font-family: 'Courier New', Courier, monospace;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-size: 11px;
+    color: var(--signal);
+    font-weight: 700;
+  }
+  h1{
+    font-family: 'Courier New', Courier, monospace;
+    color: var(--ink);
+    font-size: clamp(18px, 2.6vw, 26px);
+    margin: 2px 0 1px;
+    text-wrap: balance;
+  }
+  .sub{
+    font-size: 13px;
+    color: var(--muted);
+    max-width: 72ch;
+  }
+
+  .readout-row{
+    display:flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: baseline;
+    justify-content: center;
+    margin: 6px 0 2px;
+    font-family: 'Courier New', Courier, monospace;
+  }
+  .readout{
+    display:flex;
+    align-items:baseline;
+    gap:6px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 6px 12px;
+  }
+  .readout .k{ color: var(--muted); font-size: 12px; }
+  .readout .v{ font-size: 20px; font-weight: 700; color: var(--ink); min-width: 3.4ch; text-align:right; font-variant-numeric: tabular-nums; }
+  .readout.threshold .v{ color: var(--threshold); }
+  .readout.pass .v{ color: var(--result); }
+
+  .panel{
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 12px 14px;
+  }
+
+  .wave-label{
+    display:flex;
+    align-items:center;
+    gap: 8px;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 700;
+    font-size: 13px;
+    margin-bottom: 6px;
+  }
+  .wave-label .swatch{ width: 12px; height: 12px; border-radius: 3px; display:inline-block; }
+  .wave-label.signal .swatch{ background: var(--signal); }
+  .wave-label.threshold .swatch{ background: var(--threshold); }
+  .wave-label.result .swatch{ background: var(--result); }
+  .wave-label.negative .swatch{ background: var(--negative); }
+  .wave-label.signal{ color: var(--signal); }
+  .wave-label.result{ color: var(--result); }
+
+  canvas{ display:block; width:100%; touch-action: none; }
+  #signalCanvas, #resultCanvas{ height: 190px; }
+
+  .controls{
+    display:flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items:center;
+    justify-content:center;
+    margin-top: 4px;
+  }
+  .slider-row{
+    display:flex;
+    align-items:center;
+    gap: 10px;
+    width: 100%;
+    max-width: 520px;
+  }
+  .slider-row label{
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  input[type="range"]{
+    flex: 1;
+    accent-color: var(--threshold);
+  }
+  button{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: var(--bg);
+    color: var(--ink);
+    padding: 6px 12px;
+    cursor: pointer;
+  }
+  button:hover{ border-color: var(--threshold); }
+  button:focus-visible{ outline: 2px solid var(--threshold); outline-offset: 2px; }
+  button.primary{
+    background: var(--threshold);
+    border-color: var(--threshold);
+    color: #171717;
+  }
+  .preset-row{
+    display:flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content:center;
+  }
+
+  .hint{
+    text-align:center;
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  .math-panel{ text-align:center; }
+  .math-examples{
+    display:flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content:center;
+    margin: 6px 0 12px;
+  }
+  .math-ex, .math-live{
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 15px;
+    font-weight: 700;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 6px 12px;
+    color: var(--ink);
+  }
+  .math-live{
+    font-size: 19px;
+    display:inline-flex;
+    align-items:center;
+    gap: 10px;
+    padding: 10px 18px;
+  }
+  .math-live-tag{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--muted);
+  }
+  .sig{ color: var(--signal); }
+  .thr{ color: var(--threshold); }
+  .res.pos{ color: var(--result); }
+  .res.neg{ color: var(--negative); }
+  .res.zero{ color: var(--muted); }
+
+  footer{
+    text-align:center;
+    font-size: 11px;
+    color: var(--muted);
+    padding-top: 2px;
+  }
+  footer a{ color: var(--muted); }
+
+  @media (prefers-reduced-motion: reduce){
+    * { scroll-behavior: auto !important; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div>
+    <div class="eyebrow">Intro to TouchDesigner &middot; Audio Analysis</div>
+    <h1>Signal Minus <span style="color:var(--threshold);">Threshold</span></h1>
+    <div class="sub">The top graph is an RMS signal, always between 0 and 1. The bottom graph is that same signal with a Math CHOP subtracting a threshold, no clamping. Whatever was above the threshold line comes out positive, whatever was below it comes out negative. Drag the slider and watch the balance shift.</div>
+  </div>
+
+  <div class="readout-row">
+    <div class="readout threshold"><span class="k">threshold</span><span class="v" id="readThreshold">0.00</span></div>
+    <div class="readout pass"><span class="k">% of signal positive</span><span class="v" id="readPass">100%</span></div>
+  </div>
+
+  <div class="panel math-panel">
+    <div class="wave-label"><span class="swatch" style="background:var(--ink);"></span> the math, one point on the signal at a time</div>
+    <div class="math-examples">
+      <div class="math-ex"><span class="sig">0.5</span> &minus; <span class="thr">0</span> = <span class="res pos">0.5</span></div>
+      <div class="math-ex"><span class="sig">0.5</span> &minus; <span class="thr">0.3</span> = <span class="res pos">0.2</span></div>
+      <div class="math-ex"><span class="sig">0.5</span> &minus; <span class="thr">0.5</span> = <span class="res zero">0.0</span></div>
+      <div class="math-ex"><span class="sig">0.5</span> &minus; <span class="thr">1</span> = <span class="res neg">&minus;0.5</span></div>
+    </div>
+    <div class="math-live">
+      <span class="sig">0.50</span> &minus; <span class="thr" id="liveThresholdNum">0.00</span> = <span class="res" id="liveResultNum">0.50</span>
+      <span class="math-live-tag" id="liveResultTag">above the line, positive</span>
+    </div>
+    <div class="hint" style="margin-top:8px;">A point on the signal only turns negative once the threshold is subtracted past it. Drag the slider above and watch this same point cross from positive to negative.</div>
+  </div>
+
+  <div class="panel">
+    <div class="wave-label signal"><span class="swatch"></span> RMS signal (0 to 1), with the threshold line overlaid</div>
+    <canvas id="signalCanvas" width="900" height="190" aria-label="RMS signal over time with a threshold line drawn across it"></canvas>
+  </div>
+
+  <div class="panel">
+    <div class="wave-label result"><span class="swatch"></span> signal &minus; threshold, unclamped &mdash; <span style="color:var(--result);">positive above</span> the line, <span style="color:var(--negative);">negative below</span> it</div>
+    <canvas id="resultCanvas" width="900" height="190" aria-label="The signal after subtracting the threshold, allowed to go negative"></canvas>
+  </div>
+
+  <div class="controls">
+    <div class="slider-row">
+      <label for="thresholdSlider">threshold</label>
+      <input type="range" id="thresholdSlider" min="0" max="1" step="0.01" value="0">
+    </div>
+    <div class="preset-row">
+      <button class="preset" data-t="0">0</button>
+      <button class="preset" data-t="0.25">0.25</button>
+      <button class="preset" data-t="0.5">0.5</button>
+      <button class="preset" data-t="0.75">0.75</button>
+      <button class="preset" data-t="1">1</button>
+      <button class="primary" id="playBtn">Sweep</button>
+    </div>
+  </div>
+  <div class="hint">At threshold 0, the whole signal sits at or above the line, almost entirely positive. At threshold 1, almost the whole signal falls below it, negative, except the very tallest peaks.</div>
+
+  <footer>Built for Luisa's Intro to TouchDesigner, Fall 2026 &middot; <a href="../touchdesigner.html">&larr; Back to Intro to TouchDesigner</a></footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ---------- deterministic synthetic RMS-like signal ----------
+  // a handful of sine components at non-integer-related frequencies plus
+  // gentle smoothed noise, rectified and normalized to sit in 0..1, so it
+  // reads like a real audio RMS envelope: mostly low, with clear peaks.
+  var N = 600; // sample count across the visible window
+  var signal = new Array(N);
+  (function buildSignal(){
+    var seed = 42;
+    function rand(){ // tiny deterministic PRNG so the curve is identical every load
+      seed = (seed * 9301 + 49297) % 233280;
+      return seed / 233280;
+    }
+    var raw = new Array(N);
+    var noiseState = 0;
+    for (var i = 0; i < N; i++){
+      var t = i / N;
+      var v = 0;
+      v += 0.55 * Math.pow(Math.max(0, Math.sin(t * Math.PI * 7.3)), 3);
+      v += 0.35 * Math.pow(Math.max(0, Math.sin(t * Math.PI * 13.1 + 1.3)), 5);
+      v += 0.22 * Math.pow(Math.max(0, Math.sin(t * Math.PI * 21.7 + 2.1)), 7);
+      noiseState += (rand() - 0.5) * 0.08;
+      noiseState *= 0.9;
+      v += Math.abs(noiseState);
+      raw[i] = v;
+    }
+    var max = Math.max.apply(null, raw);
+    for (var j = 0; j < N; j++){ signal[j] = Math.max(0, raw[j] / max); }
+  })();
+
+  var state = {
+    threshold: 0,
+    playing: false,
+    playDir: 1
+  };
+
+  function cssVar(name){
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  }
+
+  function setupCanvas(canvas){
+    var ratio = window.devicePixelRatio || 1;
+    var rect = canvas.getBoundingClientRect();
+    var w = rect.width || canvas.width;
+    var h = rect.height || canvas.height;
+    canvas.width = Math.round(w * ratio);
+    canvas.height = Math.round(h * ratio);
+    var ctx = canvas.getContext('2d');
+    ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+    return { ctx: ctx, w: w, h: h };
+  }
+
+  var signalCanvas = document.getElementById('signalCanvas');
+  var resultCanvas = document.getElementById('resultCanvas');
+  var signalDims, resultDims;
+
+  function resizeAll(){
+    signalDims = setupCanvas(signalCanvas);
+    resultDims = setupCanvas(resultCanvas);
+    drawAll();
+  }
+
+  function layout(w, h){
+    var padL = 34, padR = 16, padT = 14, padB = 14;
+    return { x0: padL, x1: w - padR, y0: padT, y1: h - padB };
+  }
+
+  function drawGrid(ctx, w, h, L){
+    var line = cssVar('--line');
+    var muted = cssVar('--muted');
+    ctx.strokeStyle = line;
+    ctx.lineWidth = 1;
+    [0, 0.5, 1].forEach(function(v){
+      var y = L.y1 - v * (L.y1 - L.y0);
+      ctx.beginPath(); ctx.moveTo(L.x0, y); ctx.lineTo(L.x1, y); ctx.stroke();
+    });
+    ctx.fillStyle = muted;
+    ctx.font = "11px Arial, Helvetica, sans-serif";
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'middle';
+    [0, 0.5, 1].forEach(function(v){
+      var y = L.y1 - v * (L.y1 - L.y0);
+      ctx.fillText(v.toFixed(1), L.x0 - 6, y);
+    });
+  }
+
+  function drawCurve(ctx, L, values, color, lineWidth){
+    ctx.strokeStyle = color;
+    ctx.lineWidth = lineWidth;
+    ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+    ctx.beginPath();
+    for (var i = 0; i < values.length; i++){
+      var x = L.x0 + (L.x1 - L.x0) * (i / (values.length - 1));
+      var y = L.y1 - Math.max(0, Math.min(1, values[i])) * (L.y1 - L.y0);
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+  }
+
+  function fillUnderCurve(ctx, L, values, softColor){
+    ctx.fillStyle = softColor;
+    ctx.beginPath();
+    ctx.moveTo(L.x0, L.y1);
+    for (var i = 0; i < values.length; i++){
+      var x = L.x0 + (L.x1 - L.x0) * (i / (values.length - 1));
+      var y = L.y1 - Math.max(0, Math.min(1, values[i])) * (L.y1 - L.y0);
+      ctx.lineTo(x, y);
+    }
+    ctx.lineTo(L.x1, L.y1);
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  function drawSignalPanel(){
+    var ctx = signalDims.ctx, w = signalDims.w, h = signalDims.h;
+    ctx.clearRect(0, 0, w, h);
+    var L = layout(w, h);
+    drawGrid(ctx, w, h, L);
+    fillUnderCurve(ctx, L, signal, cssVar('--signal-soft'));
+    drawCurve(ctx, L, signal, cssVar('--signal'), 2.5);
+
+    // threshold line
+    var ty = L.y1 - state.threshold * (L.y1 - L.y0);
+    ctx.strokeStyle = cssVar('--threshold');
+    ctx.lineWidth = 2.5;
+    ctx.setLineDash([2, 0]);
+    ctx.beginPath();
+    ctx.moveTo(L.x0, ty); ctx.lineTo(L.x1, ty);
+    ctx.stroke();
+
+    ctx.fillStyle = cssVar('--threshold');
+    ctx.font = "700 11px 'Courier New', monospace";
+    ctx.textAlign = 'left';
+    ctx.textBaseline = state.threshold > 0.9 ? 'top' : 'bottom';
+    ctx.fillText('threshold', L.x0 + 4, ty + (state.threshold > 0.9 ? 4 : -4));
+  }
+
+  // signed layout: value range is -1..1, with 0 at the vertical center
+  function drawSignedGrid(ctx, w, h, L){
+    var line = cssVar('--line');
+    var muted = cssVar('--muted');
+    var ink = cssVar('--ink');
+    var midY = (L.y0 + L.y1) / 2;
+    ctx.strokeStyle = line;
+    ctx.lineWidth = 1;
+    [-1, -0.5, 0.5, 1].forEach(function(v){
+      var y = midY - v * (midY - L.y0);
+      ctx.beginPath(); ctx.moveTo(L.x0, y); ctx.lineTo(L.x1, y); ctx.stroke();
+    });
+    // zero line, emphasized
+    ctx.strokeStyle = ink;
+    ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.moveTo(L.x0, midY); ctx.lineTo(L.x1, midY); ctx.stroke();
+
+    ctx.fillStyle = muted;
+    ctx.font = "11px Arial, Helvetica, sans-serif";
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'middle';
+    [-1, -0.5, 0, 0.5, 1].forEach(function(v){
+      var y = midY - v * (midY - L.y0);
+      ctx.fillText(v.toFixed(1), L.x0 - 6, y);
+    });
+    return midY;
+  }
+
+  function drawSignedCurve(ctx, L, midY, values){
+    var posColor = cssVar('--result');
+    var negColor = cssVar('--negative');
+    var posSoft = cssVar('--result-soft');
+    var negSoft = cssVar('--negative-soft');
+    var span = midY - L.y0;
+
+    function yOf(v){ return midY - Math.max(-1, Math.min(1, v)) * span; }
+    function xOf(i){ return L.x0 + (L.x1 - L.x0) * (i / (values.length - 1)); }
+
+    // fill positive region
+    ctx.fillStyle = posSoft;
+    ctx.beginPath();
+    ctx.moveTo(L.x0, midY);
+    for (var i = 0; i < values.length; i++){ ctx.lineTo(xOf(i), yOf(Math.max(0, values[i]))); }
+    ctx.lineTo(L.x1, midY);
+    ctx.closePath();
+    ctx.fill();
+
+    // fill negative region
+    ctx.fillStyle = negSoft;
+    ctx.beginPath();
+    ctx.moveTo(L.x0, midY);
+    for (var j = 0; j < values.length; j++){ ctx.lineTo(xOf(j), yOf(Math.min(0, values[j]))); }
+    ctx.lineTo(L.x1, midY);
+    ctx.closePath();
+    ctx.fill();
+
+    // stroke the curve, switching color at the zero crossing
+    for (var k = 0; k < values.length - 1; k++){
+      ctx.strokeStyle = values[k] >= 0 ? posColor : negColor;
+      ctx.lineWidth = 2.5;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(xOf(k), yOf(values[k]));
+      ctx.lineTo(xOf(k + 1), yOf(values[k + 1]));
+      ctx.stroke();
+    }
+  }
+
+  function drawResultPanel(){
+    var ctx = resultDims.ctx, w = resultDims.w, h = resultDims.h;
+    ctx.clearRect(0, 0, w, h);
+    var L = layout(w, h);
+    var midY = drawSignedGrid(ctx, w, h, L);
+
+    var result = signal.map(function(v){ return v - state.threshold; });
+    drawSignedCurve(ctx, L, midY, result);
+    return result;
+  }
+
+  var EXAMPLE_SIGNAL = 0.5; // the fixed point used in the live equation card
+
+  function updateReadouts(result){
+    document.getElementById('readThreshold').textContent = state.threshold.toFixed(2);
+    var positive = 0;
+    for (var i = 0; i < result.length; i++){ if (result[i] > 0) positive++; }
+    var pct = Math.round(100 * positive / result.length);
+    document.getElementById('readPass').textContent = pct + '%';
+
+    var liveResult = EXAMPLE_SIGNAL - state.threshold;
+    var resultEl = document.getElementById('liveResultNum');
+    var tagEl = document.getElementById('liveResultTag');
+    document.getElementById('liveThresholdNum').textContent = state.threshold.toFixed(2);
+    resultEl.textContent = (liveResult < 0 ? '−' : '') + Math.abs(liveResult).toFixed(2);
+    resultEl.className = 'res ' + (liveResult > 0.001 ? 'pos' : (liveResult < -0.001 ? 'neg' : 'zero'));
+    tagEl.textContent = liveResult > 0.001 ? 'above the line, positive' : (liveResult < -0.001 ? 'below the line, negative' : 'exactly on the line, zero');
+  }
+
+  function drawAll(){
+    drawSignalPanel();
+    var result = drawResultPanel();
+    updateReadouts(result);
+  }
+
+  // ---------- interaction ----------
+  var slider = document.getElementById('thresholdSlider');
+  var playBtn = document.getElementById('playBtn');
+
+  function setThreshold(t){
+    state.threshold = Math.max(0, Math.min(1, t));
+    slider.value = state.threshold;
+    drawAll();
+  }
+
+  slider.addEventListener('input', function(){
+    state.playing = false;
+    playBtn.textContent = 'Sweep';
+    setThreshold(parseFloat(slider.value));
+  });
+
+  document.querySelectorAll('.preset').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      state.playing = false;
+      playBtn.textContent = 'Sweep';
+      setThreshold(parseFloat(btn.getAttribute('data-t')));
+    });
+  });
+
+  var SWEEP_PER_SEC = reduceMotion ? 0 : 0.35;
+  var lastT = null;
+
+  function frame(t){
+    if (!state.playing){ lastT = null; return; }
+    if (lastT === null) lastT = t;
+    var dt = (t - lastT) / 1000;
+    lastT = t;
+
+    state.threshold += SWEEP_PER_SEC * state.playDir * dt;
+    if (state.threshold >= 1){ state.threshold = 1; state.playDir = -1; }
+    if (state.threshold <= 0){ state.threshold = 0; state.playDir = 1; }
+    slider.value = state.threshold;
+    drawAll();
+    requestAnimationFrame(frame);
+  }
+
+  playBtn.addEventListener('click', function(){
+    state.playing = !state.playing;
+    playBtn.textContent = state.playing ? 'Pause' : 'Sweep';
+    if (state.playing){
+      lastT = null;
+      requestAnimationFrame(frame);
+    }
+  });
+
+  window.addEventListener('resize', resizeAll);
+  if (window.matchMedia){
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', drawAll);
+  }
+
+  resizeAll();
+})();
+</script>
+</body>
+</html>
