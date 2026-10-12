@@ -244,6 +244,7 @@
       <div class="spec-item"><div class="k">Location</div><div class="v">Main Bldg, B214A</div></div>
       <div class="spec-item"><div class="k">Credits</div><div class="v">3</div></div>
       <div class="spec-item"><div class="k">Format</div><div class="v">Live in-person, sessions recorded</div></div>
+      <div class="spec-item"><div class="k">Course Code</div><div class="v">ICCC-515 / ISCM-215</div></div>
     </div>
     <p class="office-hours" style="margin-top:18px; font-size:.9rem; color:var(--muted);">Office hours are by appointment, email me at least 48 hours before you need to meet.</p>
   </header>
@@ -269,9 +270,10 @@
     <ul class="outcomes">
       <li><strong>Develop technical proficiency across music technology tools and workflows.</strong> Real-time audio-visual environments, matching audio-reactive visuals and TouchDesigner&rsquo;s own workflow.</li>
       <li><strong>Create immersive virtual and augmented environments.</strong> The 3D introduction and the Instancing/POPs work that follows.</li>
-      <li><strong>Integrate spatial media into cohesive experiential systems.</strong> Building interactive, real-time visual systems across the semester, especially the Week 11&ndash;13 cross-tool final project work.</li>
+      <li><strong>Integrate spatial media into cohesive experiential systems.</strong> Building interactive, real-time visual systems across the semester, especially the Week 9&ndash;13 cross-tool final project work.</li>
+      <li><strong>Connect to other software.</strong> Link a TouchDesigner network to at least one other piece of software, using a protocol such as OSC or MIDI.</li>
     </ul>
-    <p style="margin-top:14px; font-size:.92rem; color:var(--muted);">Masters students additionally build toward leading interdisciplinary teams on the required group final, independent research beyond what&rsquo;s shown in class, and articulating the thinking behind spatial and visual work.</p>
+    <p style="margin-top:14px; font-size:.92rem; color:var(--muted);">Masters students additionally build toward original tools or techniques beyond what&rsquo;s covered in class, and a leading technical role in the required group final.</p>
   </section>
 
   <section id="weekly">
@@ -282,7 +284,7 @@
 
     <div class="callout">
       <span class="eyebrow">Weekly homework, in one line</span>
-      <p>Every class is recorded, and that recording is always available as a reference. Each week&rsquo;s assignment is posted in <strong>Canvas</strong> &mdash; sometimes it&rsquo;s recreating that day&rsquo;s network plus adding a new operator, sometimes it&rsquo;s your own exploration, and sometimes there are specific instructions. Always check Canvas for that week&rsquo;s assignment. Due <strong>11:59 PM the night of class</strong>, then submission closes, no late work.</p>
+      <p>Every class is recorded, and that recording is always available as a reference. Each week&rsquo;s assignment is posted in <strong>Canvas</strong> &mdash; sometimes it&rsquo;s recreating that day&rsquo;s network plus adding a new operator, sometimes it&rsquo;s your own exploration, and sometimes there are specific instructions. Always check Canvas for that week&rsquo;s assignment. Due <strong>11:59 PM one week after it&rsquo;s assigned</strong>, the same day as the following class. Late work is accepted only under specific circumstances, considered case by case. See Course Policies below.</p>
       <p><strong>Final project:</strong> identical structure and deadlines to Coding Music Fundamentals and Coding Art Fundamentals. See Final Project below.</p>
     </div>
 
@@ -387,18 +389,23 @@
     <div class="week-row">
       <div class="wk"><span class="n">10</span><span class="d">Nov 11</span></div>
       <div>
-        <h3>POPs: Point Clouds &amp; Particles</h3>
+        <h3>Talking to Other Software</h3>
         <ul class="desc-list">
-          <li>TouchDesigner&rsquo;s newer particle and point-cloud family (POPs).</li>
-          <li>Again scaled to run well on personal laptops.</li>
+          <li>Receiving a live signal, OSC or MIDI In, from a ChucK or Coding Art Fundamentals classmate&rsquo;s software, driving one TouchDesigner parameter.</li>
         </ul>
-        <p class="assign">Assignment: see this week&rsquo;s instructions in Canvas. Your group&rsquo;s presentation slot for Dec 2 also goes out this week.</p>
+        <p class="assign">Assignment: wire up one external signal &mdash; a classmate&rsquo;s output or a test OSC app &mdash; driving one TouchDesigner parameter, as a proof of concept. Your group&rsquo;s presentation slot for Dec 2 also goes out this week.</p>
       </div>
     </div>
-    <div class="week-row shared">
-      <span class="tag">Shared across all three courses</span>
-      <h3 style="margin-bottom:6px;">Week 11 &middot; Nov 18 &middot; Talking to Other Software</h3>
-      <p class="desc" style="margin-bottom:0;">OSC/MIDI in from ChucK and openFrameworks classmates.</p>
+    <div class="week-row">
+      <div class="wk"><span class="n">11</span><span class="d">Nov 18</span></div>
+      <div>
+        <h3>POPs: Point Clouds &amp; GPU Particles</h3>
+        <ul class="desc-list">
+          <li>TouchDesigner&rsquo;s newer GPU compute particle and point-cloud family (POPs).</li>
+          <li>Again scaled to run well on personal laptops.</li>
+        </ul>
+        <p class="assign">Assignment: build a POPs based point cloud or particle system. See this week&rsquo;s instructions in Canvas.</p>
+      </div>
     </div>
     <div class="week-row shared">
       <span class="tag">Shared across all three courses</span>
@@ -412,8 +419,8 @@
     </div>
     <div class="week-row shared">
       <span class="tag">Shared across all three courses</span>
-      <h3 style="margin-bottom:6px;">Week 14 &middot; Dec 9 &middot; Digital Submission &amp; Portfolio</h3>
-      <p class="desc" style="margin-bottom:0;">Recorded performance due, along with the required remote AI workshop, including a TouchDesigner-specific segment (attendance counts toward your final project grade, see Grading), and your Digital Expo portfolio.</p>
+      <h3 style="margin-bottom:6px;">Week 14 &middot; Dec 9 &middot; AI Workshop &amp; Portfolio Prep</h3>
+      <p class="desc" style="margin-bottom:0;">Required remote AI workshop, including a TouchDesigner-specific segment on using Claude to help debug TD expressions and Python DAT scripts (attendance counts toward your final project grade, see Grading). The Digital Expo portfolio deadline is Friday, Dec 11, two days later.</p>
     </div>
   </section>
 
@@ -430,7 +437,7 @@
       <div><dt>Masters student leadership</dt><dd>Each group should include at least one Masters student, when enrollment allows. Masters students are expected to take a leading role in their group. It&rsquo;s a chance to practice the leadership and professionalism needed on mixed-experience teams, in school and afterward.</dd></div>
       <div><dt>Connecting outward</dt><dd>Every group&rsquo;s TouchDesigner content needs to connect to at least one other piece of software or language, such as ChucK, p5.js, openFrameworks, or Ableton, or anything that speaks OSC, MIDI, or another live protocol. You aren&rsquo;t limited to this list; any tool that fits the piece works.</dd></div>
       <div><dt>Reusing one project</dt><dd>If a group&rsquo;s project counts as the final for more than one of Luisa&rsquo;s three Fall 2026 courses, it has to incorporate each tool it&rsquo;s counting for: two tools if double-counted, all three if triple-counted.</dd></div>
-      <div><dt>Digital submission</dt><dd>Week 14 (Dec 9): a high-quality video/audio recording, due the same day, for grading and the Digital Expo portfolio. Specs go out by Week 12. It doesn&rsquo;t have to be a straight capture of the live show. This matches Coding Music Fundamentals and Coding Art Fundamentals exactly; there are no exceptions for any of the three courses.</dd></div>
+      <div><dt>Digital submission</dt><dd>Due Friday, Dec 11, at 11:59 PM: a high-quality video/audio recording for grading and the Digital Expo portfolio. Specs go out by Week 12. It doesn&rsquo;t have to be a straight capture of the live show. This matches Coding Music Fundamentals and Coding Art Fundamentals exactly; there are no exceptions for any of the three courses.</dd></div>
     </dl>
   </section>
 
@@ -456,8 +463,21 @@
       <div class="lp">LP<br>30&ndash;59</div>
       <div class="nc">NC<br>0&ndash;29</div>
     </div>
-    <p style="margin-top:24px; font-size:.92rem; color:var(--muted);">Attendance at the Week 14 AI workshop counts for 10% of your final project grade. If you miss it, you lose that part of your grade.</p>
-    <p style="margin-top:14px; font-size:.92rem; color:var(--muted);">If you miss 3 or more classes without an excused absence, you will receive a No Credit for the course. Sign in every class. Sessions are recorded, so you can catch up on content after a missed class, but that doesn&rsquo;t count as attendance credit.</p>
+    <p style="margin-top:24px; font-size:.92rem; color:var(--muted);">Attendance at the Week 14 AI workshop counts for 10% of your final project grade. If you miss it, you lose that part of your grade. See Course Policies below for the attendance policy.</p>
+  </section>
+
+  <section id="policies">
+    <div class="section-head">
+      <span class="eyebrow">Policies</span>
+      <h2>Course Policies</h2>
+    </div>
+    <h3 style="margin-top:0; margin-bottom:10px; font-size:1.02rem;">Attendance</h3>
+    <p>Three or more unexcused absences result in a No Credit for the course. Sign in at every class. Classes are recorded, so a student who misses one can catch up on the content, though this does not substitute for attendance credit.</p>
+    <h3 style="margin-top:28px; margin-bottom:10px; font-size:1.02rem;">Submission and Late Work</h3>
+    <p>Each weekly assignment is due by 11:59 PM one week after it&rsquo;s assigned, the same day as the following class. For example, the assignment given in the October 7 class is due by 11:59 PM on October 14. Late work is accepted only under specific circumstances, considered on a case by case basis.</p>
+    <h3 style="margin-top:28px; margin-bottom:10px; font-size:1.02rem;">Statement on Artificial Intelligence</h3>
+    <p>Students are asked not to use AI tools such as ChatGPT, Copilot, or Claude to complete their weekly assignments, particularly in the first half of the semester, while core skills are still being built by hand. Without understanding what the underlying concept is actually doing, a student cannot tell when an AI tool&rsquo;s suggestion is wrong, or adapt it to their own work. This course builds that understanding first, one concept at a time, so that later, when AI tools do assist, students can read and verify what is produced rather than trusting it blindly.</p>
+    <p>A required workshop on using AI tools well takes place in Week 14, once the fundamentals are solid enough for AI to help rather than become a crutch. This statement uses the same wording across all three Fall 2026 Creative Computing courses. This week&rsquo;s workshop includes a TouchDesigner-specific segment on using Claude to help debug TD expressions and Python DAT scripts, and to explore asset generation feeding into TOPs.</p>
   </section>
 
   <section id="materials">
