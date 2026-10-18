@@ -25,13 +25,12 @@
   <div class="nav-inner">
     <div class="nav-title"><a href="index.html">Coding Art Fundamentals</a></div>
     <div class="nav-links">
-      <a href="overview.html">Overview</a>
+      <a href="index.html">Overview</a>
       <a href="schedule.html" class="current">Schedule</a>
       <a href="midterm.html">Midterm</a>
       <a href="final.html">Final</a>
       <a href="materials.html">Materials</a>
       <a href="policies.html">Policies</a>
-      <a href="../index.html">&larr; All courses</a>
     </div>
   </div>
 </nav>
@@ -43,165 +42,277 @@
   <header class="page-head" id="top">
     <span class="eyebrow">Coding Art Fundamentals &middot; Schedule</span>
     <h1 style="margin-top:10px;">Weekly Schedule</h1>
-    <p class="thesis">Weeks 1&ndash;14, moving from p5.js to openFrameworks and C++. Three weeks are shared across all three Fall 2026 Creative Computing courses.</p>
+    <p class="thesis">Weeks 1&ndash;14, moving from p5.js to openFrameworks and C++. Each week below is a short version; full assignment instructions, with step by step detail, are posted in Canvas.</p>
   </header>
 
   <section>
     <div class="callout">
-      <span class="eyebrow">Weekly homework, in one line</span>
-      <p>Every class is recorded, and that recording is always available as a reference. Each week&rsquo;s assignment is posted in <strong>Canvas</strong> &mdash; sometimes it&rsquo;s reproducing what we did in class plus adding something, sometimes it&rsquo;s your own exploration, and sometimes there are specific instructions. Always check Canvas for that week&rsquo;s assignment. Due <strong>11:59 PM one week after it&rsquo;s assigned</strong>, the same day as the following class. Late work is accepted only under specific circumstances, considered case by case. See <a href="policies.html">Policies</a>.</p>
-      <p><strong>Final project:</strong> identical structure and deadlines to Coding Music Fundamentals and Intro to TouchDesigner. See <a href="final.html">Final Project</a>.</p>
-    </div>
-
-    <div class="standing-box">
-      <span class="eyebrow">Standing assignment &middot; given Week 1</span>
-      <p>Read the Vectors and Noise chapters of <em>The Nature of Code</em>, or watch the equivalent Coding Train video series. Do this at your own pace, but the Vectors material needs to be done by Week 9 and the Noise material by Week 11. Each of those weeks has a short in-class quiz checking basic understanding, not coding fluency.</p>
+      <span class="eyebrow">Deadlines</span>
+      <p>Each weekly assignment is due by <strong>11:59 PM one week after it&rsquo;s assigned</strong>, the same day as the following class. Late work is accepted only under specific circumstances, considered case by case. See <a href="policies.html">Policies</a>.</p>
+      <p><strong>Week 10 (Nov 11)</strong> is pre-recorded instead of in person, for a campus holiday.</p>
     </div>
 
     <div class="week-row">
       <div class="wk"><span class="n">01</span><span class="d">Sept 9</span><span class="lang">p5.js</span></div>
       <div>
-        <h3>Foundations Review</h3>
+        <h3>Foundations and First Code</h3>
+        <p class="eyebrow" style="margin-bottom:6px;">In Class</p>
         <ul class="desc-list">
-          <li>Opening the <a href="https://editor.p5js.org/" target="_blank" rel="noopener">p5.js web editor</a> together in class for this first session, not VS Code &mdash; VS Code still gets installed today, just not used yet.</li>
-          <li>A simple instructor example first, then the class types a few things together in p5.js, live.</li>
+          <li>Course introduction, expectations, and course load.</li>
+          <li>A short live demo on why fundamentals matter before leaning on AI tools: solving a short sequence of arithmetic problems by hand, starting simple (two-digit addition) and getting harder each time (multi-digit multiplication, then a multi-step order-of-operations problem with parentheses and division), then handing that last problem to an AI tool and watching it solve it live, sometimes correctly, sometimes with a wrong step buried in the middle. The point: a student who worked through the problem by hand can immediately catch the AI&rsquo;s mistake; a student who skipped straight to the AI has no way to know it&rsquo;s wrong.</li>
+          <li>First code in the p5.js web editor (<a href="https://editor.p5js.org/" target="_blank" rel="noopener">editor.p5js.org</a>): creating an account and saving a sketch.</li>
+          <li>What syntax is, and how it changes across languages.</li>
+          <li>Cartesian coordinates (x, y) and basic shapes, using the p5.js reference library.</li>
+          <li>Shape parameters: position, size, and color.</li>
+          <li>The <span class="mono">setup()</span> and <span class="mono">draw()</span> functions, without movement yet, and why line order matters.</li>
         </ul>
-        <p class="assign">Assignment: watch this short, beginner-friendly series on creative coding, then build a first p5.js sketch &mdash; a shape, placed at a position, given an RGB color, moved with sine/cosine. Copy-pasting the code shown in the videos is completely fine here &mdash; the goal is refreshing the vocabulary (coordinates, RGB, sine/cos) and getting some initial hands-on coding in, not understanding concepts like variables yet (that comes later). Submit as a p5.js web editor sketch link, submission mechanics shown live in class.</p>
-        <ul class="desc-list" style="margin-top:10px;">
-          <li><a href="https://www.youtube.com/watch?v=yPWkPOfnGsw" target="_blank" rel="noopener">Video 1</a></li>
-          <li><a href="https://www.youtube.com/watch?v=MXs1cOlidWs" target="_blank" rel="noopener">Video 2</a></li>
-          <li><a href="https://www.youtube.com/watch?v=c3TeLi6Ns1E" target="_blank" rel="noopener">Video 3</a></li>
-          <li><a href="https://www.youtube.com/watch?v=riiJTF5-N7c" target="_blank" rel="noopener">Video 4</a></li>
-          <li><a href="https://www.youtube.com/watch?v=LuGsp5KeJMM" target="_blank" rel="noopener">Video 5</a></li>
-          <li><a href="https://www.youtube.com/watch?v=m463X1cqV6s" target="_blank" rel="noopener">Video 6 (sine/cosine)</a></li>
+        <p class="eyebrow" style="margin-top:14px; margin-bottom:6px;">Assignment Overview</p>
+        <ul class="desc-list">
+          <li>Watch a short beginner video series on the p5.js workspace.</li>
+          <li>Build two or more colored shapes in the p5.js editor.</li>
+          <li>Research one artist working in interactive or real time digital art, and submit a short write-up with a link.</li>
+          <li>Install VS Code with the p5.js extensions.</li>
         </ul>
       </div>
     </div>
+
     <div class="week-row">
       <div class="wk"><span class="n">02</span><span class="d">Sept 16</span><span class="lang">p5.js</span></div>
       <div>
-        <h3>First Real Code</h3>
+        <h3>First Animation</h3>
+        <p class="eyebrow" style="margin-bottom:6px;">In Class</p>
         <ul class="desc-list">
-          <li>GitHub Pages goes live: your first hosted assignment.</li>
-          <li>Variables, <span class="mono">setup()</span>/<span class="mono">draw()</span>, <span class="mono">if</span>/<span class="mono">else</span>, and <span class="mono">for</span>/<span class="mono">while</span> loops.</li>
-          <li>Drawing shapes at XY positions.</li>
+          <li>Variables and conditionals (<span class="mono">if</span>/<span class="mono">else</span>), plus coding shorthand like <span class="mono">x++</span> and <span class="mono">x += 1</span>.</li>
+          <li><span class="mono">draw()</span> and <span class="mono">setup()</span> in action: what happens every frame, and p5.js&rsquo;s overall structure.</li>
+          <li>The bouncing ball example.</li>
+          <li>GitHub Pages goes live, first code submission of the semester.</li>
         </ul>
-        <p class="assign">Assignment: see this week&rsquo;s instructions in Canvas.</p>
+        <p class="eyebrow" style="margin-top:14px; margin-bottom:6px;">Assignment Overview</p>
+        <ul class="desc-list">
+          <li>Based on the code used in class (<a href="https://github.com/pinzonluisa/CodingArtFundamentals-ClassExamples" target="_blank" rel="noopener">class code repository</a>), create a piece using variables and conditionals.</li>
+          <li>Use the class exercises as a starting point to develop your own piece, making sure to use variables and conditionals.</li>
+          <li>Feel free to explore the p5.js library to push further than what was covered in class.</li>
+        </ul>
       </div>
     </div>
+
     <div class="week-row">
       <div class="wk"><span class="n">03</span><span class="d">Sept 23</span><span class="lang">p5.js</span></div>
       <div>
-        <h3>Randomness, Arrays &amp; Sine/Cosine</h3>
+        <h3>Coloring with Arrays</h3>
+        <p class="eyebrow" style="margin-bottom:6px;">In Class</p>
         <ul class="desc-list">
-          <li>A random-driven shape.</li>
-          <li>An array-driven row of shapes.</li>
-          <li>A shape oscillating with <span class="mono">sin()</span>/<span class="mono">cos()</span>.</li>
-          <li>One combined piece pulling all three together.</li>
+          <li>Hex color.</li>
+          <li>Arrays.</li>
+          <li>Loops.</li>
         </ul>
-        <p class="assign">Assignment: see this week&rsquo;s instructions in Canvas.</p>
+        <p class="eyebrow" style="margin-top:14px; margin-bottom:6px;">Assignment Overview</p>
+        <ul class="desc-list">
+          <li>Based on the code used in class (<a href="https://github.com/pinzonluisa/CodingArtFundamentals-ClassExamples" target="_blank" rel="noopener">class code repository</a>), create a piece using arrays and loops.</li>
+          <li>Use the class exercises as a starting point to develop your own piece, making sure to use arrays, loops, and hex color.</li>
+          <li>Feel free to explore the p5.js library to push further than what was covered in class.</li>
+        </ul>
       </div>
     </div>
+
     <div class="week-row">
       <div class="wk"><span class="n">04</span><span class="d">Sept 30</span><span class="lang">p5.js</span></div>
       <div>
-        <h3>Modulo</h3>
+        <h3>Rotation and Randomness</h3>
+        <p class="eyebrow" style="margin-bottom:6px;">In Class</p>
         <ul class="desc-list">
-          <li>The modulo operator, and how it&rsquo;s used to index into an array.</li>
-          <li>Soft lines drifting around the canvas, each drawn from a small array of trailing points connected end to end.</li>
-          <li>Using modulo indexing so each line always closes into a loop.</li>
+          <li>Loop review, using nested, shrinking squares drawn from a color array.</li>
+          <li><span class="mono">translate()</span> and <span class="mono">rotate()</span>, with <span class="mono">push()</span>/<span class="mono">pop()</span> shown first without and then with, to isolate each shape&rsquo;s transform.</li>
+          <li><span class="mono">random()</span> used for rotation speed and, in the final example, to pick a color from the array.</li>
         </ul>
-        <p class="assign">Assignment: see this week&rsquo;s instructions in Canvas.</p>
+        <p class="eyebrow" style="margin-top:14px; margin-bottom:6px;">Assignment Overview</p>
+        <ul class="desc-list">
+          <li>Based on the code used in class (<a href="https://github.com/pinzonluisa/CodingArtFundamentals-ClassExamples" target="_blank" rel="noopener">class code repository</a>), create a piece using rotation and randomness.</li>
+          <li>Use the class exercises as a starting point to develop your own piece, making sure to use <span class="mono">translate()</span>, <span class="mono">rotate()</span>, and <span class="mono">push()</span>/<span class="mono">pop()</span>.</li>
+          <li>Feel free to explore the p5.js library to push further than what was covered in class.</li>
+        </ul>
       </div>
     </div>
+
     <div class="week-row">
       <div class="wk"><span class="n">05</span><span class="d">Oct 7</span><span class="lang">p5.js</span></div>
       <div>
-        <h3>Functions &amp; Oscillation Revisited</h3>
+        <h3>The Bouncing Ball: Functions</h3>
+        <p class="eyebrow" style="margin-bottom:6px;">In Class</p>
         <ul class="desc-list">
-          <li>Declaring and calling functions.</li>
-          <li>Local versus global scope.</li>
-          <li>Using a function to add oscillating movement, revisiting Week 3&rsquo;s sine/cosine.</li>
+          <li>Introduction to functions: the bouncing ball refactored into functions, including a random color change triggered on each bounce.</li>
+          <li>Sine, with cosine introduced as an alternative, explained for oscillation, first mapped directly to shape size and color, then refactored into a reusable return function.</li>
+          <li>Loops and functions combined to draw multiple layered shapes offset by the sine wave, ending with a mouse interactive color inversion example.</li>
         </ul>
-        <p class="assign">Assignment: see this week&rsquo;s instructions in Canvas.</p>
-        <p class="assign" style="margin-top:8px;"><a href="../interactives/week5-functions-and-oscillation-revisited.html" target="_blank" rel="noopener">Full Week 5 content page &rarr;</a></p>
+        <p class="eyebrow" style="margin-top:14px; margin-bottom:6px;">Assignment Overview</p>
+        <ul class="desc-list">
+          <li>Based on the code used in class (<a href="https://github.com/pinzonluisa/CodingArtFundamentals-ClassExamples" target="_blank" rel="noopener">class code repository</a>), create a piece using functions.</li>
+          <li>Use the class exercises as a starting point to develop your own piece, making sure to use functions, along with sine or cosine for motion or color.</li>
+          <li>Feel free to explore the p5.js library to push further than what was covered in class.</li>
+        </ul>
+        <p class="assign" style="margin-top:10px;"><a href="../interactives/week5-functions-and-oscillation-revisited.html" target="_blank" rel="noopener">Full Week 5 content page &rarr;</a></p>
       </div>
     </div>
+
     <div class="week-row">
       <div class="wk"><span class="n">06</span><span class="d">Oct 14</span><span class="lang">p5.js</span></div>
       <div>
-        <h3>Classes</h3>
+        <h3>Building a Class: Object-Oriented Programming</h3>
+        <p class="eyebrow" style="margin-bottom:6px;">In Class</p>
         <ul class="desc-list">
-          <li>A custom class: constructor, member variables, <span class="mono">display()</span>/<span class="mono">update()</span> methods.</li>
-          <li>Getting two instances on screen.</li>
-          <li>Pre-midterm consolidation.</li>
+          <li>Starting from a new function based sketch of layered, offset circles that move and bounce around the canvas, the code gets refactored step by step into a class called <span class="mono">mover</span>: constructor, methods, and how to call an instance.</li>
+          <li>A second <span class="mono">mover</span> instance is added to show the same class driving two independent objects at once.</li>
+          <li>Creating a new <span class="mono">.js</span> file for the class and linking it from <span class="mono">index.html</span>.</li>
+          <li>Building an array of many <span class="mono">mover</span> instances at once is left for students to explore on their own.</li>
         </ul>
-        <p class="assign">Assignment: no separate assignment this week. This material is covered by the midterm instead (see Week 7).</p>
+        <p class="eyebrow" style="margin-top:14px; margin-bottom:6px;">Assignment Overview</p>
+        <ul class="desc-list">
+          <li>No separate weekly assignment this week.</li>
+          <li>This week&rsquo;s class work feeds directly into the Midterm Project, which requires at least one class.</li>
+        </ul>
       </div>
     </div>
+
     <div class="week-row shared">
       <span class="tag">Shared across all three courses</span>
-      <h3 style="margin-bottom:6px;">Week 7 &middot; Oct 21 &middot; Midterm</h3>
-      <p class="desc" style="margin-bottom:0;">The midterm covers everything from Weeks 1 through 6, including the custom class from Week 6. An interactive p5.js sketch demonstrating variables, conditionals, loops, randomness, arrays, a custom function, and a custom class. No fixed time slot; scheduling is coordinated across all three classes. See <a href="midterm.html">Midterm Project</a>.</p>
+      <h3 style="margin-bottom:10px;">Week 7 &middot; Oct 21 &middot; Midterm</h3>
+      <p class="eyebrow" style="margin-bottom:6px;">In Class</p>
+      <ul class="desc-list">
+        <li>Midterm, presented in class.</li>
+        <li>No fixed time slot, coordinated across the three Fall 2026 Creative Computing courses (Coding Art Fundamentals, Intro to TouchDesigner, and Coding Music Fundamentals).</li>
+      </ul>
+      <p class="eyebrow" style="margin-top:14px; margin-bottom:6px;">Assignment Overview</p>
+      <ul class="desc-list">
+        <li>See <a href="midterm.html">Midterm Project</a> for the full assignment.</li>
+        <li>Also due before Week 8: watch the pre-recorded walkthrough in Canvas covering installing openFrameworks, downloading the starter template from the <a href="https://github.com/pinzonluisa/OF_Starter-Template" target="_blank" rel="noopener">class template repository</a>, and how to upload openFrameworks work to GitHub for the rest of the semester.</li>
+        <li>This pre-Week-8 assignment is short and logistical, no coding involved: follow the steps shown in the video and upload the result to Canvas, confirming everything is installed, the template downloaded, and the upload process understood before Week 8&rsquo;s class.</li>
+        <li>If you run into trouble, reach out for help ahead of time.</li>
+      </ul>
     </div>
+
     <div class="week-row">
       <div class="wk"><span class="n">08</span><span class="d">Oct 28</span><span class="lang">oF / C++</span></div>
       <div>
-        <h3>oF/C++ Onboarding, and Port to C++</h3>
+        <h3>Intro to C++ and openFrameworks</h3>
+        <p class="eyebrow" style="margin-bottom:6px;">In Class</p>
         <ul class="desc-list">
-          <li>C++ syntax and oF&rsquo;s <span class="mono">setup()</span>/<span class="mono">update()</span>/<span class="mono">draw()</span> structure.</li>
-          <li>Header files (<span class="mono">.h</span>/<span class="mono">.cpp</span>).</li>
-          <li>Porting Week 6&rsquo;s class into a C++ class.</li>
+          <li>Introduction to C++ and the openFrameworks project generator.</li>
+          <li>The Week 6 bouncing ball exercise rebuilt in C++: same logic, new syntax.</li>
+          <li>C++ arrays have a fixed size, so this is also where <span class="mono">std::vector</span> comes in: C++&rsquo;s adjustable size container, and the equivalent of the resizable arrays used in JavaScript.</li>
         </ul>
-        <p class="assign">Assignment: see this week&rsquo;s instructions in Canvas.</p>
+        <p class="eyebrow" style="margin-top:14px; margin-bottom:6px;">Assignment Overview</p>
+        <ul class="desc-list">
+          <li>Based on the code used in class (<a href="https://github.com/pinzonluisa/CodingArtFundamentals-ClassExamples" target="_blank" rel="noopener">class code repository</a>), create a piece in C++ and openFrameworks.</li>
+          <li>Use the class exercises as a starting point to develop your own piece, making sure to use the openFrameworks <span class="mono">setup()</span>/<span class="mono">update()</span>/<span class="mono">draw()</span> structure.</li>
+          <li>If your piece used a resizable array in JavaScript, convert it into a C++ <span class="mono">std::vector</span>, since plain C++ arrays can&rsquo;t grow or shrink the way JavaScript arrays can.</li>
+          <li>Feel free to explore openFrameworks further than what was covered in class.</li>
+          <li>Submission is the same process as before, minus the GitHub Pages portion: openFrameworks doesn&rsquo;t run in the browser, so this week just means uploading your project to the class repository on GitHub.</li>
+        </ul>
       </div>
     </div>
+
     <div class="week-row">
       <div class="wk"><span class="n">09</span><span class="d">Nov 4</span><span class="lang">oF / C++</span></div>
       <div>
-        <h3>Vectors</h3>
+        <h3>Introduction to Noise</h3>
+        <p class="eyebrow" style="margin-bottom:6px;">In Class</p>
         <ul class="desc-list">
-          <li>Refactoring position and velocity into a single <span class="mono">ofVec2f</span> each.</li>
-          <li>Following the mouse.</li>
+          <li>Replacing <span class="mono">random()</span> with <span class="mono">ofNoise()</span> in the same mover, for smooth, organic motion.</li>
+          <li>Also the deadline to have your final project group formed.</li>
         </ul>
-        <p class="assign">Assignment: see this week&rsquo;s instructions in Canvas. This week is also the deadline to have your final group formed (minimum 2, maximum 3). Also: the Vectors quiz, on the standing reading assignment from Week 1.</p>
+        <p class="eyebrow" style="margin-top:14px; margin-bottom:6px;">Assignment Overview</p>
+        <ul class="desc-list">
+          <li>Based on the code used in class (<a href="https://github.com/pinzonluisa/CodingArtFundamentals-ClassExamples" target="_blank" rel="noopener">class code repository</a>), create a piece using noise.</li>
+          <li>Use the class exercises as a starting point to develop your own piece, making sure to use <span class="mono">ofNoise()</span> instead of <span class="mono">random()</span>.</li>
+          <li>Feel free to explore openFrameworks further than what was covered in class.</li>
+          <li>Read the Randomness chapter of <a href="https://natureofcode.com/random/" target="_blank" rel="noopener">The Nature of Code</a> for a deeper look at noise and randomness, and use it as a guide to push the assignment further.</li>
+        </ul>
       </div>
     </div>
+
     <div class="week-row">
       <div class="wk"><span class="n">10</span><span class="d">Nov 11</span><span class="lang">oF / C++</span></div>
       <div>
-        <h3>Connecting to Other Software through OSC</h3>
+        <h3>Connecting to Other Software and Adding Interactivity</h3>
+        <p class="eyebrow" style="margin-bottom:6px;">In Class</p>
         <ul class="desc-list">
-          <li>Sending OSC from an oF sketch to a ChucK patch using <span class="mono">ofxOsc</span>, a concrete example of two Fall 2026 courses talking to each other.</li>
+          <li>No class this week, a holiday.</li>
+          <li>The OSC, MIDI input, and mouse/keyboard interactivity material is pre-recorded instead and already available in Canvas.</li>
+          <li>Watch it during the week: there&rsquo;s no class to cover it in, but it&rsquo;s required groundwork for the final project.</li>
+          <li>A sign-up sheet for the Week 13 presentation slot still goes out this week, posted in Canvas since there&rsquo;s no class to hand it out in.</li>
         </ul>
-        <p class="assign">Assignment: see this week&rsquo;s instructions in Canvas, sending an OSC message from your own sketch. Your group&rsquo;s presentation slot for Dec 2 also goes out this week.</p>
+        <p class="eyebrow" style="margin-top:14px; margin-bottom:6px;">Assignment Overview</p>
+        <ul class="desc-list">
+          <li>No weekly assignment this week. Use the time to start prepping your final project.</li>
+          <li>Watching the pre-recorded video on connecting to other software and adding interactivity is required, even though there&rsquo;s nothing to submit for it: the final project depends on this material.</li>
+        </ul>
       </div>
     </div>
+
     <div class="week-row">
       <div class="wk"><span class="n">11</span><span class="d">Nov 18</span><span class="lang">oF / C++</span></div>
       <div>
-        <h3>Introduction to Noise</h3>
+        <h3>Introduction to Vectors</h3>
+        <p class="eyebrow" style="margin-bottom:6px;">In Class</p>
         <ul class="desc-list">
-          <li>Driving your mover with <span class="mono">ofNoise()</span> instead of randomness.</li>
-          <li>Exporting an openFrameworks project to a web version in HTML, plus a short discussion of the crossroads between different coding languages.</li>
+          <li>Refactoring position and velocity into a single <span class="mono">ofVec2f</span> each, following the mouse.</li>
+          <li>This is the final weekly assignment of the semester. Weeks 12 and 13 are final project work and the final performance.</li>
         </ul>
-        <p class="assign">Assignment: see this week&rsquo;s instructions in Canvas. Also: the Noise quiz, on the standing reading assignment from Week 1.</p>
+        <p class="eyebrow" style="margin-top:14px; margin-bottom:6px;">Assignment Overview</p>
+        <ul class="desc-list">
+          <li>Based on the code used in class (<a href="https://github.com/pinzonluisa/CodingArtFundamentals-ClassExamples" target="_blank" rel="noopener">class code repository</a>), create a piece using vectors.</li>
+          <li>Use the class exercises as a starting point to develop your own piece, making sure to use <span class="mono">ofVec2f</span> for position and velocity.</li>
+          <li>Feel free to explore openFrameworks further than what was covered in class.</li>
+          <li>Submission is the same process as before, minus the GitHub Pages portion: just upload your project to the class repository on GitHub.</li>
+          <li>Read the Vectors chapter of <a href="https://natureofcode.com/vectors/" target="_blank" rel="noopener">The Nature of Code</a> for a deeper look at vectors, and use it as a guide to push the assignment further.</li>
+        </ul>
       </div>
     </div>
+
     <div class="week-row shared">
       <span class="tag">Shared across all three courses</span>
-      <h3 style="margin-bottom:6px;">Week 12 &middot; Nov 25 &middot; Remote Day</h3>
-      <p class="desc" style="margin-bottom:0;">Shared CCRMA session, plus 1:1 help for troubleshooting and cross-tool wiring. Specs for the Week 14 digital submission go out today.</p>
+      <h3 style="margin-bottom:10px;">Week 12 &middot; Nov 25 &middot; Final Project Work</h3>
+      <p class="eyebrow" style="margin-bottom:6px;">In Class</p>
+      <ul class="desc-list">
+        <li>Remote day.</li>
+        <li>An optional Stanford CCRMA workshop on multimedia creative coding research and development.</li>
+        <li>Help is available during class time, and additional help slots are added throughout the week.</li>
+        <li>Final project work begins.</li>
+      </ul>
+      <p class="eyebrow" style="margin-top:14px; margin-bottom:6px;">Assignment Overview</p>
+      <ul class="desc-list">
+        <li>Final project work time, help available during class.</li>
+        <li>No separate submission this week.</li>
+      </ul>
     </div>
+
     <div class="week-row shared">
       <span class="tag">Shared across all three courses</span>
-      <h3 style="margin-bottom:6px;">Week 13 &middot; Dec 2 &middot; Final Performance</h3>
-      <p class="desc" style="margin-bottom:0;">Final project presented in person, in your group&rsquo;s assigned slot within the 1&ndash;6 PM window.</p>
+      <h3 style="margin-bottom:10px;">Week 13 &middot; Dec 2 &middot; Final Performance</h3>
+      <p class="eyebrow" style="margin-bottom:6px;">In Class</p>
+      <ul class="desc-list">
+        <li>Final performance, in person, within a shared 1&ndash;6 PM window.</li>
+        <li>Groups sign up for their exact slot during Week 10.</li>
+      </ul>
+      <p class="eyebrow" style="margin-top:14px; margin-bottom:6px;">Assignment Overview</p>
+      <ul class="desc-list">
+        <li>See <a href="final.html">Final Project</a> for the full assignment.</li>
+      </ul>
     </div>
+
     <div class="week-row shared">
       <span class="tag">Shared across all three courses</span>
-      <h3 style="margin-bottom:6px;">Week 14 &middot; Dec 9 &middot; AI Workshop &amp; Portfolio Prep</h3>
-      <p class="desc" style="margin-bottom:0;">Required remote AI workshop (attendance counts toward your final project grade, see <a href="overview.html#grading">Grading</a>). The Digital Expo portfolio deadline is Friday, Dec 11, two days later.</p>
+      <h3 style="margin-bottom:10px;">Week 14 &middot; Dec 9 &middot; Digital Submission and AI Workshop</h3>
+      <p class="eyebrow" style="margin-bottom:6px;">In Class</p>
+      <ul class="desc-list">
+        <li>Required remote AI workshop.</li>
+        <li>The Digital Expo portfolio deadline is Friday, Dec 11.</li>
+      </ul>
+      <p class="eyebrow" style="margin-top:14px; margin-bottom:6px;">Assignment Overview</p>
+      <ul class="desc-list">
+        <li>Attendance at the AI workshop counts as this week&rsquo;s assignment.</li>
+        <li>See <a href="final.html">Final Project</a> for the portfolio deadline.</li>
+      </ul>
     </div>
   </section>
 

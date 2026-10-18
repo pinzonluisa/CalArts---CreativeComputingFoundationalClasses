@@ -169,8 +169,8 @@ dl.spec dd { margin: 0; font-size: .95rem; }
 .scale-bar .lp { background: color-mix(in srgb, var(--accent) 25%, var(--surface-2)); }
 .scale-bar .nc { background: var(--surface-2); color: var(--muted); }
 
-ul.plain { margin: 0; padding-left: 1.2em; }
-ul.plain li { margin-bottom: 8px; }
+ul.plain, ol.plain { margin: 0; padding-left: 1.2em; }
+ul.plain li, ol.plain li { margin-bottom: 8px; }
 
 .course-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px,1fr)); gap: 16px; margin-top: 8px; }
 .course-card {
