@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Intro to TouchDesigner</title>
+<meta name="theme-color" content="#e5aa70">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/course-site.css">
+<style>
+  :root { --accent: #6b4a2f; --accent-ink: #6b4a2f; }
+</style>
+</head>
+<body>
+
+<div class="veil" aria-hidden="true">
+  <img class="veil__art" src="../assets/veil.svg" alt="" width="2000" height="1150">
+  <div class="veil__pool"></div>
+  <div class="veil__lantern"><img src="../assets/veil.svg" alt="" width="2000" height="1150"></div>
+</div>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-title"><a href="index.html">Intro to TouchDesigner</a></div>
+    <div class="nav-links">
+      <a href="index.html" class="current">Overview</a>
+      <a href="schedule.html">Schedule</a>
+      <a href="midterm.html">Midterm</a>
+      <a href="final.html">Final</a>
+      <a href="resources.html">Resources</a>
+      <a href="policies.html">Policies</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <a class="back-home" href="../index.html">&larr; All courses</a>
+
+  <header class="page-head" id="top">
+    <span class="eyebrow">CalArts &middot; Fall 2026 &middot; Instructor: Luisa Pinzon</span>
+    <h1 style="margin-top:10px;">Intro to TouchDesigner</h1>
+    <div class="spec-sheet">
+      <div class="spec-item"><div class="k">Meets</div><div class="v">Wed, 1:00&ndash;2:50 PM</div></div>
+      <div class="spec-item"><div class="k">Location</div><div class="v">Main Bldg, B214A</div></div>
+      <div class="spec-item"><div class="k">Credits</div><div class="v">3</div></div>
+      <div class="spec-item"><div class="k">Format</div><div class="v">TouchDesigner, 2D then 3D</div></div>
+    </div>
+  </header>
+
+  <div class="section-nav-row">
+    <div class="section-nav">
+      <a href="schedule.html">Schedule<span class="view">View &rarr;</span></a>
+      <a href="midterm.html">Midterm<span class="view">View &rarr;</span></a>
+      <a href="final.html">Final<span class="view">View &rarr;</span></a>
+      <a href="resources.html">Resources<span class="view">View &rarr;</span></a>
+      <a href="policies.html">Policies<span class="view">View &rarr;</span></a>
+    </div>
+  </div>
+
+  <section id="description" style="padding-bottom:64px;">
+    <p>Intro to TouchDesigner introduces TouchDesigner, a node based platform for building interactive, real time visuals. The course is built for beginners: no prior TouchDesigner experience is necessary, and it&rsquo;s a strong fit for artists, designers, and creatives who want to work with interactive visuals, audio reactive systems, and real time 3D.</p>
+    <p>TouchDesigner&rsquo;s visual, node based workflow makes the same programming ideas taught in Coding Art Fundamentals, logic, data, and transformation, visible as a network of connected operators instead of lines of code. The course builds technical fluency in TouchDesigner&rsquo;s own terms, one operator family at a time, while staying open to where a student&rsquo;s own interests pull the work.</p>
+
+    <h3 style="margin-top:32px; margin-bottom:12px; font-size:1.06rem;">Course Content</h3>
+    <p>Demonstrations are built live in class, node by node. A few weeks also share a pre-made reference network for students to open and explore on their own, on top of that week&rsquo;s own demonstration. The course divides into two halves, moving from foundational 2D work into 3D, GPU driven systems, and cross-software connection.</p>
+
+    <h4 style="margin-top:24px; margin-bottom:10px; font-size:.92rem; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); font-weight:700;">Part 1: 2D Foundations</h4>
+    <p>The first half builds a 2D visual toolkit, one operator family at a time, covering:</p>
+    <ul class="plain">
+      <li>TOPs (Texture Operators): image and video processing, color, and compositing</li>
+      <li>CHOPs (Channel Operators): numeric signals over time, used to animate and drive other operators</li>
+      <li>Feedback, noise, and generative image techniques</li>
+      <li>Audio reactivity and manual control through Panel COMPs</li>
+    </ul>
+    <p>Every week from Week 1 through Week 6 carries a running requirement: each assignment has to include at least one TOP the student hasn&rsquo;t used before, found through TouchDesigner&rsquo;s own operator documentation (right-click any operator &rarr; Help) rather than demoed in class.</p>
+    <p><strong>Midterm Project.</strong> This is where the first half&rsquo;s skills come together: an audio reactive TouchDesigner piece, built by experimenting with image processing, geometric shapes, noise, or video input, using the &ldquo;2D Compile&rdquo; network and techniques from the weeks leading up to it as a starting point. See the <a href="midterm.html">Midterm Project</a> page for the full assignment.</p>
+
+    <h4 style="margin-top:24px; margin-bottom:10px; font-size:.92rem; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); font-weight:700;">Part 2: 3D, Instancing, and Connecting Outward</h4>
+    <p>The second half introduces 3D and GPU driven systems, then opens TouchDesigner outward to other software:</p>
+    <ul class="plain">
+      <li>3D scenes: geometry, cameras, lights, and render output</li>
+      <li>GPU instancing and POPs (Point Cloud/Particle Operators), TouchDesigner&rsquo;s newer GPU compute particle family</li>
+      <li>Receiving a live signal from another piece of software through OSC or MIDI</li>
+    </ul>
+    <p>See the <a href="schedule.html">Course Schedule</a> page for the week-by-week breakdown of this half.</p>
+    <p><strong>Final Project.</strong> The final project is done in groups, intentionally. Collaboration and co-creation are a core part of any art practice, and one of the things that keeps human made work different from anything a machine can produce on its own. Working in a group also builds skills every professional needs: communicating clearly, solving problems together, asking for help, and reaching decisions as a team. See the <a href="final.html">Final Project</a> page for the full assignment.</p>
+
+    <h3 style="margin-top:32px; margin-bottom:12px; font-size:1.06rem;">Portfolio</h3>
+    <p>A GitHub repository of project files (<span class="mono">.toe</span>/<span class="mono">.tox</span>) builds a working portfolio, alongside a rendered video of each major project since TouchDesigner&rsquo;s own files aren&rsquo;t readable the way code is. The final project adds a digital recording of the performance as part of that same portfolio.</p>
+
+    <h3 style="margin-top:32px; margin-bottom:12px; font-size:1.06rem;">Future Pathways</h3>
+    <p>The operator fluency and GPU driven techniques built in this course carry directly into later specializations, including:</p>
+    <ul class="plain">
+      <li>Projection mapping and spatial, immersive environments</li>
+      <li>Sensor driven interaction, robotics, and mechatronics</li>
+      <li>Real time audio-visual performance systems</li>
+      <li>3D modeling and procedural systems</li>
+    </ul>
+
+    <h3 style="margin-top:32px; margin-bottom:12px; font-size:1.06rem;">Learning Outcomes</h3>
+    <p>By the end of this course, BFA students will be able to:</p>
+    <ul class="outcomes">
+      <li>Build real time, interactive visual systems in TouchDesigner, using TOPs, CHOPs, and 3D operators</li>
+      <li>Apply core creative coding techniques, including feedback, noise, and GPU instancing, to build an original interactive visual piece</li>
+      <li>Build and document a working TouchDesigner project as a portfolio piece, including a GitHub repository with a README</li>
+      <li>Connect a TouchDesigner network to at least one other piece of software, using a protocol such as OSC or MIDI</li>
+    </ul>
+    <p style="margin-top:14px; font-size:.92rem; color:var(--muted);">MFA students, in addition, begin building toward:</p>
+    <ul class="outcomes" style="font-size:.92rem; color:var(--muted);">
+      <li>Building original tools or techniques that go beyond what&rsquo;s covered in class</li>
+      <li>Taking a leading technical role in a collaborative, cross disciplinary final project</li>
+    </ul>
+
+    <h3 style="margin-top:32px; margin-bottom:12px; font-size:1.06rem;">Course Structure</h3>
+    <ul class="plain">
+      <li>Class length: 1 hour 50 minutes</li>
+      <li>Review of the previous class and questions</li>
+      <li>Live, node by node demonstration of new concepts in TouchDesigner</li>
+      <li>Space for questions and troubleshooting, with build time to work alongside or start the week&rsquo;s assignment</li>
+      <li>Next week&rsquo;s assignment and any pre-work named before class ends</li>
+    </ul>
+
+    <h3 style="margin-top:32px; margin-bottom:12px; font-size:1.06rem;">Class Recordings</h3>
+    <p>Every class is recorded, and the recording stays available afterward as a reference. There&rsquo;s a lot of content each week; recordings are the safety net for re-watching, not required viewing.</p>
+
+    <h3 style="margin-top:32px; margin-bottom:12px; font-size:1.06rem;">Materials</h3>
+    <p>Students need a laptop capable of running TouchDesigner, which is GPU heavy: older or integrated-graphics laptops may struggle from Week 8 (3D, Instancing, and POPs) onward. No computer lab is available this semester, so this must be a student&rsquo;s own machine, and instance and particle counts in Weeks 9 and 11 are kept to what a typical personal laptop handles comfortably.</p>
+    <ul class="plain">
+      <li>TouchDesigner (free, non-commercial license), installed in Week 1 in class</li>
+      <li>A GitHub account, used for the Digital Expo portfolio</li>
+      <li>A YouTube or Vimeo account, used for the Digital Expo portfolio&rsquo;s rendered recording</li>
+      <li>Canvas, for all weekly <span class="mono">.toe</span> submissions</li>
+    </ul>
+    <p>No textbook purchase is required. See the <a href="resources.html">Resources</a> page for class links.</p>
+
+    <h3 style="margin-top:32px; margin-bottom:12px; font-size:1.06rem;">Submission Model</h3>
+    <p>Each weekly assignment is posted in Canvas, and can vary week to week: sometimes it&rsquo;s recreating that day&rsquo;s network plus the required new operator, sometimes open exploration, sometimes specific instructions. Students submit their network as a <span class="mono">.toe</span> file through Canvas, zipped with its <span class="mono">Assets</span> folder if it uses any external assets, keeping asset references relative rather than as absolute file paths, so nothing breaks once it&rsquo;s unzipped on another machine. The Midterm and Final projects are both presented in person; see their own pages for details.</p>
+
+    <h3 style="margin-top:32px; margin-bottom:12px; font-size:1.06rem;" id="grading">Grading</h3>
+    <div class="bar" style="margin-top:0;">
+      <span style="width:50%; background: var(--accent);"></span>
+      <span style="width:20%; background: color-mix(in srgb, var(--accent) 60%, var(--surface-2));"></span>
+      <span style="width:30%; background: color-mix(in srgb, var(--accent) 30%, var(--surface-2));"></span>
+    </div>
+    <div class="bar-legend">
+      <span><span class="dot" style="background:var(--accent);"></span>Weekly assignments: 50%</span>
+      <span><span class="dot" style="background:color-mix(in srgb, var(--accent) 60%, var(--surface-2));"></span>Midterm project: 20%</span>
+      <span><span class="dot" style="background:color-mix(in srgb, var(--accent) 30%, var(--surface-2));"></span>Final project: 30%</span>
+    </div>
+    <p style="margin-top:14px; font-size:.92rem; color:var(--muted);">The weekly assignments category splits evenly across however many weekly assignments actually run that semester, not a fixed per-assignment percentage.</p>
+    <h4 style="margin-top:28px; margin-bottom:12px; font-size:.92rem; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); font-weight:700;">Grade scale</h4>
+    <div class="scale-bar">
+      <div class="hp">HP<br>80&ndash;100</div>
+      <div class="p">P<br>60&ndash;79</div>
+      <div class="lp">LP<br>30&ndash;59</div>
+      <div class="nc">NC<br>0&ndash;29</div>
+    </div>
+    <p style="margin-top:24px; font-size:.92rem; color:var(--muted);">All assignments are posted in Canvas with their instructions and deadline, and are submitted digitally through Canvas. The Midterm and Final projects additionally include an in person presentation. The Week 14 AI workshop doesn&rsquo;t have its own assignment; attendance that day counts as that week&rsquo;s assignment, within the weekly assignments category above.</p>
+  </section>
+
+  <footer>
+    <p>Intro to TouchDesigner &middot; CalArts, Fall 2026 &middot; Luisa Pinzon</p>
+    <a class="back-site" href="https://luisapinzon.com/">&larr; Back to luisapinzon.com</a>
+  </footer>
+
+</div>
+<script src="../assets/veil.js"></script>
+</body>
+</html>

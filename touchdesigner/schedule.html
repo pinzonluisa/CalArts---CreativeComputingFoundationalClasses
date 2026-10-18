@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Schedule &middot; Intro to TouchDesigner</title>
+<meta name="theme-color" content="#e5aa70">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/course-site.css">
+<style>
+  :root { --accent: #6b4a2f; --accent-ink: #6b4a2f; }
+</style>
+</head>
+<body>
+
+<div class="veil" aria-hidden="true">
+  <img class="veil__art" src="../assets/veil.svg" alt="" width="2000" height="1150">
+  <div class="veil__pool"></div>
+  <div class="veil__lantern"><img src="../assets/veil.svg" alt="" width="2000" height="1150"></div>
+</div>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-title"><a href="index.html">Intro to TouchDesigner</a></div>
+    <div class="nav-links">
+      <a href="index.html">Overview</a>
+      <a href="schedule.html" class="current">Schedule</a>
+      <a href="midterm.html">Midterm</a>
+      <a href="final.html">Final</a>
+      <a href="resources.html">Resources</a>
+      <a href="policies.html">Policies</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <a class="back-home" href="index.html">&larr; Back to Intro to TouchDesigner</a>
+
+  <header class="page-head" id="top">
+    <span class="eyebrow">Intro to TouchDesigner &middot; Schedule</span>
+    <h1 style="margin-top:10px;">Weekly Schedule</h1>
+  </header>
+
+  <section>
+    <div class="callout">
+      <span class="eyebrow">Deadlines</span>
+      <p>Each weekly assignment is due by <strong>11:59 PM one week after it&rsquo;s assigned</strong>, the same day as the following class. Late work is accepted only under specific circumstances, considered case by case. See <a href="policies.html">Policies</a>.</p>
+      <p><strong>Week 10 (Nov 11)</strong> is pre-recorded instead of in person, for a campus holiday.</p>
+    </div>
+
+    <div class="schedule-table-wrap">
+    <table class="schedule-table">
+      <thead>
+        <tr>
+          <th class="col-week">Week</th>
+          <th class="col-topic">Topic</th>
+          <th class="col-inclass">In Class</th>
+          <th class="col-assign">Assignment</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <tr>
+          <td class="wk-cell"><span class="n">01</span><span class="d">Sept 9</span><span class="lang">TD</span></td>
+          <td class="topic-cell" data-label="Topic">Welcome to TouchDesigner: Pixels, Assets, and an Exploratory Palette</td>
+          <td class="inclass-cell" data-label="In Class">
+            <ul class="desc-list">
+              <li>Install TouchDesigner and tour the interface.</li>
+              <li>A short live demo on why fundamentals matter before leaning on AI tools: solving a short sequence of arithmetic problems by hand, starting simple (two-digit addition) and getting harder each time (multi-digit multiplication, then a multi-step order-of-operations problem with parentheses and division), then handing that last problem to an AI tool and watching it solve it live, sometimes correctly, sometimes with a wrong step buried in the middle. The point: a student who worked through the problem by hand can immediately catch the AI&rsquo;s mistake; a student who skipped straight to the AI has no way to know it&rsquo;s wrong.</li>
+              <li>Pixels and resolution, what an asset is, and how to find an operator&rsquo;s own documentation (right-click any operator &rarr; Help).</li>
+              <li>Building a palette component by feel: Constant TOPs into a Table DAT into a Ramp TOP, compacted into a COMP.</li>
+              <li>A first look, just to see it, at the pre-made &ldquo;2D Compile&rdquo; network, a preview of where the semester is headed.</li>
+            </ul>
+          </td>
+          <td class="assign-cell" data-label="Assignment">
+            <ul class="desc-list">
+              <li>Recreate the palette component from class, and find and use one TOP you haven&rsquo;t used before, found through its own documentation rather than demoed in class.</li>
+              <li>Also: research one artist working in interactive or real time digital art, and submit a short write-up with a link.</li>
+            </ul>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="wk-cell"><span class="n">02</span><span class="d">Sept 16</span><span class="lang">TD</span></td>
+          <td class="topic-cell" data-label="Topic">Signal Processing: Animate with CHOPs</td>
+          <td class="inclass-cell" data-label="In Class">
+            <ul class="desc-list">
+              <li>A quick color theory mention, the deep dive is homework.</li>
+              <li>CHOPs as numeric signals over time: a Wave CHOP set up as an LFO, exported into a TOP parameter to animate the Week 1 palette.</li>
+              <li>HSV Adjust and Lookup TOPs applied to the palette.</li>
+            </ul>
+          </td>
+          <td class="assign-cell" data-label="Assignment">
+            <ul class="desc-list">
+              <li>Animate your palette using a Wave CHOP exported into a TOP parameter, and apply an HSV Adjust or Lookup TOP using an actual color harmony.</li>
+              <li>Find and use one new TOP, as before.</li>
+            </ul>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="wk-cell"><span class="n">03</span><span class="d">Sept 23</span><span class="lang">TD</span></td>
+          <td class="topic-cell" data-label="Topic">Feedback Loop Introduction</td>
+          <td class="inclass-cell" data-label="In Class">
+            <ul class="desc-list">
+              <li>A generative, self referencing Feedback TOP network: a TOP network&rsquo;s output fed back into itself. No webcam, kept simple enough to build a real mental model of feedback on its own.</li>
+              <li>Also introduces the Displace TOP and a first look at the Noise TOP.</li>
+            </ul>
+          </td>
+          <td class="assign-cell" data-label="Assignment">
+            <ul class="desc-list">
+              <li>Build a feedback based piece using the Feedback TOP, and find and use one new TOP, as before.</li>
+            </ul>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="wk-cell"><span class="n">04</span><span class="d">Sept 30</span><span class="lang">TD</span></td>
+          <td class="topic-cell" data-label="Topic">Feedback Loop Synthesis</td>
+          <td class="inclass-cell" data-label="In Class">
+            <ul class="desc-list">
+              <li>Reaction diffusion, built on top of Week 3&rsquo;s feedback foundation.</li>
+              <li>Full content for this week is still being finalized.</li>
+            </ul>
+          </td>
+          <td class="assign-cell" data-label="Assignment">
+            <ul class="desc-list">
+              <li>Build a reaction diffusion based piece, and find and use one new TOP, as before.</li>
+            </ul>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="wk-cell"><span class="n">05</span><span class="d">Oct 7</span><span class="lang">TD</span></td>
+          <td class="topic-cell" data-label="Topic">Audio Reactivity and Control Panel</td>
+          <td class="inclass-cell" data-label="In Class">
+            <ul class="desc-list">
+              <li>An audio reactive piece: the Audio Spectrum CHOP driving visuals, plus Panel COMPs (buttons, sliders) for manual control.</li>
+            </ul>
+          </td>
+          <td class="assign-cell" data-label="Assignment">
+            <ul class="desc-list">
+              <li>Build an audio reactive piece where at least two visual parameters respond to sound, plus one manual override control.</li>
+              <li>Find and use one new TOP, as before.</li>
+            </ul>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="wk-cell"><span class="n">06</span><span class="d">Oct 14</span><span class="lang">TD</span></td>
+          <td class="topic-cell" data-label="Topic">2D Compile: Revisit, Explore, and Render</td>
+          <td class="inclass-cell" data-label="In Class">
+            <ul class="desc-list">
+              <li>Revisiting the pre-made &ldquo;2D Compile&rdquo; network first previewed in Week 1, now expanded with a few more examples of techniques covered this semester, a handful of Luisa&rsquo;s own personal networks, networks from previous semesters, and a video input setup, all walked through live in class.</li>
+              <li>Image manipulation techniques inside it (Noise TOPs, Composite TOP, Level/Blur) are part of what&rsquo;s being explored.</li>
+              <li>Also: a walkthrough of how to render a file out of TouchDesigner, which the Midterm Project&rsquo;s submission needs. This doubles as the midterm dry run.</li>
+            </ul>
+          </td>
+          <td class="assign-cell" data-label="Assignment">
+            <ul class="desc-list">
+              <li>Pick one or two sources from the &ldquo;2D Compile&rdquo; network, image processing, geometric shapes, noise, or video input, and start folding them into your audio reactive midterm piece.</li>
+              <li>Previous student work is linked in Canvas alongside the assignment for inspiration.</li>
+            </ul>
+          </td>
+        </tr>
+
+        <tr class="shared-row">
+          <td class="wk-cell"><span class="n">07</span><span class="d">Oct 21</span><span class="lang">Shared</span></td>
+          <td class="topic-cell" data-label="Topic">Midterm</td>
+          <td class="inclass-cell" data-label="In Class">
+            <ul class="desc-list">
+              <li>Midterm, presented in class.</li>
+              <li>No fixed time slot, coordinated across the three Fall 2026 Creative Computing courses (Coding Art Fundamentals, Intro to TouchDesigner, and Coding Music Fundamentals).</li>
+            </ul>
+          </td>
+          <td class="assign-cell" data-label="Assignment">
+            <ul class="desc-list">
+              <li>See <a href="midterm.html">Midterm Project</a> for the full assignment, including the Creative Computing website submission step.</li>
+            </ul>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="wk-cell"><span class="n">08</span><span class="d">Oct 28</span><span class="lang">TD</span></td>
+          <td class="topic-cell" data-label="Topic">3D Introduction</td>
+          <td class="inclass-cell" data-label="In Class">
+            <ul class="desc-list">
+              <li>Geometry, Camera, and Light COMPs, and a Render TOP.</li>
+              <li>The Week 1 palette applied as material color.</li>
+            </ul>
+          </td>
+          <td class="assign-cell" data-label="Assignment">
+            <ul class="desc-list">
+              <li>Build a simple 3D scene, a few geometries, one camera, one light, with your palette applied as material color.</li>
+            </ul>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="wk-cell"><span class="n">09</span><span class="d">Nov 4</span><span class="lang">TD</span></td>
+          <td class="topic-cell" data-label="Topic">Instancing</td>
+          <td class="inclass-cell" data-label="In Class">
+            <ul class="desc-list">
+              <li>GPU instancing: per instance position, color, and scale, driven from data.</li>
+              <li>Also the deadline to have your final project group formed.</li>
+            </ul>
+          </td>
+          <td class="assign-cell" data-label="Assignment">
+            <ul class="desc-list">
+              <li>Build an instanced system, particles, a grid, or a crowd, with per instance color pulled from your palette.</li>
+              <li>This is the last required weekly assignment of the semester. After this, use the time to start prepping your final project.</li>
+            </ul>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="wk-cell"><span class="n">10</span><span class="d">Nov 11</span><span class="lang">TD</span></td>
+          <td class="topic-cell" data-label="Topic">Talking to Other Software</td>
+          <td class="inclass-cell" data-label="In Class">
+            <ul class="desc-list">
+              <li>No class this week, a holiday.</li>
+              <li>The OSC/MIDI In material, receiving a live signal from a ChucK or Coding Art Fundamentals classmate&rsquo;s software to drive a TouchDesigner parameter, is pre-recorded instead and already available in Canvas. Watch it during the week since there&rsquo;s no class to cover it in.</li>
+              <li>A sign-up sheet for the Week 13 presentation slot still goes out this week, posted in Canvas.</li>
+            </ul>
+          </td>
+          <td class="assign-cell" data-label="Assignment">
+            <ul class="desc-list">
+              <li>No required assignment this week. Use the time to keep prepping your final project.</li>
+              <li>Watching the pre-recorded OSC/MIDI video is still required groundwork for the final project, even though nothing is submitted for it.</li>
+            </ul>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="wk-cell"><span class="n">11</span><span class="d">Nov 18</span><span class="lang">TD</span></td>
+          <td class="topic-cell" data-label="Topic">POPs: Point Clouds and GPU Particles</td>
+          <td class="inclass-cell" data-label="In Class">
+            <ul class="desc-list">
+              <li>A quick TA-led workshop introducing POPs, TouchDesigner&rsquo;s newer GPU compute particle and point cloud family. Not a required topic, worth exploring further if it fits your final project, but optional.</li>
+              <li>The rest of class is final project workshop time.</li>
+            </ul>
+          </td>
+          <td class="assign-cell" data-label="Assignment">
+            <ul class="desc-list">
+              <li>No required assignment. POPs are optional to explore further for the final project.</li>
+              <li>Use the rest of class, and the time after, to work on your final project.</li>
+            </ul>
+          </td>
+        </tr>
+
+        <tr class="shared-row">
+          <td class="wk-cell"><span class="n">12</span><span class="d">Nov 25</span><span class="lang">Shared</span></td>
+          <td class="topic-cell" data-label="Topic">Final Project Work</td>
+          <td class="inclass-cell" data-label="In Class">
+            <ul class="desc-list">
+              <li>Remote day. An optional Stanford CCRMA workshop on multimedia creative coding research and development.</li>
+              <li>Help is available during class time, and additional help slots are added throughout the week. Final project work continues.</li>
+              <li>A new pre-made &ldquo;2D+3D Compile&rdquo; reference network is shared for final project use.</li>
+            </ul>
+          </td>
+          <td class="assign-cell" data-label="Assignment">
+            <ul class="desc-list">
+              <li>Final project work time, help available during class.</li>
+              <li>No separate submission this week.</li>
+            </ul>
+          </td>
+        </tr>
+
+        <tr class="shared-row">
+          <td class="wk-cell"><span class="n">13</span><span class="d">Dec 2</span><span class="lang">Shared</span></td>
+          <td class="topic-cell" data-label="Topic">Final Performance</td>
+          <td class="inclass-cell" data-label="In Class">
+            <ul class="desc-list">
+              <li>Final performance, in person, within a shared 1&ndash;6 PM window.</li>
+              <li>Groups sign up for their exact slot during Week 10.</li>
+            </ul>
+          </td>
+          <td class="assign-cell" data-label="Assignment">
+            <ul class="desc-list">
+              <li>See <a href="final.html">Final Project</a> for the full assignment.</li>
+            </ul>
+          </td>
+        </tr>
+
+        <tr class="shared-row">
+          <td class="wk-cell"><span class="n">14</span><span class="d">Dec 9</span><span class="lang">Shared</span></td>
+          <td class="topic-cell" data-label="Topic">Digital Submission and AI Workshop</td>
+          <td class="inclass-cell" data-label="In Class">
+            <ul class="desc-list">
+              <li>Required remote AI workshop, including a TouchDesigner-specific segment on using Claude to help debug TD expressions and Python DAT scripts, and to explore asset generation feeding into TOPs.</li>
+              <li>The Digital Expo portfolio deadline is Friday, Dec 11.</li>
+            </ul>
+          </td>
+          <td class="assign-cell" data-label="Assignment">
+            <ul class="desc-list">
+              <li>Attendance at the AI workshop counts as this week&rsquo;s assignment.</li>
+              <li>See <a href="final.html">Final Project</a> for the portfolio deadline.</li>
+            </ul>
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+    </div>
+  </section>
+
+  <footer>
+    <p>Intro to TouchDesigner &middot; CalArts, Fall 2026 &middot; Luisa Pinzon</p>
+    <a class="back-site" href="https://luisapinzon.com/">&larr; Back to luisapinzon.com</a>
+  </footer>
+
+</div>
+<script src="../assets/veil.js"></script>
+</body>
+</html>
