@@ -172,20 +172,69 @@ dl.spec dd { margin: 0; font-size: .95rem; }
 ul.plain, ol.plain { margin: 0; padding-left: 1.2em; }
 ul.plain li, ol.plain li { margin-bottom: 8px; }
 
+.section-nav-row { margin: 32px 0 0; }
 .section-nav {
-  margin-top: 10px; display: grid; grid-template-columns: repeat(auto-fit, minmax(120px,1fr));
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(120px,1fr));
   gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 10px; overflow: hidden;
 }
 .section-nav a {
-  display: flex; align-items: center; justify-content: center; text-align: center;
-  background: var(--surface); padding: 14px 10px; min-height: 48px;
-  font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: .85rem;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-align: center;
+  background: var(--surface); padding: 18px 10px; min-height: 76px;
+  font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: .9rem;
   color: var(--text); text-decoration: none; transition: background .15s ease, color .15s ease;
 }
+.section-nav a .view {
+  display: block; font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: .66rem;
+  text-transform: uppercase; letter-spacing: .09em; color: var(--accent-ink);
+}
 .section-nav a:hover { background: var(--accent); color: var(--on-accent); }
+.section-nav a:hover .view { color: var(--on-accent); }
 .section-nav a:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 
 .week-divider { border: none; border-top: 1px solid var(--border); margin: 14px 0 10px; }
+
+.schedule-table-wrap { margin-top: 8px; overflow-x: auto; }
+.schedule-table { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: .92rem; }
+.schedule-table th {
+  background: var(--surface-2); font-family: 'Montserrat', sans-serif; font-weight: 700;
+  font-size: .68rem; text-transform: uppercase; letter-spacing: .07em; color: var(--muted);
+  text-align: left; padding: 10px 14px; border-bottom: 2px solid var(--border);
+}
+.schedule-table td {
+  padding: 16px 14px; border-bottom: 1px solid var(--border); border-right: 1px solid var(--border);
+  vertical-align: top;
+}
+.schedule-table th:last-child, .schedule-table td:last-child { border-right: none; }
+.schedule-table tbody tr:last-child td { border-bottom: none; }
+.schedule-table th.col-week, .schedule-table td.wk-cell { width: 11%; }
+.schedule-table th.col-topic, .schedule-table td.topic-cell { width: 16%; }
+.schedule-table th.col-inclass, .schedule-table td.inclass-cell { width: 36.5%; }
+.schedule-table th.col-assign, .schedule-table td.assign-cell { width: 36.5%; }
+.schedule-table td.wk-cell { font-family: 'Montserrat', sans-serif; }
+.schedule-table td.wk-cell .n { font-size: 1.15rem; font-weight: 700; display: block; }
+.schedule-table td.wk-cell .d { font-size: .76rem; color: var(--muted); display: block; margin-top: 2px; }
+.schedule-table td.wk-cell .lang { display: inline-block; margin-top: 6px; font-size: .64rem; padding: 2px 6px; border-radius: 4px; background: var(--surface-2); color: var(--muted); }
+.schedule-table td.topic-cell { font-weight: 600; }
+.schedule-table ul.desc-list { margin: 0; padding-left: 1.1em; font-size: .9rem; }
+.schedule-table ul.desc-list li { margin-bottom: 6px; }
+.schedule-table ul.desc-list li:last-child { margin-bottom: 0; }
+.schedule-table tr.shared-row td { background: color-mix(in srgb, var(--accent) 16%, var(--surface)); }
+.schedule-table tr.shared-row td.wk-cell .lang { background: var(--accent); color: var(--on-accent); }
+
+@media (max-width: 760px) {
+  .schedule-table thead { display: none; }
+  .schedule-table, .schedule-table tbody, .schedule-table tr, .schedule-table td { display: block; width: 100% !important; }
+  .schedule-table tr { border: 1px solid var(--border); border-radius: 10px; margin-bottom: 14px; }
+  .schedule-table tr.shared-row { border-color: color-mix(in srgb, var(--accent) 30%, var(--border)); }
+  .schedule-table td { border: none; border-bottom: 1px solid var(--border); padding: 12px 16px; }
+  .schedule-table tr td:last-child { border-bottom: none; }
+  .schedule-table td.topic-cell::before,
+  .schedule-table td.inclass-cell::before,
+  .schedule-table td.assign-cell::before {
+    content: attr(data-label); display: block; font-family: 'Montserrat', sans-serif; font-weight: 700;
+    font-size: .64rem; text-transform: uppercase; letter-spacing: .08em; color: var(--accent-ink); margin-bottom: 6px;
+  }
+}
 
 .course-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px,1fr)); gap: 16px; margin-top: 8px; }
 .course-card {
