@@ -172,6 +172,21 @@ dl.spec dd { margin: 0; font-size: .95rem; }
 ul.plain, ol.plain { margin: 0; padding-left: 1.2em; }
 ul.plain li, ol.plain li { margin-bottom: 8px; }
 
+.section-nav {
+  margin-top: 10px; display: grid; grid-template-columns: repeat(auto-fit, minmax(120px,1fr));
+  gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 10px; overflow: hidden;
+}
+.section-nav a {
+  display: flex; align-items: center; justify-content: center; text-align: center;
+  background: var(--surface); padding: 14px 10px; min-height: 48px;
+  font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: .85rem;
+  color: var(--text); text-decoration: none; transition: background .15s ease, color .15s ease;
+}
+.section-nav a:hover { background: var(--accent); color: var(--on-accent); }
+.section-nav a:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+.week-divider { border: none; border-top: 1px solid var(--border); margin: 14px 0 10px; }
+
 .course-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px,1fr)); gap: 16px; margin-top: 8px; }
 .course-card {
   display: block; background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
