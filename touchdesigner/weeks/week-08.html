@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Week 8: 3D Concepts, SOPs, and POPs &middot; Intro to TouchDesigner</title>
+<meta name="theme-color" content="#e5aa70">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course-site.css">
+<style>
+  :root { --accent: #6b4a2f; --accent-ink: #6b4a2f; }
+</style>
+</head>
+<body>
+
+<div class="veil" aria-hidden="true">
+  <img class="veil__art" src="../../assets/veil.svg" alt="" width="2000" height="1150">
+  <div class="veil__pool"></div>
+  <div class="veil__lantern"><img src="../../assets/veil.svg" alt="" width="2000" height="1150"></div>
+</div>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-title"><a href="../index.html">Intro to TouchDesigner</a></div>
+    <div class="nav-links">
+      <a href="../index.html">Overview</a>
+      <a href="../schedule.html" class="current">Schedule</a>
+      <a href="../midterm.html">Midterm</a>
+      <a href="../final.html">Final</a>
+      <a href="../resources.html">Resources</a>
+      <a href="../policies.html">Policies</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <a class="back-home" href="../schedule.html">&larr; Back to Schedule</a>
+
+  <header class="page-head" id="top">
+    <span class="eyebrow">Intro to TouchDesigner &middot; Week 8 &middot; Oct 28</span>
+    <h1 style="margin-top:10px;">3D Concepts, SOPs, and POPs</h1>
+    <div class="spec-sheet">
+      <div class="spec-item"><div class="k">Schedule Topic</div><div class="v">3D Introduction</div></div>
+      <div class="spec-item"><div class="k">Parts</div><div class="v">Basics, Rendering, Source</div></div>
+      <div class="spec-item"><div class="k">Format</div><div class="v">Reference &middot; plain language</div></div>
+    </div>
+  </header>
+
+  <div class="section-nav-row">
+    <div class="section-nav">
+      <a href="#basics">3D Basics<span class="view">Part 1 &rarr;</span></a>
+      <a href="#rendering">Rendering, MATs<span class="view">Part 2 &rarr;</span></a>
+      <a href="#source">SOPs &amp; POPs<span class="view">Part 3 &rarr;</span></a>
+    </div>
+  </div>
+
+  <!-- ============ PART 1: 3D BASICS ============ -->
+  <section class="module-part" id="basics">
+    <div class="section-head">
+      <span class="eyebrow">Part 1</span>
+      <h2>3D Basics</h2>
+    </div>
+
+    <div class="watch-row"><a class="watch-link" href="https://www.youtube.com/watch?v=p3MU7J-0284" target="_blank" rel="noopener">Watch: geometry basics</a></div>
+
+    <h3 class="module-sub">3D Geometry: <span class="accent">Core Topology</span></h3>
+    <p>The building blocks of any 3D shape: a point is a vertex, two connected vertices make an edge, and edges closed into a flat shape make a face. Triangles and quads are the two kinds of faces you will see most, and every quad is really just two triangles underneath.</p>
+    <div class="module-stage">
+      <img class="module-shot" src="img/week8-topology.jpg" alt="3D Geometry Core Topology diagram, mesh, face, vertex, edge, triangle, and quad on a cube" width="1024" height="655">
+    </div>
+
+    <h3 class="module-sub">3D Mathematics <span class="accent">and Operations</span></h3>
+    <p>A vector is a direction and a magnitude, like V = (4, 3, 2). Objects move through three transforms: move, rotate, and scale, each one happening around a pivot point. The dot product compares two vectors: positive when they point roughly the same way, zero at a right angle, negative when they oppose.</p>
+    <div class="module-stage">
+      <img class="module-shot" src="img/week8-vectors.jpg" alt="3D Mathematics and Operations diagram, vectors, transforms, dot product, pivot point, NURBS, point cloud" width="1024" height="655">
+    </div>
+
+    <h3 class="module-sub">3D Surface Data <span class="accent">and Texturing</span></h3>
+    <p>Normals describe which way a surface faces, flat per face or smoothed per vertex. Tangent space adds two more directions along the surface itself, which is what a normal map is built on: a bump map is grayscale height only, a normal map is a full RGB direction per pixel, and UV mapping is how a flat image gets wrapped onto the 3D shape in the first place.</p>
+    <div class="module-stage">
+      <img class="module-shot" src="img/week8-texturing.jpg" alt="3D Surface Data and Texturing diagram, face normal, vertex normal, tangent space, bump map, normal map, UV mapping" width="1024" height="655">
+    </div>
+    <div class="watch-row">
+      <a class="watch-link" href="https://youtube.com/shorts/LstVSko3GYM" target="_blank" rel="noopener">Watch short: normals</a>
+      <a class="watch-link" href="https://youtube.com/shorts/Pfy__6KjcpA" target="_blank" rel="noopener">Watch short: normals</a>
+      <a class="watch-link" href="https://www.youtube.com/watch?v=gyAUPl_PMRQ" target="_blank" rel="noopener">Watch: UV unwrapping</a>
+      <a class="watch-link" href="https://www.youtube.com/watch?v=Prp6FDUugHg" target="_blank" rel="noopener">Watch: vector math</a>
+    </div>
+  </section>
+
+  <!-- ============ PART 2: 3D RENDERING, MATS ============ -->
+  <section class="module-part tint" id="rendering">
+    <div class="section-head">
+      <span class="eyebrow">Part 2</span>
+      <h2>3D Rendering, MATs</h2>
+    </div>
+    <p>This part applies no matter what&rsquo;s feeding the geometry, SOPs or POPs. Every 3D scene shares the same rendering and material basics.</p>
+
+    <h3 class="module-sub">Geo, Light, <span class="accent">Camera</span></h3>
+    <p>Every 3D scene in TouchDesigner needs three things: a Geo COMP, a Light COMP, and a Camera COMP.</p>
+    <div class="module-stage">
+      <img class="module-shot" src="img/week8-geo-light-cam.png" alt="Simple geometry render in TouchDesigner, sphere1 into geo1 into render1, with cam1 and light1 feeding render1" width="1548" height="772">
+    </div>
+
+    <h3 class="module-sub">Parenting <span class="accent">Components</span></h3>
+    <p>A child component inherits its parent&rsquo;s movement, which is how a NULL COMP can drive a camera&rsquo;s position or aim.</p>
+    <div class="module-stage">
+      <img class="module-shot" src="img/week8-parent-camera.png" alt="A NULL COMP named ParentCamera parented above cam1, with cam1 viewing a sphere and cube from an angle" style="max-width:360px;" width="994" height="942">
+      <img class="module-shot" src="img/week8-lookat-null.png" alt="A NULL COMP named LookAtNull parented above cam1, used to aim the camera" style="max-width:360px;" width="1412" height="742">
+    </div>
+
+    <h3 class="module-sub">Render TOP: <span class="accent">Wildcard</span> vs Naming It</h3>
+    <p>The wildcard asterisk means &ldquo;everything that matches,&rdquo; convenient while building but it quietly picks up anything added later too. Naming the actual operator scopes the render to exactly what&rsquo;s intended.</p>
+    <div class="module-stage">
+      <img class="module-shot" src="img/week8-render-top.png" alt="Render TOP parameters, Camera(s) set to cam1, Geometry and Lights both set to the wildcard asterisk" width="944" height="548">
+    </div>
+
+    <h3 class="module-sub">MATs, <span class="accent">Materials</span></h3>
+    <p>A MAT defines how a surface responds to light: color, shininess, and texture, separate from the geometry and the lighting.</p>
+    <div class="module-stage">
+      <img class="module-shot" src="img/week8-mats.png" alt="TouchDesigner network with line2, noise1, and geo1 feeding render1, color swatch visible for assigning a material" width="1716" height="1516">
+    </div>
+    <div class="watch-row">
+      <a class="watch-link" href="https://www.youtube.com/watch?v=tnQ4ofr4sIE" target="_blank" rel="noopener">Watch: materials, part 1</a>
+      <a class="watch-link" href="https://www.youtube.com/watch?v=0T18pFhsu6k" target="_blank" rel="noopener">Watch: materials, part 2</a>
+    </div>
+  </section>
+
+  <!-- ============ PART 3: 3D SOURCE IN TD ============ -->
+  <section class="module-part" id="source">
+    <div class="section-head">
+      <span class="eyebrow">Part 3</span>
+      <h2>3D Source in TD: SOPs and POPs</h2>
+    </div>
+
+    <h3 class="module-sub">SOPs <span class="accent">vs POPs</span></h3>
+    <p>SOPs are how TouchDesigner has built 3D geometry for years, solid shapes run on the CPU. POPs are new, point cloud geometry run on the GPU, which can handle far more points at once.</p>
+    <div class="module-stage">
+      <svg width="700" height="280" viewBox="0 0 700 280" role="img" aria-label="Diagram comparing a SOP surface operator, a solid CPU based shape, with a POP point operator, a GPU native point cloud">
+        <polygon points="100,220 270,220 270,80 170,40 100,80" fill="var(--accent)" fill-opacity="0.18" stroke="var(--text)" stroke-width="1.8"/>
+        <line x1="100" y1="80" x2="270" y2="80" stroke="var(--text)" stroke-width="1.2"/>
+        <line x1="170" y1="40" x2="170" y2="180" stroke="var(--text)" stroke-width="1.2"/>
+        <text x="105" y="250" fill="var(--text)" font-family="Montserrat, sans-serif" font-size="14" font-weight="700">SOP, Surface Operator</text>
+        <text x="105" y="267" fill="var(--muted)" font-family="Montserrat, sans-serif" font-size="11">CPU based, shapes and surfaces</text>
+
+        <g fill="var(--accent)">
+          <circle cx="420" cy="60" r="3.5"/><circle cx="450" cy="50" r="3.5"/><circle cx="480" cy="60" r="3.5"/><circle cx="510" cy="50" r="3.5"/><circle cx="540" cy="60" r="3.5"/>
+          <circle cx="410" cy="90" r="3.5"/><circle cx="440" cy="85" r="3.5"/><circle cx="470" cy="92" r="3.5"/><circle cx="500" cy="85" r="3.5"/><circle cx="530" cy="92" r="3.5"/><circle cx="560" cy="85" r="3.5"/>
+          <circle cx="420" cy="120" r="3.5"/><circle cx="450" cy="125" r="3.5"/><circle cx="480" cy="118" r="3.5"/><circle cx="510" cy="125" r="3.5"/><circle cx="540" cy="118" r="3.5"/>
+          <circle cx="410" cy="150" r="3.5"/><circle cx="440" cy="155" r="3.5"/><circle cx="470" cy="148" r="3.5"/><circle cx="500" cy="155" r="3.5"/><circle cx="530" cy="148" r="3.5"/><circle cx="560" cy="155" r="3.5"/>
+          <circle cx="420" cy="180" r="3.5"/><circle cx="450" cy="185" r="3.5"/><circle cx="480" cy="178" r="3.5"/><circle cx="510" cy="185" r="3.5"/><circle cx="540" cy="178" r="3.5"/>
+        </g>
+        <text x="420" y="250" fill="var(--text)" font-family="Montserrat, sans-serif" font-size="14" font-weight="700">POP, Point Operator</text>
+        <text x="420" y="267" fill="var(--muted)" font-family="Montserrat, sans-serif" font-size="11">GPU native, points with attributes</text>
+      </svg>
+    </div>
+
+    <h3 class="module-sub">Anatomy of a <span class="accent">POP</span></h3>
+    <p>A cube broken into what a POP actually tracks: 8 points, 8 vertex references, 12 filled triangles.</p>
+    <div class="module-stage">
+      <img class="module-shot" src="img/week8-pop-anatomy.jpg" alt="Anatomy of a POP diagram, points, vertices, primitives for a cube" style="max-width:420px;" width="941" height="1024">
+    </div>
+    <div class="watch-row">
+      <a class="watch-link" href="https://www.youtube.com/watch?v=bWfUk6MF8B0" target="_blank" rel="noopener">Watch: POPs</a>
+      <a class="watch-link" href="https://www.youtube.com/watch?v=xCmn625J-vA" target="_blank" rel="noopener">Watch: POPs</a>
+      <a class="watch-link" href="https://www.youtube.com/watch?v=B-WJrAIw7Y0" target="_blank" rel="noopener">Watch: POPs</a>
+      <a class="watch-link" href="https://www.youtube.com/playlist?list=PLfsywHJIrszH6LmcjUyCEdbyHDJKsFFol" target="_blank" rel="noopener">Watch: POPs playlist</a>
+    </div>
+  </section>
+
+  <footer>
+    <p>Intro to TouchDesigner &middot; CalArts, Fall 2026 &middot; Luisa Pinzon</p>
+    <a class="back-site" href="https://luisapinzon.com/">&larr; Back to luisapinzon.com</a>
+  </footer>
+
+</div>
+<script src="../../assets/veil.js"></script>
+</body>
+</html>

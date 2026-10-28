@@ -274,3 +274,29 @@ footer a { color: var(--muted); }
 .veil__lantern img { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover; will-change: transform; }
 .veil.is-live .veil__lantern { opacity: 1; }
 @media (prefers-reduced-motion: reduce) { .veil__lantern { display: none; } }
+
+/* Week content pages (module decks): image/diagram stage + video-link row,
+   shared across every course's weekly content pages. */
+.module-stage {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+  padding: 18px; margin: 14px 0 0; display: flex; justify-content: center;
+  align-items: flex-start; gap: 20px; flex-wrap: wrap;
+}
+.module-shot { max-width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--border); display: block; }
+.module-stage svg { display: block; max-width: 100%; height: auto; }
+.watch-row { display: flex; gap: 18px; flex-wrap: wrap; margin: 14px 0 0; }
+.watch-link {
+  display: inline-flex; align-items: center; gap: 6px; font-size: .85rem; font-weight: 600;
+  color: var(--accent-ink); text-decoration: none; border-bottom: 1px dotted var(--accent);
+}
+.watch-link::before { content: "\25B6"; font-size: .64em; }
+.watch-link:hover { color: var(--text); border-color: var(--text); }
+.module-part { padding: 48px 0; border-bottom: 1px solid var(--border); scroll-margin-top: 76px; }
+.module-part:last-of-type { border-bottom: none; }
+.module-part.tint {
+  background: color-mix(in srgb, var(--accent) 7%, var(--surface)); border-radius: 12px;
+  padding: 36px 28px; margin: 8px 0; border-bottom: none;
+}
+.module-sub { margin-top: 30px; margin-bottom: 6px; font-size: 1.04rem; font-weight: 700; }
+.module-sub:first-of-type { margin-top: 6px; }
+.module-sub .accent { color: var(--accent-ink); }
