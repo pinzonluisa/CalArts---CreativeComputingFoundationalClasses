@@ -1,0 +1,718 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Week 9: Noise, Random Walks, and Buffering &middot; Coding Art Fundamentals</title>
+<meta name="theme-color" content="#e5aa70">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/course-site.css">
+<style>
+  :root {
+    --accent: #c9642f; --accent-ink: #c9642f;
+    /* Page-local additions for the interactive noise/buffer demos below:
+       --cool pairs with --accent throughout as the second series color
+       (random/x vs noise/y, "without" vs "with" buffering); --panel-line
+       and --mono are read directly by the canvas JS via getComputedStyle. */
+    --cool: #2f6f72;
+    --panel-line: var(--border);
+    --mono: ui-monospace, 'SF Mono', 'Cascadia Code', Consolas, monospace;
+  }
+
+  /* ---- demo-only layout, specific to this page's canvas comparisons ---- */
+  .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 14px 0 0; }
+  @media (max-width: 620px) { .compare-grid { grid-template-columns: 1fr; } }
+  .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px; box-shadow: var(--shadow); }
+  .panel-label { font-family: 'Montserrat', sans-serif; font-size: .78rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+  .panel-label .dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; flex: none; }
+  .panel-label .dot.random { background: var(--cool); }
+  .panel-label .dot.noise { background: var(--accent); }
+  canvas { display: block; width: 100%; border-radius: 8px; background: var(--bg); }
+  .motion-canvas { aspect-ratio: 1 / 0.62; margin-bottom: 10px; }
+  .graph-canvas { aspect-ratio: 1 / 0.3; }
+  .demo-caption { font-size: .85rem; color: var(--muted); margin: 10px 0 0; }
+  .demo-block { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 18px 18px 20px; margin: 14px 0 0; box-shadow: var(--shadow); }
+  .demo-block .demo-caption { margin-top: 12px; }
+  .demo-block .demo-caption:first-child { margin-top: 0; }
+  .demo-legend { display: flex; gap: 18px; font-family: 'Montserrat', sans-serif; font-size: .78rem; color: var(--muted); margin-top: 10px; flex-wrap: wrap; }
+  .demo-legend span { display: flex; align-items: center; gap: 6px; }
+  .demo-legend i { width: 14px; height: 2px; border-radius: 2px; display: inline-block; }
+  .slider-row { display: flex; align-items: center; gap: 12px; margin-top: 14px; }
+  .slider-row input[type=range] { flex: 1; accent-color: var(--accent); }
+  .slider-row label { font-family: 'Montserrat', sans-serif; font-size: .78rem; color: var(--muted); white-space: nowrap; }
+</style>
+</head>
+<body>
+
+<div class="veil" aria-hidden="true">
+  <img class="veil__art" src="../../assets/veil.svg" alt="" width="2000" height="1150">
+  <div class="veil__pool"></div>
+  <div class="veil__lantern"><img src="../../assets/veil.svg" alt="" width="2000" height="1150"></div>
+</div>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-title"><a href="../index.html">Coding Art Fundamentals</a></div>
+    <div class="nav-links">
+      <a href="../index.html">Overview</a>
+      <a href="../schedule.html" class="current">Schedule</a>
+      <a href="../midterm.html">Midterm</a>
+      <a href="../final.html">Final</a>
+      <a href="../resources.html">Resources</a>
+      <a href="../policies.html">Policies</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <a class="back-home" href="../schedule.html">&larr; Back to Schedule</a>
+
+  <header class="page-head" id="top">
+    <span class="eyebrow">Coding Art Fundamentals &middot; Week 9 &middot; Nov 4</span>
+    <h1 style="margin-top:10px;">Noise, Random Walks, and Buffering</h1>
+    <div class="spec-sheet">
+      <div class="spec-item"><div class="k">Schedule Topic</div><div class="v">Introduction to Noise</div></div>
+      <div class="spec-item"><div class="k">Parts</div><div class="v">Reading, Noise, p5.js, oF, Buffers</div></div>
+      <div class="spec-item"><div class="k">Format</div><div class="v">Reference &middot; interactive demos</div></div>
+    </div>
+  </header>
+
+  <div class="section-nav-row">
+    <div class="section-nav">
+      <a href="#reading">Reading<span class="view">Part 1 &rarr;</span></a>
+      <a href="#noise">Noise vs Random<span class="view">Part 2 &rarr;</span></a>
+      <a href="#p5-example">p5.js Example<span class="view">Part 3 &rarr;</span></a>
+      <a href="#of-examples">oF Examples<span class="view">Part 4 &rarr;</span></a>
+      <a href="#buffers">Buffers<span class="view">Part 5 &rarr;</span></a>
+    </div>
+  </div>
+
+  <!-- ============ PART 1: READING ============ -->
+  <section class="module-part" id="reading">
+    <div class="section-head">
+      <span class="eyebrow">Part 1</span>
+      <h2>Reading: <em>Nature of Code</em>, Chapter 0 (Random)</h2>
+    </div>
+    <p>Book: <a href="https://natureofcode.com/random/" target="_blank" rel="noopener">natureofcode.com/random</a>. Perlin noise section directly: <a href="https://natureofcode.com/random/#a-smoother-approach-with-perlin-noise" target="_blank" rel="noopener">natureofcode.com/random/#a-smoother-approach-with-perlin-noise</a>.</p>
+    <p>Section by section summary, in the order Shiffman covers them:</p>
+    <ul class="plain">
+      <li><strong>Random Walks.</strong> Introduces the random walk as a path built from a series of random steps, using a coin flip on a balance beam as the starting image.</li>
+      <li><strong>The Random Walker Class.</strong> Builds a <span class="mono">Walker</span> class with a position and methods to draw and step, using <span class="mono">random()</span> and <span class="mono">floor()</span> to pick one of four directions.</li>
+      <li><strong>A Traditional Random Walk (Example 0.1).</strong> A walker takes one step per frame and leaves a trail on a background that is never cleared.</li>
+      <li><strong>A Random Number Distribution (Example 0.2).</strong> Counts random picks into bins and graphs them, showing that <span class="mono">random()</span> is uniform and evens out over a large sample.</li>
+      <li><strong>Pseudorandom Numbers.</strong> Computer randomness comes from deterministic math, not true chance. The sequence only looks random.</li>
+      <li><strong>Probability and Nonuniform Distributions.</strong> Uniform randomness is often not natural enough, so this section introduces weighting outcomes instead of treating every option equally.</li>
+      <li><strong>A Walker That Tends to Move to the Right (Example 0.3).</strong> Gives the walker a 40 percent chance to move right and smaller chances for the other directions, demonstrating weighted probability in practice.</li>
+      <li><strong>A Normal Distribution of Random Numbers.</strong> Covers the bell curve, where values cluster around a mean, using height as the example, and introduces <span class="mono">randomGaussian()</span>.</li>
+      <li><strong>Calculating Mean and Standard Deviation.</strong> Walks through the arithmetic behind the normal distribution: averaging, squaring deviations, and taking a square root.</li>
+      <li><strong>A Gaussian Distribution (Example 0.4).</strong> Draws semi transparent circles at x positions pulled from a normal distribution centered on the canvas, so the overlap visibly clusters toward the middle.</li>
+      <li><strong>A Custom Distribution of Random Numbers.</strong> Covers oversampling in a random walk, the L&eacute;vy flight as a fix using occasional large jumps, and the accept-reject method for shaping a custom probability curve.</li>
+      <li><strong>An Accept-Reject Distribution (Example 0.5).</strong> Keeps a random value only if a second random number also qualifies it, which lets the acceptance rate follow a chosen curve.</li>
+      <li><strong>A Smoother Approach with Perlin Noise.</strong> This is the core section. Perlin noise is a sequence of pseudorandom values where neighboring values stay close together, giving smooth, organic motion instead of jumps. Shiffman also covers its history, including its origin in the film <em>Tron</em> and its common use in procedural textures.</li>
+      <li><strong>Noise Ranges.</strong> <span class="mono">noise()</span> returns values from 0 to 1, and its argument is a position in noise space, not a range to sample from. <span class="mono">map()</span> is what rescales the output to fit the canvas.</li>
+      <li><strong>A Perlin Noise Walker (Example 0.6).</strong> A walker whose x and y come from two different offsets sampled from the same noise space. Starting the two offsets far apart keeps the axes from moving in lockstep.</li>
+      <li><strong>Two-Dimensional Noise.</strong> Extends noise to two dimensions, where a value resembles its neighbors in every direction, producing cloud-like textures when mapped to grayscale.</li>
+      <li><strong>Noise Detail.</strong> Covers <span class="mono">noiseDetail()</span>, which controls how many octaves shape the noise&rsquo;s texture, giving finer or coarser looking results.</li>
+      <li><strong>The Ecosystem Project.</strong> An open-ended project prompt: build a digital pond ecosystem, starting with a creature whose behavior comes from a random walk or noise, with personality in the movement before any visual polish.</li>
+    </ul>
+  </section>
+
+  <!-- ============ PART 2: NOISE VS RANDOM (interactive) ============ -->
+  <section class="module-part tint" id="noise">
+    <div class="section-head">
+      <span class="eyebrow">Part 2</span>
+      <h2>Noise vs Random</h2>
+    </div>
+    <p><span class="mono">random()</span> gives a fresh independent value every time you call it. Nothing connects one value to the next. <span class="mono">noise()</span> works differently: nearby inputs give nearby outputs, so as the input creeps forward each frame, the output drifts instead of jumping.</p>
+
+    <div class="compare-grid">
+      <div class="panel">
+        <div class="panel-label"><span class="dot random"></span>random()</div>
+        <canvas id="randomMotion" class="motion-canvas"></canvas>
+        <canvas id="randomGraph" class="graph-canvas"></canvas>
+        <p class="demo-caption">A fresh value every frame. The dot jumps, the graph is jagged.</p>
+      </div>
+      <div class="panel">
+        <div class="panel-label"><span class="dot noise"></span>noise()</div>
+        <canvas id="noiseMotion" class="motion-canvas"></canvas>
+        <canvas id="noiseGraph" class="graph-canvas"></canvas>
+        <p class="demo-caption">Each value grows out of the last. The dot drifts, the graph is smooth.</p>
+      </div>
+    </div>
+
+    <h3 class="module-sub">How Noise Is <span class="accent">Built</span></h3>
+    <div class="demo-block">
+      <p class="demo-caption">Same random points every time. Squeeze a lot of them into view and the line looks jagged, like random. Stretch out to just a few and the smooth curve between them shows, that is noise.</p>
+      <canvas id="interpCanvas" class="motion-canvas" style="aspect-ratio:1/0.5;"></canvas>
+      <div class="slider-row">
+        <label>noise</label>
+        <input type="range" id="interpSlider" min="2" max="36" step="0.1" value="36">
+        <label>random</label>
+      </div>
+    </div>
+
+    <h3 class="module-sub">Same Noise, Two <span class="accent">Starting Points</span></h3>
+    <div class="demo-block">
+      <p class="demo-caption">One curve, two markers sitting far apart on it. The code starts x and y at numbers like 0 and 10000. Here the two are closer together so both fit on one graph.</p>
+      <canvas id="sharedCurve" class="graph-canvas" style="aspect-ratio:1/0.4;margin-bottom:14px;"></canvas>
+      <canvas id="curveScroll" class="graph-canvas" style="aspect-ratio:1/0.4;margin-bottom:10px;"></canvas>
+      <p class="demo-caption" style="margin-bottom:14px;">Same curve, now scrolling by underneath them. The two dots stay the same distance apart the whole time, because their starting points never change.</p>
+      <canvas id="valueCompare" class="graph-canvas" style="aspect-ratio:1/0.4;"></canvas>
+      <p class="demo-caption">The same two dots, now just showing where each one currently sits on the line. When they land close together the dots stack up, when they do not, they sit apart.</p>
+      <div class="demo-legend">
+        <span><i style="background:var(--cool)"></i>x</span>
+        <span><i style="background:var(--accent)"></i>y</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PART 3: P5.JS EXAMPLE ============ -->
+  <section class="module-part" id="p5-example">
+    <div class="section-head">
+      <span class="eyebrow">Part 3</span>
+      <h2>p5.js Example: Perlin Noise Walker</h2>
+    </div>
+    <p>Sketch: <a href="https://editor.p5js.org/natureofcode/sketches/qyNwGUy59" target="_blank" rel="noopener">editor.p5js.org/natureofcode/sketches/qyNwGUy59</a></p>
+    <p>This is Shiffman&rsquo;s own Example 0.6 from the reading above. The <span class="mono">Walker</span> class keeps two offsets, <span class="mono">xoff</span> and <span class="mono">yoff</span>, starting far apart in noise space. Each frame, both offsets move forward by a small, fixed amount, and each one is passed into its own call to <span class="mono">noise()</span>, then mapped onto the canvas width and height. Because the two offsets never catch up to each other, the x and y motion never look the same, even though both come from the exact same noise function.</p>
+  </section>
+
+  <!-- ============ PART 4: OF EXAMPLES ============ -->
+  <section class="module-part" id="of-examples">
+    <div class="section-head">
+      <span class="eyebrow">Part 4</span>
+      <h2>Our openFrameworks Examples</h2>
+    </div>
+
+    <h3 class="module-sub">F26-NoiseP1-Prep: <span class="accent">one walker, straight noise</span></h3>
+    <p><span class="mono">walker.hpp</span> / <span class="mono">walker.cpp</span>. This is the direct openFrameworks version of the book&rsquo;s Example 0.6: one walker, <span class="mono">ofNoise()</span> mapped straight onto the window.</p>
+    <div class="code-block">
+      <span class="filename">walker.hpp</span>
+      <pre><code>class walker{
+public:
+    walker();
+    float tx;
+    float ty;
+    float x;
+    float y;
+    void step();
+    void show();
+};</code></pre>
+    </div>
+    <div class="code-block">
+      <span class="filename">walker.cpp</span>
+      <pre><code>walker::walker(){
+    ofSetCircleResolution(50);
+    tx = 0.0;
+    ty = 10000.0;
+}
+
+void walker::step(){
+    x = ofMap(ofNoise(tx), 0.0, 1.0, 0.0, ofGetWidth());
+    y = ofMap(ofNoise(ty), 0.0, 1.0, 0.0, ofGetHeight());
+    tx += 0.01;
+    ty += 0.01;
+}
+
+void walker::show(){
+    ofFill();
+    ofSetColor(100, 200, 10);
+    ofDrawCircle(x, y, 20);
+}</code></pre>
+    </div>
+    <p><span class="mono">tx</span> and <span class="mono">ty</span> start 10000 apart on purpose, for the same reason as the p5 example: two offsets that far apart on the same noise curve behave like two unrelated values.</p>
+
+    <h3 class="module-sub">F26-NoiseP2-Prep: <span class="accent">many movers, noise as a steering force</span></h3>
+    <p><span class="mono">mover.hpp</span> / <span class="mono">mover.cpp</span>. Here noise is not the position itself, it is the force that steers the position, using <span class="mono">ofSignedNoise()</span> instead of <span class="mono">ofNoise()</span>.</p>
+    <div class="code-block">
+      <span class="filename">mover.cpp</span>
+      <pre><code>mover::mover() {
+    r = floor(ofRandom(200,255));
+    g = floor(ofRandom(0,200));
+    b = 0;
+    a = floor(ofRandom(20,50));
+
+    x = ofGetWidth()/2;
+    y = ofGetHeight()/2;
+
+    radius = ofRandom(0.1,2);
+
+    nPos1 = ofRandom(-1000,1000);
+    nPos2 = ofRandom(2000,4000);
+
+    n1Speed = ofRandom(0.001,0.005);
+    n2Speed = ofRandom(0.001,0.005);
+
+    xDir = 0;
+    yDir = 0;
+
+    maxSpeed = ofRandom(1,2);
+}
+
+void mover::display(){
+    ofFill();
+    ofSetColor(r,g,b,a);
+    ofDrawCircle(x,y,radius);
+}
+
+void mover::update(){
+    // the noise value becomes the steering force instead of a fixed direction
+    xDir = ofSignedNoise(nPos1 += n1Speed);
+    yDir = ofSignedNoise(nPos2 += n2Speed);
+
+    xDir = ofMap(xDir, -1.0, 1.0, -maxSpeed, maxSpeed);
+    yDir = ofMap(yDir, -1.0, 1.0, -maxSpeed, maxSpeed);
+
+    x += xDir;
+    y += yDir;
+}</code></pre>
+    </div>
+    <p>All 30 movers start at the center and drift outward because <span class="mono">xDir</span>/<span class="mono">yDir</span> are signed, so they can push in either direction, and get added onto position every frame instead of replacing it.</p>
+
+    <h3 class="module-sub">ofNoise() <span class="accent">vs ofSignedNoise()</span></h3>
+    <ul class="plain">
+      <li><a href="https://openframeworks.cc/documentation/math/ofMath/#show_ofNoise" target="_blank" rel="noopener"><span class="mono">ofNoise()</span></a>: returns a value from 0.0 to 1.0. Has overloads from one to four float coordinates, plus glm vector versions.</li>
+      <li><a href="https://openframeworks.cc/documentation/math/ofMath/#show_ofSignedNoise" target="_blank" rel="noopener"><span class="mono">ofSignedNoise()</span></a>: returns a value from -1.0 to 1.0. Same overloads, same inputs, only the output range differs.</li>
+    </ul>
+    <p>In practice: <span class="mono">ofNoise()</span> fits naturally when the result maps straight onto a position, like <span class="mono">walker.cpp</span> above, because 0 to 1 is easy to stretch across a window with <span class="mono">ofMap()</span>. <span class="mono">ofSignedNoise()</span> fits naturally when the result is a force or offset added onto something that already exists, like <span class="mono">mover.cpp</span>&rsquo;s <span class="mono">xDir</span>/<span class="mono">yDir</span>, since it needs to be able to push in either direction, not just one.</p>
+  </section>
+
+  <!-- ============ PART 5: BUFFERS ============ -->
+  <section class="module-part tint" id="buffers">
+    <div class="section-head">
+      <span class="eyebrow">Part 5</span>
+      <h2>Double Buffering and ofFbo</h2>
+    </div>
+    <p>The graphics card keeps two full copies of the picture. One is on screen right now, the front buffer. The other is hidden, the back buffer, and that is where the next frame gets drawn. Once it is ready, the two swap, so what you see is always a finished frame, never one caught mid-draw.</p>
+
+    <div class="compare-grid">
+      <div class="panel">
+        <div class="panel-label"><span class="dot noise"></span>with double buffering</div>
+        <canvas id="bufferedBoth" class="motion-canvas" style="aspect-ratio:1/0.85;"></canvas>
+        <p class="demo-caption">Both copies stay ready with the same position. Whichever is marked front feeds the result below, and swapping between them never skips a beat.</p>
+      </div>
+      <div class="panel">
+        <div class="panel-label"><span class="dot random"></span>without double buffering</div>
+        <canvas id="unbufferedMotion" class="motion-canvas"></canvas>
+        <p class="demo-caption">There is only one copy, and the screen reads from it while it is still being redrawn. Part of what you see is the old frame, part is already the new one.</p>
+      </div>
+    </div>
+
+    <h3 class="module-sub">ofFbo: <span class="accent">Drawing That Sticks Around</span></h3>
+    <p>Up to now, every example clears and redraws the whole window each frame. <a href="https://openframeworks.cc/documentation/gl/ofFbo/" target="_blank" rel="noopener"><span class="mono">ofFbo</span></a> is for the opposite case: a buffer you draw into once, and whatever you draw stays there across frames until something draws over it again. That is what makes a trail, a painting surface, or anything else that should accumulate over time possible, instead of resetting to a blank frame 60 times a second.</p>
+    <div class="code-block">
+      <span class="filename">minimal shape of it</span>
+      <pre><code>// setup()
+fbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
+fbo.begin();
+ofClear(0, 0, 0, 255);   // paint the starting background once
+fbo.end();
+
+// draw()
+fbo.begin();
+// draw here, it stays until you draw over it again
+fbo.end();
+fbo.draw(0, 0);           // show the accumulated result</code></pre>
+    </div>
+
+    <h3 class="module-sub">FBO <span class="accent">Template</span></h3>
+    <p><span class="mono">FBO_template/src/ofApp.h</span> and <span class="mono">ofApp.cpp</span> are already set up as a drop-in starting point, with a marked spot for where a student&rsquo;s own draw code goes:</p>
+    <div class="code-block">
+      <span class="filename">ofApp.h</span>
+      <pre><code>ofFbo fbo;  // ADD THIS IN YOUR HEADER FILE</code></pre>
+    </div>
+    <div class="code-block">
+      <span class="filename">ofApp.cpp</span>
+      <pre><code>void ofApp::setup(){
+    //Fbo object setup
+    fbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
+    fbo.begin();
+    ofClear(0, 0, 0, 255);   // paint the starting background once with your desired background color
+    fbo.end();
+}
+
+void ofApp::draw(){
+    fbo.begin();
+    ofFill();
+    ofSetColor(0,0); // this is the color of the new background, is like your new ofBackground();
+    ofDrawRectangle(0, 0, fbo.getWidth(), fbo.getHeight()); // new background is this rectangle
+
+    /// here you write your regular Draw function code. Simply move it all inside this section right here.
+
+    fbo.end();
+
+    /// After we have drawn our buffer in our fbo object we now draw the object.
+    fbo.draw(0, 0);
+}</code></pre>
+    </div>
+  </section>
+
+  <div class="callout" style="margin-top:8px;">
+    <span class="eyebrow">Class GitHub</span>
+    <p><a href="https://github.com/pinzonluisa/CodingArtFundamentals-ClassExamples" target="_blank" rel="noopener">github.com/pinzonluisa/CodingArtFundamentals-ClassExamples</a></p>
+  </div>
+
+  <footer>
+    <p>Coding Art Fundamentals &middot; CalArts, Fall 2026 &middot; Luisa Pinzon</p>
+    <a class="back-site" href="https://luisapinzon.com/">&larr; Back to luisapinzon.com</a>
+  </footer>
+
+</div>
+<script src="../../assets/veil.js"></script>
+<script>
+(function(){
+"use strict";
+
+/* ---------- shared canvas fitting ---------- */
+const registry = [];
+function fit(canvas){
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const rect = canvas.getBoundingClientRect();
+  const w = Math.max(1, Math.round(rect.width));
+  const h = Math.max(1, Math.round(rect.height));
+  canvas.width = w * dpr;
+  canvas.height = h * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  return {ctx, w, h};
+}
+function register(canvas, drawFn){
+  const entry = {canvas, drawFn, ctx:null, w:0, h:0};
+  const refit = () => { const r = fit(canvas); entry.ctx = r.ctx; entry.w = r.w; entry.h = r.h; };
+  refit();
+  window.addEventListener('resize', refit);
+  registry.push(entry);
+  return entry;
+}
+function cssVar(name){ return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+
+/* ---------- tiny interpolated value-noise, 1D ---------- */
+function hashRand(i){
+  const x = Math.sin(i * 12.9898) * 43758.5453123;
+  return x - Math.floor(x);
+}
+function noise1d(x){
+  const i0 = Math.floor(x);
+  const i1 = i0 + 1;
+  const t = x - i0;
+  const ts = t * t * (3 - 2 * t);
+  const v0 = hashRand(i0);
+  const v1 = hashRand(i1);
+  return v0 + ts * (v1 - v0);
+}
+
+/* ---------- random vs noise: motion + rolling graph ---------- */
+function makeComparison(motionId, graphId, colorVar, isNoise){
+  const motionCanvas = document.getElementById(motionId);
+  const graphCanvas = document.getElementById(graphId);
+  const history = [];
+  const maxHistory = 160;
+  let t = isNoise ? Math.random() * 1000 : 0;
+  let val = 0.5;
+  const trail = [];
+  const maxTrail = 26;
+
+  function step(){
+    if (isNoise){ t += 0.012; val = noise1d(t); }
+    else { val = Math.random(); }
+    history.push(val); if (history.length > maxHistory) history.shift();
+    trail.push(val); if (trail.length > maxTrail) trail.shift();
+  }
+
+  register(motionCanvas, function(entry){
+    const color = cssVar(colorVar);
+    const {ctx, w, h} = entry;
+    ctx.clearRect(0, 0, w, h);
+    const pad = h * 0.18, top = pad, bottom = h - pad;
+    for (let i = 0; i < trail.length; i++){
+      const x = (w * 0.12) + (w * 0.76) * (i / (maxTrail - 1));
+      const y = top + (bottom - top) * (1 - trail[i]);
+      ctx.beginPath(); ctx.fillStyle = color; ctx.globalAlpha = (i / trail.length) * 0.35;
+      ctx.arc(x, y, Math.max(2, h * 0.025), 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+    if (trail.length){
+      const x = (w * 0.12) + (w * 0.76) * ((trail.length - 1) / (maxTrail - 1));
+      const y = top + (bottom - top) * (1 - trail[trail.length - 1]);
+      ctx.beginPath(); ctx.fillStyle = color; ctx.arc(x, y, Math.max(3, h * 0.045), 0, Math.PI * 2); ctx.fill();
+    }
+  });
+
+  register(graphCanvas, function(entry){
+    const color = cssVar(colorVar);
+    const {ctx, w, h} = entry;
+    ctx.clearRect(0, 0, w, h);
+    const pad = 6;
+    ctx.strokeStyle = cssVar('--panel-line'); ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(0, h / 2); ctx.lineTo(w, h / 2); ctx.stroke();
+    ctx.beginPath(); ctx.strokeStyle = color; ctx.lineWidth = 2;
+    for (let i = 0; i < history.length; i++){
+      const x = w * (i / (maxHistory - 1));
+      const y = pad + (h - pad * 2) * (1 - history[i]);
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+  });
+
+  return step;
+}
+const stepRandom = makeComparison('randomMotion', 'randomGraph', '--cool', false);
+const stepNoise = makeComparison('noiseMotion', 'noiseGraph', '--accent', true);
+
+/* ---------- how noise is built: stretch the lattice to go from random to noise ---------- */
+(function(){
+  const canvas = document.getElementById('interpCanvas');
+  const slider = document.getElementById('interpSlider');
+
+  register(canvas, function(entry){
+    const domain = parseFloat(slider.value);
+    const {ctx, w, h} = entry;
+    ctx.clearRect(0, 0, w, h);
+    const padX = w * 0.04, padY = h * 0.14;
+    const plotW = w - padX * 2, plotH = h - padY * 2;
+    const xToPx = (x) => padX + (x / domain) * plotW;
+    const valToPy = (v) => padY + (1 - v) * plotH;
+
+    // the exact same curve every time, only how much of it fits in view changes
+    ctx.beginPath();
+    ctx.strokeStyle = cssVar('--accent');
+    ctx.lineWidth = 2;
+    for (let px = 0; px <= plotW; px += 1){
+      const x = (px / plotW) * domain;
+      const y = valToPy(noise1d(x));
+      const sx = padX + px;
+      if (px === 0) ctx.moveTo(sx, y); else ctx.lineTo(sx, y);
+    }
+    ctx.stroke();
+
+    // the same random lattice points, wherever they land at this stretch
+    ctx.fillStyle = cssVar('--cool');
+    const lastI = Math.ceil(domain);
+    for (let i = 0; i <= lastI; i++){
+      const x = xToPx(i);
+      if (x < padX - 4 || x > padX + plotW + 4) continue;
+      const y = valToPy(hashRand(i));
+      ctx.beginPath(); ctx.arc(x, y, 4, 0, Math.PI * 2); ctx.fill();
+    }
+  });
+})();
+
+/* ---------- shared curve: two markers far apart ---------- */
+(function(){
+  const canvas = document.getElementById('sharedCurve');
+  const DOMAIN = 40;
+  const markX = 3, markY = 32;
+
+  register(canvas, function(entry){
+    const {ctx, w, h} = entry;
+    ctx.clearRect(0, 0, w, h);
+    const padX = w * 0.04, padY = h * 0.22;
+    const plotW = w - padX * 2, plotH = h - padY * 2;
+    const xToPx = (x) => padX + (x / DOMAIN) * plotW;
+    const valToPy = (v) => padY + (1 - v) * plotH;
+
+    ctx.beginPath();
+    ctx.strokeStyle = cssVar('--panel-line');
+    ctx.lineWidth = 1.5;
+    for (let px = 0; px <= plotW; px += 2){
+      const x = (px / plotW) * DOMAIN;
+      const y = valToPy(noise1d(x));
+      const sx = padX + px;
+      if (px === 0) ctx.moveTo(sx, y); else ctx.lineTo(sx, y);
+    }
+    ctx.stroke();
+
+    const pulse = 1 + Math.sin(performance.now() / 350) * 0.18;
+    function marker(x, color, label){
+      const px = xToPx(x), py = valToPy(noise1d(x));
+      ctx.fillStyle = color;
+      ctx.beginPath(); ctx.arc(px, py, 6 * pulse, 0, Math.PI * 2); ctx.fill();
+      ctx.font = '11px ' + (cssVar('--mono') || 'monospace');
+      ctx.fillText(label, px - 4, py - 12);
+    }
+    marker(markX, cssVar('--cool'), 'x');
+    marker(markY, cssVar('--accent'), 'y');
+  });
+})();
+
+/* ---------- curve scrolling by, two dots riding it at a fixed gap ---------- */
+(function(){
+  const scrollCanvas = document.getElementById('curveScroll');
+  const compareCanvas = document.getElementById('valueCompare');
+  const DOMAIN = 40, markX = 3, markY = 32;
+  let phase = 0;
+
+  register(scrollCanvas, function(entry){
+    phase += 0.04;
+    const {ctx, w, h} = entry;
+    ctx.clearRect(0, 0, w, h);
+    const padX = w * 0.04, padY = h * 0.22;
+    const plotW = w - padX * 2, plotH = h - padY * 2;
+
+    ctx.beginPath();
+    ctx.strokeStyle = cssVar('--panel-line');
+    ctx.lineWidth = 1.5;
+    for (let px = 0; px <= plotW; px += 2){
+      const absX = phase + (px / plotW) * DOMAIN;
+      const y = padY + (1 - noise1d(absX)) * plotH;
+      const sx = padX + px;
+      if (px === 0) ctx.moveTo(sx, y); else ctx.lineTo(sx, y);
+    }
+    ctx.stroke();
+
+    const pulse = 1 + Math.sin(performance.now() / 350) * 0.18;
+    function marker(localX, color, label){
+      const px = padX + (localX / DOMAIN) * plotW;
+      const py = padY + (1 - noise1d(phase + localX)) * plotH;
+      ctx.fillStyle = color;
+      ctx.beginPath(); ctx.arc(px, py, 6 * pulse, 0, Math.PI * 2); ctx.fill();
+      ctx.font = '11px ' + (cssVar('--mono') || 'monospace');
+      ctx.fillText(label, px - 4, py - 12);
+    }
+    marker(markX, cssVar('--cool'), 'x');
+    marker(markY, cssVar('--accent'), 'y');
+  });
+
+  register(compareCanvas, function(entry){
+    const vx = noise1d(phase + markX);
+    const vy = noise1d(phase + markY);
+    const {ctx, w, h} = entry;
+    ctx.clearRect(0, 0, w, h);
+    const padL = w * 0.09, padR = w * 0.05;
+    const trackW = w - padL - padR;
+    const rowX = h * 0.36, rowY = h * 0.68;
+
+    ctx.strokeStyle = cssVar('--panel-line'); ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(padL, rowX); ctx.lineTo(padL + trackW, rowX); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(padL, rowY); ctx.lineTo(padL + trackW, rowY); ctx.stroke();
+
+    ctx.font = '11px ' + (cssVar('--mono') || 'monospace');
+    ctx.fillStyle = cssVar('--muted');
+    ctx.fillText('0', padL, h * 0.97);
+    ctx.fillText('1', padL + trackW - 6, h * 0.97);
+    ctx.fillStyle = cssVar('--cool'); ctx.fillText('x', 4, rowX + 4);
+    ctx.fillStyle = cssVar('--accent'); ctx.fillText('y', 4, rowY + 4);
+
+    ctx.fillStyle = cssVar('--cool');
+    ctx.beginPath(); ctx.arc(padL + vx * trackW, rowX, 7, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = cssVar('--accent');
+    ctx.beginPath(); ctx.arc(padL + vy * trackW, rowY, 7, 0, Math.PI * 2); ctx.fill();
+  });
+})();
+
+/* ---------- continuous motion, with and without double buffering ---------- */
+(function(){
+  const bufferedCanvas = document.getElementById('bufferedBoth');
+  const unbufferedCanvas = document.getElementById('unbufferedMotion');
+  let t = 0;
+  let front = 0;
+  const SWAP_EVERY = 90;
+
+  function ballX(time, w){
+    return w * 0.5 + w * 0.32 * Math.sin(time * 0.02);
+  }
+  function ballXIn(time, originX, width){
+    return originX + width * 0.5 + width * 0.32 * Math.sin(time * 0.02);
+  }
+
+  register(bufferedCanvas, function(entry){
+    t += 1;
+    if (t % SWAP_EVERY === 0) front = 1 - front;
+
+    const {ctx, w, h} = entry;
+    ctx.clearRect(0, 0, w, h);
+
+    const boxW = w * 0.4, boxH = h * 0.42;
+    const boxPos = [{x: w * 0.06, y: h * 0.08}, {x: w * 0.54, y: h * 0.08}];
+
+    for (let i = 0; i < 2; i++){
+      const p = boxPos[i];
+      const isFront = (i === front);
+      ctx.fillStyle = cssVar('--bg');
+      ctx.strokeStyle = isFront ? cssVar('--accent') : cssVar('--muted');
+      ctx.lineWidth = isFront ? 3 : 1.5;
+      if (!isFront) ctx.setLineDash([5, 4]);
+      ctx.beginPath();
+      if (ctx.roundRect) ctx.roundRect(p.x, p.y, boxW, boxH, 8); else ctx.rect(p.x, p.y, boxW, boxH);
+      ctx.fill(); ctx.stroke();
+      ctx.setLineDash([]);
+
+      ctx.save();
+      ctx.beginPath();
+      if (ctx.roundRect) ctx.roundRect(p.x, p.y, boxW, boxH, 8); else ctx.rect(p.x, p.y, boxW, boxH);
+      ctx.clip();
+      ctx.fillStyle = cssVar('--accent');
+      ctx.beginPath();
+      ctx.arc(ballXIn(t, p.x, boxW), p.y + boxH * 0.55, Math.min(boxW, boxH) * 0.16, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      ctx.fillStyle = cssVar('--muted');
+      ctx.font = '11px ' + (cssVar('--mono') || 'monospace');
+      ctx.fillText((i === 0 ? 'buffer A' : 'buffer B') + (isFront ? ' &middot; front' : ' &middot; back'), p.x + 6, p.y + boxH + 16);
+    }
+
+    const sx = w * 0.06, sy = h * 0.68, sw = w * 0.88, sh = h * 0.24;
+    ctx.fillStyle = cssVar('--bg');
+    ctx.strokeStyle = cssVar('--accent');
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    if (ctx.roundRect) ctx.roundRect(sx, sy, sw, sh, 8); else ctx.rect(sx, sy, sw, sh);
+    ctx.fill(); ctx.stroke();
+
+    ctx.save();
+    ctx.beginPath();
+    if (ctx.roundRect) ctx.roundRect(sx, sy, sw, sh, 8); else ctx.rect(sx, sy, sw, sh);
+    ctx.clip();
+    ctx.fillStyle = cssVar('--accent');
+    ctx.beginPath();
+    ctx.arc(ballXIn(t, sx, sw), sy + sh * 0.55, Math.min(sw, sh) * 0.22, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+
+    ctx.fillStyle = cssVar('--muted');
+    ctx.font = '11px ' + (cssVar('--mono') || 'monospace');
+    ctx.fillText('result, on screen', sx + 6, sy + sh + 16);
+  });
+
+  register(unbufferedCanvas, function(entry){
+    const {ctx, w, h} = entry;
+    ctx.clearRect(0, 0, w, h);
+    const y = h * 0.5, r = Math.min(w, h) * 0.11;
+    const seamY = h * 0.5 + Math.sin(t * 0.013) * h * 0.22;
+    const oldX = ballX(t - 20, w);
+    const newX = ballX(t, w);
+    ctx.fillStyle = cssVar('--cool');
+
+    ctx.save();
+    ctx.beginPath(); ctx.rect(0, 0, w, seamY); ctx.clip();
+    ctx.beginPath(); ctx.arc(oldX, y, r, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+
+    ctx.save();
+    ctx.beginPath(); ctx.rect(0, seamY, w, h - seamY); ctx.clip();
+    ctx.beginPath(); ctx.arc(newX, y, r, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+
+    ctx.strokeStyle = cssVar('--muted'); ctx.lineWidth = 1;
+    ctx.setLineDash([4, 3]);
+    ctx.beginPath(); ctx.moveTo(0, seamY); ctx.lineTo(w, seamY); ctx.stroke();
+    ctx.setLineDash([]);
+  });
+})();
+
+/* ---------- master loop ---------- */
+function frame(){
+  stepRandom();
+  stepNoise();
+  for (const entry of registry){ if (entry.ctx) entry.drawFn(entry); }
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+
+})();
+</script>
+</body>
+</html>
